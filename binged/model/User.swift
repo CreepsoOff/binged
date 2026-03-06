@@ -10,8 +10,9 @@ import Foundation
 struct User: Identifiable, Hashable//, Equatable
 {
     var id = UUID()
-    var lastName: String
-    var firstName: String
+    var lastName: String?
+    var firstName: String?
+    var Username: String
     var email: String = ""
     var picture: String?
     var age: Int
@@ -25,6 +26,7 @@ struct User: Identifiable, Hashable//, Equatable
 var magalie = User(
     lastName: "Piquet",
     firstName: "Magalie",
+    Username: "Piquima",
     email: "Magalie@lecercle.mali",
     picture: "magalie",
     age: 70,
