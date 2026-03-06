@@ -7,21 +7,6 @@
 
 import Foundation
 
-struct Actor: Identifiable
-{
-    var id = UUID()
-    var actorFirstName: String
-    var actorLastName: String
-    var actorImage: String
-    var actorDateOfBirth: Date	
-    var actorCityOfBirth: String
-    var actorBio: String
-//    var actorFilmographie: String
-    var actorAge: Int {
-           Calendar.current.dateComponents([.year], from: actorDateOfBirth, to: Date()).year!
-    }
-}
-
 let actors: [Actor] = [
 
     Actor(

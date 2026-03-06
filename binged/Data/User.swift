@@ -7,22 +7,6 @@
 
 import Foundation
 
-struct User: Identifiable, Hashable//, Equatable
-{
-    var id = UUID()
-    var lastName: String?
-    var firstName: String?
-    var Username: String
-    var email: String = ""
-    var picture: String?
-    var age: Int
-    var userBio: String?
-//  var favoriteGenre: [favoriteGenre] = []
-//    var favoriteSeries: [SeriesName?] = []
-//    var favoriteActors: [ActorName?] = []
-//    var posts: [Post?] = []
-}
-
 var magalie = User(
     lastName: "Piquet",
     firstName: "Magalie",
