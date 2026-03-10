@@ -9,41 +9,35 @@ import SwiftUI
 
 struct myProffil: View {
     var body: some View {
-        ZStack{
+        ZStack {
             Color("background")
                 .ignoresSafeArea()
-            VStack{
+            VStack {
                 Text("Mon Proffil")
                     .foregroundColor(.white)
                     .font(.largeTitle)
-                HStack{
+                HStack {
                     Image("pitt")
                         .resizable()
                         .scaledToFill()
-                        .frame(width:200, height: 200)
+                        .frame(width: 200, height: 200)
                         .padding()
-                    VStack{
-                        Text("Acteur et producteur américain célèbre pour Fight Club, Seven et Once Upon a Time in Hollywood. Il a remporté plusieurs Oscars.")
-                            .foregroundColor(.white)
-                            .lineLimit(8)
-                        Text("Modifier")
-                            .padding(8)
-                            .background(.orange)
-                            .cornerRadius(20)
-                            .foregroundColor(.white)
+                    VStack {
+                        Text(
+                            "Acteur et producteur américain célèbre pour Fight Club, Seven et Once Upon a Time in Hollywood. Il a remporté plusieurs Oscars."
+                        )
+                        .foregroundColor(.white)
+                        .lineLimit(8)
+                        basicButton(text: "Modifier")
                     }
                 }
-                HStack{
+                HStack {
                     Text("Mes Favoris")
                         .foregroundColor(.white)
                         .font(.title)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(10)
-                    Text("Modifier")
-                        .padding(8)
-                        .background(.orange)
-                        .cornerRadius(20)
-                        .foregroundColor(.white)
+                    basicButton(text: "Modifier")
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 Text("Genres")
@@ -51,42 +45,34 @@ struct myProffil: View {
                     .font(.title2)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 10)
-                HStack{
-                    Spacer()
-                    Text("Action")
-                        .padding(12)
-                        .background(.background1)
-                        .cornerRadius(20)
-                        .foregroundColor(.white)
-                    Spacer()
-                    Text("Policier")
-                        .padding(12)
-                        .background(.background1)
-                        .cornerRadius(20)
-                        .foregroundColor(.white)
-                    Spacer()
-                    Text("SF")
-                        .padding(12)
-                        .background(.background1)
-                        .cornerRadius(20)
-                        .foregroundColor(.white)
-                    Spacer()
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 12) {
+                        genreButton(genre: "Action")
+                        genreButton(genre: "Policier")
+                        genreButton(genre: "SF")
+                        genreButton(genre: "Policier")
+                        genreButton(genre: "Policier")
+                        genreButton(genre: "Policier")
+                        genreButton(genre: "Policier")
+                    }
                 }
                 Text("Acteurs")
                     .foregroundColor(.white)
                     .font(.title2)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 10)
-                ScrollView(.horizontal, showsIndicators: false){
-                HStack{
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
                         Image("pitt")
                             .resizable()
                             .scaledToFill()
-                            .frame(width:100, height: 100)
+                            .frame(width: 100, height: 100)
                             .clipShape(Circle())
                             .shadow(
                                 radius: 3,
-                                x: 5, y: 5)
+                                x: 5,
+                                y: 5
+                            )
                             .overlay(
                                 RoundedRectangle(cornerRadius: 50)
                                     .stroke(.white, lineWidth: 1)
@@ -94,11 +80,13 @@ struct myProffil: View {
                         Image("stone")
                             .resizable()
                             .scaledToFill()
-                            .frame(width:100, height: 100)
+                            .frame(width: 100, height: 100)
                             .clipShape(Circle())
                             .shadow(
                                 radius: 3,
-                                x: 5, y: 5)
+                                x: 5,
+                                y: 5
+                            )
                             .overlay(
                                 RoundedRectangle(cornerRadius: 50)
                                     .stroke(.white, lineWidth: 1)

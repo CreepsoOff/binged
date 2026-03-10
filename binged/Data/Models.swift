@@ -8,7 +8,6 @@
 import SwiftUI
 
 
-@Observable
 class Genre {
     var id = UUID()
     let type: GenreType
@@ -75,7 +74,6 @@ enum GenreType: String, CaseIterable {
     }
 }
 
-@Observable
 class YearSerie {
     var id = UUID()
     let value: String
@@ -109,7 +107,6 @@ enum Kind: String, CaseIterable {
     }
 }
 
-@Observable
 class SerieType: Identifiable {
     var id = UUID()
     let kind: Kind
@@ -136,8 +133,6 @@ struct ActorSerie {
     /// A FAIRE
 }
 
-
-@Observable
 class Serie: Identifiable {
     var id = UUID()
     let name: String
@@ -171,7 +166,7 @@ class Serie: Identifiable {
     
 }
 
-//@Observable
+
 //class Playlist: Identifiable {
 //    var id = UUID()
 //    
