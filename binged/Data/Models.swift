@@ -6,31 +6,32 @@
 //
 
 import SwiftUI
+import Observation
 
 
-@Observable
-class Genre {
-    var id = UUID()
-    let type: GenreType
-    var isFavorite: Bool?
+//class Genre: Codable, Identifiable {
+//    var id = UUID()
+//    let type: GenreType
+//    var isFavorite: Bool?
+//
+//    var icon: String {
+//        type.iconName
+//    }
+//
+//    var name: String {
+//        type.rawValue
+//    }
+//
+//    init(id: UUID = UUID(), type: GenreType, isFavorite: Bool? = nil) {
+//        self.id = id
+//        self.type = type
+//        self.isFavorite = isFavorite
+//    }
+//    
+//
+//}
 
-    var icon: String {
-        type.iconName
-    }
-
-    var name: String {
-        type.rawValue
-    }
-
-    init(id: UUID = UUID(), type: GenreType, isFavorite: Bool? = nil) {
-        self.id = id
-        self.type = type
-        self.isFavorite = isFavorite
-    }
-
-}
-
-enum GenreType: String, CaseIterable {
+enum GenreType: String, CaseIterable, Codable {
 
     case sf = "Sciences Fiction"
     case drama = "Drame"
@@ -75,29 +76,29 @@ enum GenreType: String, CaseIterable {
     }
 }
 
-@Observable
-class YearSerie {
-    var id = UUID()
-    let value: String
-    var isFavorite: Bool?
-    
-    init(id: UUID = UUID(), value: String, isFavorite: Bool? = nil) {
-        self.id = id
-        self.value = value
-        self.isFavorite = isFavorite
-    }
-}
+//@Observable
+//class YearSerie {
+//    var id = UUID()
+//    let value: String
+//    var isFavorite: Bool?
+//    
+//    init(id: UUID = UUID(), value: String, isFavorite: Bool? = nil) {
+//        self.id = id
+//        self.value = value
+//        self.isFavorite = isFavorite
+//    }
+//}
 
 
 
-enum Kind: String, CaseIterable {
+enum Kind: String, CaseIterable, Codable {
     case standard = "Série"
     case mini = "Mini-série"
     case anthology = "Anthologie"
     case docuseries = "Série documentaire"
     case daily = "Quotidienne"
 
-    var iconName: String {
+    var icon: String {
         switch self {
         case .standard: return "tv"
         case .mini: return "square.stack.3d.up.fill"
@@ -109,52 +110,40 @@ enum Kind: String, CaseIterable {
     }
 }
 
-@Observable
-class SerieType: Identifiable {
-    var id = UUID()
-    let kind: Kind
-    var isFavorite: Bool?
-
-    var name: String { kind.rawValue }
-    var icon: String { kind.iconName }
-
-    init(kind: Kind, isFavorite: Bool? = nil) {
-        self.kind = kind
-        self.isFavorite = isFavorite
-    }
-}
 
 
-
-struct Platform {  // Netflix, Prime Video, Paramount, Crunchyroll, ADN
+struct Platform: Codable {  // Netflix, Prime Video, Paramount, Crunchyroll, ADN
     let name: String
     let baseURL: String
     let icon: String
 }
 
-struct ActorSerie {
+struct ActorSerie: Codable {
     /// A FAIRE
 }
 
 
-@Observable
-class Serie: Identifiable {
-    var id = UUID()
+
+/// USER = Ses favorites kinds seront un tableau de Kind
+
+
+class Serie: Codable {
     let name: String
     let desc: String
-    let type: SerieType
+    let type: Kind
     let cover: String?
     let year: Int
-    let decennie: YearSerie
-    let genre: Genre
+    let decennie: String
+    let genre: GenreType
     let actors: [ActorSerie?]
-    var platform: [Platform]
+    var platform: [Platform?]
     var nbSaisons: Int
     var nbEpisodes: Int
     var inProgress: Bool?
     
-    init(id: UUID = UUID(), name: String, desc: String, type: SerieType, cover: String?, year: Int, decennie: YearSerie, genre: Genre, actors: [ActorSerie?], platform: [Platform], nbSaisons: Int, nbEpisodes: Int, inProgress: Bool? = nil) {
-        self.id = id
+  
+    
+    init( name: String, desc: String, type: Kind, cover: String?, year: Int, decennie: String, genre: GenreType, actors: [ActorSerie?], platform: [Platform?], nbSaisons: Int, nbEpisodes: Int, inProgress: Bool? = nil) {
         self.name = name
         self.desc = desc
         self.type = type
@@ -169,6 +158,7 @@ class Serie: Identifiable {
         self.inProgress = inProgress
     }
     
+    
 }
 
 //@Observable
@@ -177,3 +167,15 @@ class Serie: Identifiable {
 //    
 //    
 //}
+
+
+
+struct SeriesResponse: Codable {
+    let records: [SerieRecord]
+}
+
+struct SerieRecord: Codable {
+    let fields: Serie
+}
+
+
