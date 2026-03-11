@@ -27,18 +27,25 @@ struct serieProffil: View {
                         HStack{
                             iconButton(text: "Trailer", icon: "play.fill")
                             Spacer()
+                            logo(icon: "netflix")
+                            logo(icon: "apple")
+                            Spacer()
                             iconButton(text: "Ajouter", icon: "plus")
                         }
                     }
                     .padding()
                     .frame(width: 400, height: 200)
                 }
-                Text("Distribution")
-                    .foregroundColor(.white)
-                    .font(.title2)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(10)
-                    .bold()
+                HStack{
+                    Text("Distribution")
+                        .foregroundColor(.white)
+                        .font(.title2)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(10)
+                        .bold()
+                    iconButton(text: "9,5", icon: "star.fill")
+                        .padding(.top, 10)
+                }
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         Image("pitt")
@@ -74,6 +81,7 @@ struct serieProffil: View {
                 }
                     ZStack{
                         Color("background2")
+                        ScrollView(showsIndicators: false) {
                         VStack{
                             VStack(alignment: .leading, spacing: 10){
                                 Text("Synopsis")
@@ -91,7 +99,7 @@ struct serieProffil: View {
                             .background(
                                 Color.background1.opacity(50)
                                     .cornerRadius(10))
-
+                            
                             VStack(alignment: .leading, spacing: 10){
                                 HStack{
                                     Text("Critique")
@@ -102,9 +110,9 @@ struct serieProffil: View {
                                     iconButton(text: "Rejoindre le chat", icon: "text.bubble.fill")
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                 }
-                                genreButton(genre:"ffskdjfhsdkjfhskf")
-                                genreButton(genre:"ffskdjfhsdkjfhskf")
-                                genreButton(genre:"ffskdjfhsdkjfhskf")
+                                chatBubble(chat:"Yvette : sdjkfbksjdvbksjdbv")
+                                chatBubble(chat:"Yvette : sdjkfbksjdvbksjdbv")
+                                chatBubble(chat:"Yvette : sdjkfbksjdvbksjdbv fekjrnfkj fjklrejnfjk ferjkfnge")
                             }
                             .padding(20)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -115,11 +123,11 @@ struct serieProffil: View {
                         }
                         .padding()
                     }
+                }
             }
         }
     }
 }
-
 #Preview {
     serieProffil()
 }
