@@ -161,7 +161,7 @@ class Serie: Codable {
     
 }
 
-//@Observable
+
 //class Playlist: Identifiable {
 //    var id = UUID()
 //    
@@ -179,3 +179,33 @@ struct SerieRecord: Codable {
 }
 
 
+struct Actor: Identifiable
+{
+    var id = UUID()
+    var actorFirstName: String
+    var actorLastName: String
+    var actorImage: String
+    var actorDateOfBirth: Date
+    var actorCityOfBirth: String
+    var actorBio: String
+//    var actorFilmographie: String
+    var actorAge: Int {
+           Calendar.current.dateComponents([.year], from: actorDateOfBirth, to: Date()).year!
+    }
+}
+
+struct User: Identifiable, Hashable//, Equatable
+{
+    var id = UUID()
+    var lastName: String?
+    var firstName: String?
+    var Username: String
+    var email: String = ""
+    var picture: String?
+    var age: Int
+    var userBio: String?
+//  var favoriteGenre: [favoriteGenre] = []
+//    var favoriteSeries: [SeriesName?] = []
+//    var favoriteActors: [ActorName?] = []
+//    var posts: [Post?] = []
+}
