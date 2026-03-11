@@ -39,7 +39,7 @@ let actors: [Actor] = [
     Actor(
         actorFirstName: "Scarlett",
         actorLastName: "Johansson",
-        actorImage: "johansson",
+        actorImage: "scarlett",
         actorDateOfBirth: Calendar.current.date(from: DateComponents(year: 1984, month: 11, day: 22))!,
         actorCityOfBirth: "New York",
         actorBio: "Actrice américaine mondialement connue pour son rôle de Black Widow dans l’univers Marvel et pour sa carrière dans le cinéma indépendant."

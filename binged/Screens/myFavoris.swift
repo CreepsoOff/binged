@@ -9,7 +9,8 @@ import SwiftUI
 
 struct myFavoris: View {
     @State private var searchText = ""
-    
+    var user: User
+        
     var body: some View {
         ZStack{
             Color("background")
@@ -26,10 +27,12 @@ struct myFavoris: View {
                     .padding(10)
                     .bold()
                 searchBar(text: $searchText)
-                HStack{
-                    genreButton(genre: "Science-fiction")
-                    genreButton(genre: "Science")
-                    genreButton(genre: "Action")
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        ForEach(user.favoriteGenre, id: \.id) { genre in
+                            genreButton(genre: genre.name)
+                        }
+                    }
                 }
                 Text("Acteurs")
                     .foregroundColor(.white)
@@ -40,35 +43,9 @@ struct myFavoris: View {
                 searchBar(text: $searchText)
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        Image("pitt")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 100, height: 100)
-                            .clipShape(Circle())
-                            .shadow(
-                                radius: 3,
-                                x: 5,
-                                y: 5
-                            )
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 50)
-                                    .stroke(.white, lineWidth: 1)
-                            )
-                        Image("stone")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 100, height: 100)
-                            .clipShape(Circle())
-                            .shadow(
-                                radius: 3,
-                                x: 5,
-                                y: 5
-                            )
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 50)
-                                    .stroke(.white, lineWidth: 1)
-                            )
-                            .padding(5)
+                        ForEach(user.favoriteActor) { actor in
+                            actorBar(actor: actor)
+                        }
                     }
                 }
                 HStack{
@@ -81,10 +58,13 @@ struct myFavoris: View {
                     iconButton(text: "Mes playlists", icon: "list.number")
                 }
                 searchBar(text: $searchText)
+                ForEach(user.favoriteSerie, id: \.id) { genre in
+                    genreButton(genre: genre.name)
+                }
             }
         }
     }
 }
 #Preview {
-    myFavoris()
+    myFavoris(user: magalie)
 }

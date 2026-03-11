@@ -188,7 +188,7 @@ struct Actor: Identifiable
     }
 }
 
-struct User: Identifiable, Hashable//, Equatable
+struct User: Identifiable, Hashable
 {
     var id = UUID()
     var lastName: String?
@@ -198,8 +198,15 @@ struct User: Identifiable, Hashable//, Equatable
     var picture: String?
     var age: Int
     var userBio: String?
-//  var favoriteGenre: [favoriteGenre] = []
-//    var favoriteSeries: [SeriesName?] = []
-//    var favoriteActors: [ActorName?] = []
+    var favoriteGenre: [Genre] = []
+    var favoriteSerie: [Serie] = []
+    var favoriteActor: [Actor] = []
 //    var posts: [Post?] = []
+    static func == (lhs: User, rhs: User) -> Bool {
+           lhs.id == rhs.id
+       }
+
+       func hash(into hasher: inout Hasher) {
+           hasher.combine(id)
+       }
 }
