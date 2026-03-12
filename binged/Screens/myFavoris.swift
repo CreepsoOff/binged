@@ -8,7 +8,10 @@
 import SwiftUI
 
 struct myFavoris: View {
-    @State private var searchText = ""
+    @State private var searchGenre = ""
+    @State private var searchActor = ""
+    @State private var searchSerie = ""
+    
     var user: User
         
     var body: some View {
@@ -26,7 +29,7 @@ struct myFavoris: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(10)
                     .bold()
-                searchBar(text: $searchText)
+                searchBar(text: $searchGenre)
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         ForEach(user.favoriteGenre, id: \.id) { genre in
@@ -40,7 +43,7 @@ struct myFavoris: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(10)
                     .bold()
-                searchBar(text: $searchText)
+                searchBar(text: $searchActor)
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         ForEach(user.favoriteActor) { actor in
@@ -57,7 +60,7 @@ struct myFavoris: View {
                         .bold()
                     iconButton(text: "Mes playlists", icon: "list.number")
                 }
-                searchBar(text: $searchText)
+                searchBar(text: $searchSerie)
                 ForEach(user.favoriteSerie, id: \.id) { genre in
                     genreButton(genre: genre.name)
                 }
