@@ -15,7 +15,8 @@ let listDesDecennies = [
     YearSerie(value: "1980s"),
     YearSerie(value: "1970s"),
     YearSerie(value: "1960s"),
-    YearSerie(value: "1950s")
+    YearSerie(value: "1950s"),
+    YearSerie(value: "1940s")
 ]
 
 // Plateformes

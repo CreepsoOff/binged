@@ -1,0 +1,77 @@
+# --- SYSTÈME ---
+.DS_Store
+Thumbs.db
+*.swp
+*.log
+.tmp
+
+# --- ENVIRONNEMENT & SECRETS (CRITIQUE) ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.secret*
+credentials.json
+
+# --- DÉPENDANCES ---
+node_modules/
+jspm_packages/
+bower_components/
+vendor/
+.pnp*
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+
+# --- BUILD & OUTPUT ---
+dist/
+build/
+out/
+bin/
+obj/
+*.exe
+*.dll
+*.so
+*.dylib
+.next/
+.nuxt/
+.cache/
+
+# --- IDE & ÉDITEURS ---
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.iml
+*.iws
+*.sublime-project
+*.sublime-workspace
+
+# --- MOBILE (React Native / Flutter / Natif) ---
+# Android
+.gradle/
+captures/
+local.properties
+*.keystore
+*.jks
+# iOS
+Pods/
+DerivedData/
+*.moved-aside
+*.xcuserstate
+Icon?
+
+# --- TESTS & COUVERTURE ---
+coverage/
+*.lcov
+.nyc_output
+.pytest_cache/
+nosetests.xml
+
+# --- DIVERS ---
+.terraform/
+.vagrant/
+.docker-ignore
