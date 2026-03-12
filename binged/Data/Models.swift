@@ -6,32 +6,30 @@
 //
 
 import SwiftUI
-import Observation
 
 
-//class Genre: Codable, Identifiable {
-//    var id = UUID()
-//    let type: GenreType
-//    var isFavorite: Bool?
-//
-//    var icon: String {
-//        type.iconName
-//    }
-//
-//    var name: String {
-//        type.rawValue
-//    }
-//
-//    init(id: UUID = UUID(), type: GenreType, isFavorite: Bool? = nil) {
-//        self.id = id
-//        self.type = type
-//        self.isFavorite = isFavorite
-//    }
-//    
-//
-//}
+class Genre {
+    var id = UUID()
+    let type: GenreType
+    var isFavorite: Bool?
 
-enum GenreType: String, CaseIterable, Codable {
+    var icon: String {
+        type.iconName
+    }
+
+    var name: String {
+        type.rawValue
+    }
+
+    init(id: UUID = UUID(), type: GenreType, isFavorite: Bool? = nil) {
+        self.id = id
+        self.type = type
+        self.isFavorite = isFavorite
+    }
+
+}
+
+enum GenreType: String, CaseIterable {
 
     case sf = "Sciences Fiction"
     case drama = "Drame"
@@ -76,22 +74,21 @@ enum GenreType: String, CaseIterable, Codable {
     }
 }
 
-//@Observable
-//class YearSerie {
-//    var id = UUID()
-//    let value: String
-//    var isFavorite: Bool?
-//    
-//    init(id: UUID = UUID(), value: String, isFavorite: Bool? = nil) {
-//        self.id = id
-//        self.value = value
-//        self.isFavorite = isFavorite
-//    }
-//}
+class YearSerie {
+    var id = UUID()
+    let value: String
+    var isFavorite: Bool?
+    
+    init(id: UUID = UUID(), value: String, isFavorite: Bool? = nil) {
+        self.id = id
+        self.value = value
+        self.isFavorite = isFavorite
+    }
+}
 
 
 
-enum Kind: String, CaseIterable, Codable {
+enum Kind: String, CaseIterable {
     case standard = "Série"
     case mini = "Mini-série"
     case anthology = "Anthologie"
@@ -110,9 +107,23 @@ enum Kind: String, CaseIterable, Codable {
     }
 }
 
+class SerieType: Identifiable {
+    var id = UUID()
+    let kind: Kind
+    var isFavorite: Bool?
+
+    var name: String { kind.rawValue }
+    var icon: String { kind.iconName }
+
+    init(kind: Kind, isFavorite: Bool? = nil) {
+        self.kind = kind
+        self.isFavorite = isFavorite
+    }
+}
 
 
-struct Platform: Codable {  // Netflix, Prime Video, Paramount, Crunchyroll, ADN
+
+struct Platform {  // Netflix, Prime Video, Paramount, Crunchyroll, ADN
     let name: String
     let baseURL: String
     let icon: String
@@ -122,12 +133,8 @@ struct ActorSerie: Codable {
     /// A FAIRE
 }
 
-
-
-/// USER = Ses favorites kinds seront un tableau de Kind
-
-
-class Serie: Codable {
+class Serie: Identifiable {
+    var id = UUID()
     let name: String
     let desc: String
     let type: Kind
@@ -161,21 +168,47 @@ class Serie: Codable {
     
 }
 
-//@Observable
+
 //class Playlist: Identifiable {
 //    var id = UUID()
 //    
 //    
 //}
 
-
-
-struct SeriesResponse: Codable {
-    let records: [SerieRecord]
+struct Actor: Identifiable
+{
+    var id = UUID()
+    var actorFirstName: String
+    var actorLastName: String
+    var actorImage: String
+    var actorDateOfBirth: Date
+    var actorCityOfBirth: String
+    var actorBio: String
+//    var actorFilmographie: String
+    var actorAge: Int {
+           Calendar.current.dateComponents([.year], from: actorDateOfBirth, to: Date()).year!
+    }
 }
 
-struct SerieRecord: Codable {
-    let fields: Serie
+struct User: Identifiable, Hashable
+{
+    var id = UUID()
+    var lastName: String?
+    var firstName: String?
+    var Username: String
+    var email: String = ""
+    var picture: String?
+    var age: Int
+    var userBio: String?
+    var favoriteGenre: [Genre] = []
+    var favoriteSerie: [Serie] = []
+    var favoriteActor: [Actor] = []
+//    var posts: [Post?] = []
+    static func == (lhs: User, rhs: User) -> Bool {
+           lhs.id == rhs.id
+       }
+
+       func hash(into hasher: inout Hasher) {
+           hasher.combine(id)
+       }
 }
-
-

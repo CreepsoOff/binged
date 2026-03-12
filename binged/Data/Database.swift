@@ -60,16 +60,16 @@ let standard = Kind.standard
 let mini = Kind.mini
 let anthology = Kind.anthology
 
-var seriesT: [Serie] = [
+var series: [Serie] = [
+
     Serie(
         name: "Arcane",
-        desc:
-            "Au milieu du conflit entre les villes jumelles de Piltover et Zaun, deux sœurs se battent dans les camps opposés d'une guerre technologique.",
-        type: standard,
+        desc: "Au milieu du conflit entre Piltover et Zaun, deux sœurs se battent dans les camps opposés d'une guerre technologique.",
+        type: SerieType(kind: .standard),
         cover: "arcane_cover",
         year: 2021,
-        decennie: d2020,
-        genre: .animation,
+        decennie: YearSerie(value: "2020"),
+        genre: Genre(type: .animation),
         actors: [],
         platform: [netflix],
         nbSaisons: 2,
@@ -79,13 +79,12 @@ var seriesT: [Serie] = [
 
     Serie(
         name: "The Bear",
-        desc:
-            "Un jeune chef cuisinier issu du monde de la haute gastronomie rentre à Chicago pour gérer la sandwicherie de sa famille.",
-        type: standard,
+        desc: "Un jeune chef cuisinier issu du monde de la haute gastronomie rentre à Chicago pour gérer la sandwicherie familiale.",
+        type: SerieType(kind: .standard),
         cover: "the_bear_cover",
         year: 2022,
-        decennie: d2020,
-        genre: .drama,
+        decennie: YearSerie(value: "2020"),
+        genre: Genre(type: .drama),
         actors: [],
         platform: [disneyPlus],
         nbSaisons: 3,
@@ -94,13 +93,12 @@ var seriesT: [Serie] = [
 
     Serie(
         name: "Breaking Bad",
-        desc:
-            "Un professeur de chimie atteint d'un cancer s'associe à un ancien élève pour fabriquer et vendre de la méthamphétamine.",
-        type: standard,
+        desc: "Un professeur de chimie atteint d'un cancer s'associe à un ancien élève pour fabriquer et vendre de la méthamphétamine.",
+        type: SerieType(kind: .standard),
         cover: "breaking_bad_cover",
         year: 2008,
-        decennie: d2000,
-        genre: .crime,
+        decennie: YearSerie(value: "2000"),
+        genre: Genre(type: .crime),
         actors: [],
         platform: [netflix],
         nbSaisons: 5,
@@ -109,13 +107,12 @@ var seriesT: [Serie] = [
 
     Serie(
         name: "Shōgun",
-        desc:
-            "En 1600 au Japon, Lord Yoshii Toranaga lutte pour sa survie alors que ses ennemis au Conseil des régents se liguent contre lui.",
-        type: mini,
+        desc: "En 1600 au Japon, Lord Yoshii Toranaga lutte pour sa survie alors que ses ennemis se liguent contre lui.",
+        type: SerieType(kind: .mini),
         cover: "shogun_cover",
         year: 2024,
-        decennie: d2020,
-        genre: .history,
+        decennie: YearSerie(value: "2020"),
+        genre: Genre(type: .history),
         actors: [],
         platform: [disneyPlus],
         nbSaisons: 1,
@@ -124,13 +121,12 @@ var seriesT: [Serie] = [
 
     Serie(
         name: "Attack on Titan",
-        desc:
-            "L'humanité vit retranchée derrière d'immenses murs pour se protéger de prédateurs géants appelés Titans.",
-        type: standard,
+        desc: "L'humanité vit retranchée derrière d'immenses murs pour se protéger des Titans.",
+        type: SerieType(kind: .standard),
         cover: "aot_cover",
         year: 2013,
-        decennie: d2010,
-        genre: .anime,
+        decennie: YearSerie(value: "2010"),
+        genre: Genre(type: .anime),
         actors: [],
         platform: [crunchyroll, netflix],
         nbSaisons: 4,
@@ -139,28 +135,26 @@ var seriesT: [Serie] = [
 
     Serie(
         name: "Black Mirror",
-        desc:
-            "Une série d'anthologie qui explore un futur proche high-tech où les plus belles innovations de l'humanité se heurtent à ses bas instincts.",
-        type: anthology,
+        desc: "Anthologie explorant un futur proche où les technologies se retournent contre l'humanité.",
+        type: SerieType(kind: .anthology),
         cover: "black_mirror_cover",
         year: 2011,
-        decennie: d2010,
-        genre: .sf,
+        decennie: YearSerie(value: "2010"),
+        genre: Genre(type: .sf),
         actors: [],
         platform: [netflix],
         nbSaisons: 6,
         nbEpisodes: 27
     ),
-    // THE BOYS
+
     Serie(
         name: "The Boys",
-        desc:
-            "Dans un monde où les super-héros sont corrompus par la célébrité, un groupe de justiciers entreprend de les abattre.",
-        type: standard,
+        desc: "Des super-héros corrompus sont combattus par un groupe de justiciers.",
+        type: SerieType(kind: .standard),
         cover: "the_boys_cover",
         year: 2019,
-        decennie: d2010,
-        genre: .action,
+        decennie: YearSerie(value: "2010"),
+        genre: Genre(type: .action),
         actors: [],
         platform: [primeVideo],
         nbSaisons: 4,
@@ -170,13 +164,12 @@ var seriesT: [Serie] = [
     // BEEF (ACHARNÉS)
     Serie(
         name: "Beef",
-        desc:
-            "Un incident de la route entre deux inconnus tourne à l'obsession et commence à consumer leur vie petit à petit.",
-        type: mini,
+        desc: "Un incident de la route dégénère et consume progressivement la vie de deux inconnus.",
+        type: SerieType(kind: .mini),
         cover: "beef_cover",
         year: 2023,
-        decennie: d2020,
-        genre: .comedy,
+        decennie: YearSerie(value: "2020"),
+        genre: Genre(type: .comedy),
         actors: [],
         platform: [netflix],
         nbSaisons: 1,
@@ -186,18 +179,18 @@ var seriesT: [Serie] = [
     // TED LASSO
     Serie(
         name: "Ted Lasso",
-        desc:
-            "Un coach de football américain est recruté pour entraîner une équipe de football (soccer) à Londres, sans aucune expérience.",
-        type: standard,
+        desc: "Un coach de football américain entraîne une équipe de football anglaise sans aucune expérience.",
+        type: SerieType(kind: .standard),
         cover: "ted_lasso_cover",
         year: 2020,
-        decennie: d2020,
-        genre: .comedy,
+        decennie: YearSerie(value: "2020"),
+        genre: Genre(type: .comedy),
         actors: [],
         platform: [appleTV],
         nbSaisons: 3,
         nbEpisodes: 34
-    ),
+    )
+
 ]
 
 
