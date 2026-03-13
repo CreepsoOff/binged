@@ -104,7 +104,7 @@ var series: [Serie] = [
         year: 2013,
         decennie: YearSerie(value: "2010"),
         genre: Genre(type: .anime),
-        actors: [],
+        actors: [actors[0]],
         platform: [crunchyroll, netflix],
         nbSaisons: 4,
         nbEpisodes: 88
@@ -164,6 +164,72 @@ var series: [Serie] = [
         platform: [appleTV],
         nbSaisons: 3,
         nbEpisodes: 34
-    )
+    ),
+    Serie(
+            name: "Peaky Blinders",
+            desc: "Une famille de gangsters domine Birmingham.",
+            type: SerieType(kind: .standard),
+            cover: "peaky_cover",
+            year: 2013,
+            decennie: YearSerie(value: "2010"),
+            genre: allGenres.first!,
+            actors: [
+                actors[10],
+                actors[20],
+                actors[21]
+            ],
+            platform: [netflix],
+            nbSaisons: 6,
+            nbEpisodes: 36
+        ),
 
+        Serie(
+            name: "Stranger Things",
+            desc: "Des enfants affrontent des phénomènes surnaturels.",
+            type: SerieType(kind: .standard),
+            cover: "strangerthings_cover",
+            year: 2016,
+            decennie:  YearSerie(value: "2010"),
+            genre: allGenres.first!,
+            actors: [
+                actors[11]
+            ],
+            platform: [netflix],
+            nbSaisons: 4,
+            nbEpisodes: 34
+        ),
+
+        Serie(
+            name: "Breaking Bad",
+            desc: "Un professeur devient fabricant de drogue.",
+            type: SerieType(kind: .standard),
+            cover: "breakingbad_cover",
+            year: 2008,
+            decennie:  YearSerie(value: "2000"),
+            genre: allGenres.first!,
+            actors: [
+                actors[15],
+                actors[16]
+            ],
+            platform: [netflix],
+            nbSaisons: 5,
+            nbEpisodes: 62
+        ),
+
+        Serie(
+            name: "Game of Thrones",
+            desc: "Des familles nobles se battent pour le trône.",
+            type: SerieType(kind: .standard),
+            cover: "got_cover",
+            year: 2011,
+            decennie:  YearSerie(value: "2010"),
+            genre: allGenres.first!,
+            actors: [
+                actors[18],
+                actors[19]
+            ],
+            platform: [hbo],
+            nbSaisons: 8,
+            nbEpisodes: 73
+        )
 ]

@@ -97,5 +97,111 @@ let actors: [Actor] = [
         actorDateOfBirth: Calendar.current.date(from: DateComponents(year: 1988, month: 11, day: 6))!,
         actorCityOfBirth: "Scottsdale",
         actorBio: "Actrice américaine oscarisée pour La La Land. Elle est connue pour sa polyvalence entre comédie, drame et films indépendants."
+    ),
+    Actor(
+            actorFirstName: "Cillian",
+            actorLastName: "Murphy",
+            actorImage: "murphy",
+            actorDateOfBirth: Calendar.current.date(from: DateComponents(year: 1976, month: 5, day: 25))!,
+            actorCityOfBirth: "Douglas",
+            actorBio: "Acteur irlandais célèbre pour son rôle de Thomas Shelby dans Peaky Blinders et pour ses collaborations avec Christopher Nolan."
+        ),
+
+        Actor(
+            actorFirstName: "Anya",
+            actorLastName: "Taylor-Joy",
+            actorImage: "taylorjoy",
+            actorDateOfBirth: Calendar.current.date(from: DateComponents(year: 1996, month: 4, day: 16))!,
+            actorCityOfBirth: "Miami",
+            actorBio: "Actrice révélée par la série Le Jeu de la Dame et par des films comme The Witch et Furiosa."
+        ),
+
+        Actor(
+            actorFirstName: "Pedro",
+            actorLastName: "Pascal",
+            actorImage: "pascal",
+            actorDateOfBirth: Calendar.current.date(from: DateComponents(year: 1975, month: 4, day: 2))!,
+            actorCityOfBirth: "Santiago",
+            actorBio: "Acteur chilien connu pour ses rôles dans The Last of Us, Narcos et The Mandalorian."
+        ),
+
+        Actor(
+            actorFirstName: "Jenna",
+            actorLastName: "Ortega",
+            actorImage: "ortega",
+            actorDateOfBirth: Calendar.current.date(from: DateComponents(year: 2002, month: 9, day: 27))!,
+            actorCityOfBirth: "Coachella Valley",
+            actorBio: "Actrice américaine devenue célèbre grâce à la série Wednesday et à plusieurs films d’horreur."
+        ),
+
+        Actor(
+            actorFirstName: "Millie",
+            actorLastName: "Bobby Brown",
+            actorImage: "millie",
+            actorDateOfBirth: Calendar.current.date(from: DateComponents(year: 2004, month: 2, day: 19))!,
+            actorCityOfBirth: "Marbella",
+            actorBio: "Actrice britannique révélée par son rôle d’Eleven dans Stranger Things."
+        ),
+
+        Actor(
+            actorFirstName: "Henry",
+            actorLastName: "Cavill",
+            actorImage: "cavill",
+            actorDateOfBirth: Calendar.current.date(from: DateComponents(year: 1983, month: 5, day: 5))!,
+            actorCityOfBirth: "Saint Helier",
+            actorBio: "Acteur britannique connu pour Superman et pour son rôle de Geralt dans The Witcher."
+        ),
+
+        Actor(
+            actorFirstName: "Emilia",
+            actorLastName: "Clarke",
+            actorImage: "clarke",
+            actorDateOfBirth: Calendar.current.date(from: DateComponents(year: 1986, month: 10, day: 23))!,
+            actorCityOfBirth: "London",
+            actorBio: "Actrice célèbre pour son rôle de Daenerys Targaryen dans Game of Thrones."
+        ),
+
+        Actor(
+            actorFirstName: "Kit",
+            actorLastName: "Harington",
+            actorImage: "harington",
+            actorDateOfBirth: Calendar.current.date(from: DateComponents(year: 1986, month: 12, day: 26))!,
+            actorCityOfBirth: "London",
+            actorBio: "Acteur britannique connu pour son rôle de Jon Snow dans Game of Thrones."
+        ),
+
+        Actor(
+            actorFirstName: "Bryan",
+            actorLastName: "Cranston",
+            actorImage: "cranston",
+            actorDateOfBirth: Calendar.current.date(from: DateComponents(year: 1956, month: 3, day: 7))!,
+            actorCityOfBirth: "Hollywood",
+            actorBio: "Acteur américain célèbre pour son rôle de Walter White dans Breaking Bad."
+        ),
+
+        Actor(
+            actorFirstName: "Aaron",
+            actorLastName: "Paul",
+            actorImage: "paul",
+            actorDateOfBirth: Calendar.current.date(from: DateComponents(year: 1979, month: 8, day: 27))!,
+            actorCityOfBirth: "Emmett",
+            actorBio: "Acteur américain connu pour son rôle de Jesse Pinkman dans Breaking Bad."
+        ),
+    Actor(
+        actorFirstName: "Paul",
+        actorLastName: "Anderson",
+        actorImage: "anderson",
+        actorDateOfBirth: Calendar.current.date(from: DateComponents(year: 1978, month: 2, day: 12))!,
+        actorCityOfBirth: "London",
+        actorBio: "Acteur britannique connu pour son rôle d’Arthur Shelby dans la série Peaky Blinders."
+    ),
+
+    Actor(
+        actorFirstName: "Helen",
+        actorLastName: "mccrory",
+        actorImage: "mccrory",
+        actorDateOfBirth: Calendar.current.date(from: DateComponents(year: 1968, month: 8, day: 17))!,
+        actorCityOfBirth: "London",
+        actorBio: "Actrice britannique célèbre pour son rôle de Polly Gray dans Peaky Blinders et Narcissa Malefoy dans Harry Potter."
     )
 ]

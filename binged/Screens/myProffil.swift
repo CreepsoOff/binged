@@ -8,6 +8,17 @@
 import SwiftUI
 
 struct myProffil: View {
+    @State private var searchActor = ""
+    var user: User
+    
+    var filteredActors: [Actor] {
+        if searchActor.isEmpty {
+            return user.favoriteActor
+        }
+        return actors.filter {
+            $0.actorFirstName.localizedCaseInsensitiveContains(searchActor)
+        }
+    }
     var body: some View {
         ZStack {
             Color("background")
@@ -63,35 +74,9 @@ struct myProffil: View {
                     .padding(.horizontal, 10)
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        Image("pitt")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 100, height: 100)
-                            .clipShape(Circle())
-                            .shadow(
-                                radius: 3,
-                                x: 5,
-                                y: 5
-                            )
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 50)
-                                    .stroke(.white, lineWidth: 1)
-                            )
-                        Image("stone")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 100, height: 100)
-                            .clipShape(Circle())
-                            .shadow(
-                                radius: 3,
-                                x: 5,
-                                y: 5
-                            )
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 50)
-                                    .stroke(.white, lineWidth: 1)
-                            )
-                            .padding(5)
+//                        ForEach(actors) { actor in
+//                            actorBar(actor: actor)
+//                        }
                     }
                 }
                 Text("Série")
@@ -105,5 +90,5 @@ struct myProffil: View {
 }
 
 #Preview {
-    myProffil()
+    myProffil(user: magalie)
 }

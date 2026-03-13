@@ -13,6 +13,33 @@ struct myFavoris: View {
     @State private var searchSerie = ""
     
     var user: User
+    
+    var filteredGenres: [Genre] {
+            if searchGenre.isEmpty {
+                return user.favoriteGenre
+            }
+            return user.favoriteGenre.filter {
+                $0.name.localizedCaseInsensitiveContains(searchGenre)
+            }
+        }
+        
+        var filteredActors: [Actor] {
+            if searchActor.isEmpty {
+                return user.favoriteActor
+            }
+            return allActors.filter {
+                $0.actorFirstName.localizedCaseInsensitiveContains(searchActor)
+            }
+        }
+        
+        var filteredSeries: [Serie] {
+            if searchSerie.isEmpty {
+                return user.favoriteSerie
+            }
+            return user.favoriteSerie.filter {
+                $0.name.localizedCaseInsensitiveContains(searchSerie)
+            }
+        }
         
     var body: some View {
         ZStack{
@@ -32,7 +59,7 @@ struct myFavoris: View {
                 searchBar(text: $searchGenre)
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(user.favoriteGenre, id: \.id) { genre in
+                        ForEach(filteredGenres, id: \.id) { genre in
                             genreButton(genre: genre.name)
                         }
                     }
@@ -46,7 +73,7 @@ struct myFavoris: View {
                 searchBar(text: $searchActor)
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(user.favoriteActor) { actor in
+                        ForEach(filteredActors) { actor in
                             actorBar(actor: actor)
                         }
                     }
@@ -61,8 +88,8 @@ struct myFavoris: View {
                     iconButton(text: "Mes playlists", icon: "list.number")
                 }
                 searchBar(text: $searchSerie)
-                ForEach(user.favoriteSerie, id: \.id) { genre in
-                    genreButton(genre: genre.name)
+                ForEach(filteredSeries, id: \.id) { serie in
+                    genreButton(genre: serie.name)
                 }
             }
         }

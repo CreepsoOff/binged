@@ -142,13 +142,13 @@ class Serie: Identifiable {
     let year: Int
     let decennie: YearSerie
     let genre: Genre
-    let actors: [ActorSerie?]
+    let actors: [Actor]
     var platform: [Platform]
     var nbSaisons: Int
     var nbEpisodes: Int
     var inProgress: Bool?
     
-    init(id: UUID = UUID(), name: String, desc: String, type: SerieType, cover: String?, year: Int, decennie: YearSerie, genre: Genre, actors: [ActorSerie?], platform: [Platform], nbSaisons: Int, nbEpisodes: Int, inProgress: Bool? = nil) {
+    init(id: UUID = UUID(), name: String, desc: String, type: SerieType, cover: String?, year: Int, decennie: YearSerie, genre: Genre, actors: [Actor], platform: [Platform], nbSaisons: Int, nbEpisodes: Int, inProgress: Bool? = nil) {
         self.id = id
         self.name = name
         self.desc = desc

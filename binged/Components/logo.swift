@@ -14,13 +14,13 @@ struct logo: View {
         Image(icon)
         .resizable()
         .scaledToFill()
-        .frame(width: 50, height: 50)
+        .frame(width: 32, height: 32)
         .clipShape(Circle())
-        .shadow(
-            radius: 3,
-            x: 5,
-            y: 5
-        )
+//        .shadow(
+//            radius: 3,
+//            x: 5,
+//            y: 5
+//        )
         .overlay(
             RoundedRectangle(cornerRadius: 50)
                 .stroke(.white, lineWidth: 1)

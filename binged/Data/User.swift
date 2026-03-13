@@ -19,12 +19,8 @@ var magalie = User(
     picture: "magalie",
     age: 70,
     userBio: "j'adore les séries des années 1990",
-    favoriteGenre: allGenres.filter { [.action, .drama, .fantasy].contains($0.type) },
-    favoriteSerie: series.filter {
-        ["Arcane", "Black Mirror", "The Boys"].contains($0.name)
-    },
-    favoriteActor: actors.filter {
-        ["Brad", "Leonardo", "Scarlett"].contains($0.actorFirstName)
-    },
+    favoriteGenre: [Genre(type: .action)],
+    favoriteSerie: [series[0]],
+    favoriteActor: [actors[0]]
  //   posts: postsMagalie
 )

@@ -16,7 +16,7 @@ struct actorBar: View {
                 Image(actor.actorImage)
                     .resizable()
                     .scaledToFill()
-                    .frame(width: 100, height: 100)
+                    .frame(width: 75, height: 75)
                     .clipShape(Circle())
                     .shadow(
                         radius: 3,
@@ -29,8 +29,10 @@ struct actorBar: View {
                     )
                 Text(actor.actorFirstName)
                     .foregroundColor(.white)
+                    .font(.system(size: 16))
                 Text(actor.actorLastName)
                     .foregroundColor(.white)
+                    .font(.system(size: 16))
             }
         }
     }

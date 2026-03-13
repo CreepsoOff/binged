@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct serieProffil: View {
+    var serie: Serie
+    
     var body: some View {
         ZStack {
             Color("background")
@@ -17,9 +19,10 @@ struct serieProffil: View {
                     Image("peaky_blinders_cover")
                         .resizable()
                         .scaledToFill()
-                        .frame(width:400, height: 200)
+                        .frame(width:400, height: 300)
                     VStack{
-                        Text("Peaky Blinders")
+                        Text(serie.name)
+                            .font(.system(size: 32))
                             .foregroundColor(.white)
                             .font(.largeTitle)
                             .bold()
@@ -27,56 +30,51 @@ struct serieProffil: View {
                         HStack{
                             iconButton(text: "Trailer", icon: "play.fill")
                             Spacer()
-                            logo(icon: "netflix")
-                            logo(icon: "apple")
                             Spacer()
                             iconButton(text: "Ajouter", icon: "plus")
                         }
                     }
                     .padding()
-                    .frame(width: 400, height: 200)
+                    .frame(width: 400, height: 300)
+                    .frame(maxWidth: .infinity)
+                    .background(
+                        LinearGradient(gradient: Gradient(colors: [.black.opacity(0.0), .black.opacity(0.5)]), startPoint: .bottom, endPoint: .top)
+                    )
                 }
+                
+                
+                HStack{
+//                    ForEach{
+//                        (serie.platform) { Platform in
+//                            iconButton(platform: platform)
+//                        }
+//                    }
+                    logo(icon: "netflix")
+
+                    logo(icon: "apple")
+                    Spacer()
+                    iconButton(text: "9,5", icon: "star.fill")
+
+                }
+                .padding(.horizontal, 8)
+                .padding(.top, 8)
                 HStack{
                     Text("Distribution")
                         .foregroundColor(.white)
                         .font(.title2)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(10)
+                        .padding(.vertical, 8)
                         .bold()
-                    iconButton(text: "9,5", icon: "star.fill")
-                        .padding(.top, 10)
                 }
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        Image("pitt")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 100, height: 100)
-                            .clipShape(Circle())
-                            .shadow(
-                                radius: 3,
-                                x: 5,
-                                y: 5
-                            )
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 50)
-                                    .stroke(.white, lineWidth: 1)
-                            )
-                        Image("stone")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 100, height: 100)
-                            .clipShape(Circle())
-                            .shadow(
-                                radius: 3,
-                                x: 5,
-                                y: 5
-                            )
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 50)
-                                    .stroke(.white, lineWidth: 1)
-                            )
-                            .padding(5)
+                        if serie.actors.isEmpty{
+                            Text("il n'y a pas de série")
+                                .foregroundColor(.white)
+                        }
+                        ForEach(serie.actors) { actor in
+                            actorBar(actor: actor)
+                        }
                     }
                 }
                     ZStack{
@@ -89,7 +87,7 @@ struct serieProffil: View {
                                     .font(.title2)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .bold()
-                                Text("Un professeur de chimie atteint d'un cancer s'associe à un ancien élève pour fabriquer et vendre de la méthamphétamine.")
+                                Text(serie.desc)
                                     .foregroundColor(.white)
                                     .font(.title3)
                                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -107,7 +105,8 @@ struct serieProffil: View {
                                         .font(.title2)
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .bold()
-                                    iconButton(text: "Rejoindre le chat", icon: "text.bubble.fill")
+
+                            iconButton(text: "Rejoindre le chat", icon: "text.bubble.fill")
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                 }
                                 chatBubble(chat:"Yvette : sdjkfbksjdvbksjdbv")
@@ -129,5 +128,5 @@ struct serieProffil: View {
     }
 }
 #Preview {
-    serieProffil()
+    serieProffil(serie: series[9])
 }
