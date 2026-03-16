@@ -27,17 +27,10 @@ struct actorBar: View {
                         RoundedRectangle(cornerRadius: 50)
                             .stroke(.white, lineWidth: 1)
                     )
-                Text(actor.actorFirstName)
-                    .foregroundColor(.white)
-                    .font(.system(size: 16))
-                Text(actor.actorLastName)
+                Text(actor.actorName)
                     .foregroundColor(.white)
                     .font(.system(size: 16))
             }
         }
     }
-}
-
-#Preview {
-    actorBar(actor: actors[0])
 }

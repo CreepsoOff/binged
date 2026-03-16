@@ -16,15 +16,16 @@ struct serieProffil: View {
                 .ignoresSafeArea()
             VStack{
                 ZStack(alignment: .topLeading){
-                    Image("peaky_blinders_cover")
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width:400, height: 300)
+                    if let cover = serie.cover {
+                        Image(cover)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width:400, height: 300)
+                    }
                     VStack{
                         Text(serie.name)
                             .font(.system(size: 32))
                             .foregroundColor(.white)
-                            .font(.largeTitle)
                             .bold()
                         Spacer()
                         HStack{
@@ -44,14 +45,11 @@ struct serieProffil: View {
                 
                 
                 HStack{
-//                    ForEach{
-//                        (serie.platform) { Platform in
-//                            iconButton(platform: platform)
-//                        }
-//                    }
-                    logo(icon: "netflix")
-
-                    logo(icon: "apple")
+                    Text("plateforme :")
+                        .foregroundColor(.white)
+                    ForEach(serie.platform, id: \.name) { platform in
+                        logo(icon: platform.icon)
+                    }
                     Spacer()
                     iconButton(text: "9,5", icon: "star.fill")
 
@@ -72,7 +70,7 @@ struct serieProffil: View {
                             Text("il n'y a pas de série")
                                 .foregroundColor(.white)
                         }
-                        ForEach(serie.actors) { actor in
+                        ForEach(serie.actors, id: \.actorName) { actor in
                             actorBar(actor: actor)
                         }
                     }
@@ -106,8 +104,7 @@ struct serieProffil: View {
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .bold()
 
-                            iconButton(text: "Rejoindre le chat", icon: "text.bubble.fill")
-                                        .frame(maxWidth: .infinity, alignment: .leading)
+                            iconButton(text: "Chatter", icon: "text.bubble.fill")
                                 }
                                 chatBubble(chat:"Yvette : sdjkfbksjdvbksjdbv")
                                 chatBubble(chat:"Yvette : sdjkfbksjdvbksjdbv")
@@ -127,6 +124,4 @@ struct serieProffil: View {
         }
     }
 }
-#Preview {
-    serieProffil(serie: series[9])
-}
+
