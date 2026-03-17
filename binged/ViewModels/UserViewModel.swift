@@ -11,8 +11,7 @@ import Observation
 @Observable @MainActor
 class UserViewModel {
 
-    private let apiKey: String =
-        "patnKGmO8SdnHdJuu.56fbd66453984cefbd1b800152e6961547529b65ba18c6cbfdfb838ea9e88c60"
+    private let apiKey: String = Secrets.airtableAPIKey
     private let baseURL = URL(
         string: "https://api.airtable.com/v0/appIztQK14x6MyfL9/User"
     )!

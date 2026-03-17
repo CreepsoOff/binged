@@ -21,28 +21,27 @@ class SerieViewModels {
         
         let reqSeries = createRequest(urlStr: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Serie")
         let reqRoles = createRequest(urlStr: "https://api.airtable.com/v0/appIztQK14x6MyfL9/ActorSerie")
-        
         let reqActors = createRequest(urlStr: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Actor")
-        
         let reqReviews = createRequest(urlStr: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Reviews")
+        let reqPlatforms = createRequest(urlStr: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Platform")
 
         let (dataSeries, _) = try await URLSession.shared.data(for: reqSeries)
         let (dataRoles, _) = try await URLSession.shared.data(for: reqRoles)
         let (dataActors, _) = try await URLSession.shared.data(for: reqActors)
         let (dataReviews, _) = try await URLSession.shared.data(for: reqReviews)
+        let (dataPlatforms, _) = try await URLSession.shared.data(for: reqPlatforms)
 
         let decoder = JSONDecoder()
 
-        // 3. Décodage (On utilise tes structures existantes)
         let decodedSeries = try decoder.decode(SeriesResponse.self, from: dataSeries).records
         let decodedRoles = try decoder.decode(ActorSeriesResponse.self, from: dataRoles).records
-        
-        // 💡 Ici, Swift va utiliser les CodingKeys de CastMember pour comprendre le JSON de "Actor"
         let decodedActors = try decoder.decode(CastMemberResponse.self, from: dataActors).records
-        
         let decodedReviews = try decoder.decode(ReviewResponse.self, from: dataReviews).records
+        let decodedPlatforms = try decoder.decode(PlatformsResponse.self, from: dataPlatforms).records
 
-        // --- MAPPING (Reste inchangé) ---
+        // --- MAPPING ---
+        
+        // A. Dictionnaire des Acteurs
         var dictActors: [String: CastMember] = [:]
         for record in decodedActors {
             dictActors[record.id] = record.fields
@@ -63,18 +62,30 @@ class SerieViewModels {
         for record in decodedReviews {
             dictReviews[record.id] = record.fields
         }
+        
+        // D. Dictionnaire des Plateformes
+        var dictPlatforms: [String: Platform] = [:]
+        for record in decodedPlatforms {
+            dictPlatforms[record.id] = record.fields
+        }
 
-        // D. Remplissage des Séries (Rôles + Reviews)
+        // E. Remplissage final des Séries
         let finalSeries = decodedSeries.map { $0.fields }
         for serie in finalSeries {
+            
             // Mapping des Acteurs
             if let roleIDs = serie.actorIDs {
                 serie.actors = roleIDs.compactMap { dictRoles[$0] }
             }
             
-            // Mapping des Reviews (C'est ce qui manquait !)
+            // Mapping des Reviews
             if let revIDs = serie.reviewIDs {
                 serie.reviews = revIDs.compactMap { dictReviews[$0] }
+            }
+            
+            // Mapping des Plateformes
+            if let platIDs = serie.platformIDs {
+                serie.platform = platIDs.compactMap { dictPlatforms[$0] }
             }
         }
 

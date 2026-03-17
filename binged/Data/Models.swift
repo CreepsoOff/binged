@@ -96,7 +96,6 @@ enum Kind: String, CaseIterable, Codable {
         case .anthology: return "circle.grid.2x2.fill"
         case .docuseries: return "video.badge.waveform.fill"
         case .daily: return "calendar.badge.clock"
-            
         }
     }
 }
@@ -106,12 +105,18 @@ enum Kind: String, CaseIterable, Codable {
 // MARK: - Netflix, Prime Video, Paramount, Crunchyroll, ADN
 struct Platform: Codable, Identifiable {
     var id = UUID()
+    
     let name: String
-    let baseURL: String
     let icon: String
+    let baseURL: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case name, icon, baseURL
+    }
 }
 
 struct PlatformsResponse: Codable { let records: [PlatformRecord] }
+
 struct PlatformRecord: Codable {
     let id: String
     let fields: Platform
@@ -169,6 +174,7 @@ struct ActorSerie: Codable, Identifiable {
 }
 
 struct ActorSeriesResponse: Codable { let records: [ActorSerieRecord] }
+
 struct ActorSerieRecord: Codable {
     let id: String
     let fields: ActorSerie
@@ -192,6 +198,7 @@ class Serie: Codable, Identifiable {
     var nbSaisons: Int
     var nbEpisodes: Int
     var inProgress: Bool?
+    let trailerURL: String?
     
     var actorIDs: [String]?
     var platformIDs: [String]?
@@ -202,13 +209,13 @@ class Serie: Codable, Identifiable {
     var reviews: [ReviewItem] = []
     
     enum CodingKeys: String, CodingKey {
-        case name, desc, type, cover, year, decennie, genre, nbSaisons, nbEpisodes, inProgress
+        case name, desc, type, cover, year, decennie, genre, nbSaisons, nbEpisodes, inProgress, trailerURL
         case actorIDs = "actors"
         case platformIDs = "platform"
         case reviewIDs = "Reviews"
     }
     
-    init(name: String, desc: String, type: Kind, cover: String?, year: Int, decennie: String, genre: GenreType, actors: [ActorSerie] = [], platform: [Platform] = [], reviews: [ReviewItem] = [], nbSaisons: Int, nbEpisodes: Int, inProgress: Bool? = nil) {
+    init(name: String, desc: String, type: Kind, cover: String?, year: Int, decennie: String, genre: GenreType, actors: [ActorSerie] = [], platform: [Platform] = [], reviews: [ReviewItem] = [], nbSaisons: Int, nbEpisodes: Int, inProgress: Bool? = nil, trailerURL: String? = nil) {
         self.name = name
         self.desc = desc
         self.type = type
@@ -222,6 +229,7 @@ class Serie: Codable, Identifiable {
         self.actors = actors
         self.platform = platform
         self.reviews = reviews
+        self.trailerURL = trailerURL
     }
 }
 
@@ -299,12 +307,12 @@ class User: Codable, Identifiable {
     var favoriteActors: [CastMember?] = []
     var playlists: [Playlist?] = []
     var favoriteGenres: [GenreType] {
-            return favoriteGenreStrings?.compactMap { GenreType(rawValue: $0) } ?? []
-        }
+        return favoriteGenreStrings?.compactMap { GenreType(rawValue: $0) } ?? []
+    }
     
     var favoriteActorsSafe: [CastMember] {
-            return favoriteActors.compactMap { $0 }
-        }
+        return favoriteActors.compactMap { $0 }
+    }
     
     enum CodingKeys: String, CodingKey {
         case lastName, firstName, email, userName, age, userBio, picture
@@ -353,7 +361,6 @@ struct ReviewItem: Codable, Identifiable {
     }
 }
 
-// Pour le décodage Airtable
 struct ReviewRecord: Codable {
     let id: String
     let fields: ReviewItem
@@ -362,22 +369,4 @@ struct ReviewRecord: Codable {
 struct ReviewResponse: Codable {
     let records: [ReviewRecord]
 }
-
-
-//struct User: Identifiable, Hashable//, Equatable
-//{
-//    var id = UUID()
-//    var lastName: String?
-//    var firstName: String?
-//    var Username: String
-//    var email: String = ""
-//    var picture: String?
-//    var age: Int
-//    var userBio: String?
-////  var favoriteGenre: [favoriteGenre] = []
-////    var favoriteSeries: [SeriesName?] = []
-////    var favoriteActors: [ActorName?] = []
-////    var posts: [Post?] = []
-//}
-
 

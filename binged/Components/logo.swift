@@ -29,5 +29,5 @@ struct logo: View {
 }
 
 #Preview {
-    logo(icon: "netflix")
+    logo(icon: "netflix_icon")
 }

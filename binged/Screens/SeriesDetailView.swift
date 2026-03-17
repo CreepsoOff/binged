@@ -1,9 +1,14 @@
 import SwiftUI
 
+
 struct SeriesDetailView: View {
     @Environment(\.dismiss) private var dismiss
     let serie: Serie
     let textSecondary = Color.white.opacity(0.6)
+    
+    @State private var showPlaylistPicker = false
+    
+    
 
     var body: some View {
         ZStack {
@@ -26,6 +31,26 @@ struct SeriesDetailView: View {
                                     endPoint: .bottom
                                 )
                             }
+                            .overlay(alignment: .bottom) {
+            
+                                HStack {
+                                    Button {
+                                        /// Fonction pour le trailer à faire
+                                        print("Lancement du trailer pour \(serie.name)")
+                                    } label: {
+                                        iconButton(text: "Trailer", icon: "play.fill")
+                                    }
+                                    
+                                    Spacer()
+                                    
+                                    Button {
+                                        showPlaylistPicker.toggle()
+                                    } label: {
+                                        iconButton(text: "Ajouter", icon: "plus")
+                                    }
+                                }
+                                .padding()
+                            }
                             .clipped()
                     } else {
                         Rectangle()
@@ -37,19 +62,39 @@ struct SeriesDetailView: View {
                     }
 
                     VStack(alignment: .leading) {
-                        // MARK: - 2. TITRE
-                        Text(serie.name)
-                            .font(.largeTitle)
-                            .bold()
-                            .foregroundStyle(.white)
-
-                        // MARK: - 3. MÉTADONNÉES
-                        HStack {
-                            Image(systemName: "star.fill")
-                                .foregroundStyle(.yellow)
-                            Text("9.9")
+                        
+                        // MARK: - 2. TITRE & PLATEFORMES
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(serie.name)
+                                .font(.largeTitle)
                                 .bold()
                                 .foregroundStyle(.white)
+                            
+                            HStack {
+                                Text("Plateformes :")
+                                    .font(.caption)
+                                    .foregroundStyle(textSecondary)
+                                
+                                ForEach(serie.platform) { platform in
+                                    logo(icon: platform.icon)
+                                    
+                                }
+                            }
+                        }
+                        .padding(.bottom, 10)
+                        
+                        // MARK: - 3. MÉTADONNÉES
+                        HStack(spacing: 15) {
+                            HStack(spacing: 4) {
+                                Image(systemName: "star.fill")
+                                    .foregroundStyle(.orange)
+                                Text("9.9")
+                                    .bold()
+                            }
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 5)
+                            .background(.orange.opacity(0.2))
+                            .clipShape(Capsule())
                             
                             Text("• \(String(serie.year)) • \(serie.nbSaisons) \(serie.nbSaisons <= 1 ? "Saison" : "Saisons")")
                                 .foregroundStyle(textSecondary)
@@ -70,6 +115,7 @@ struct SeriesDetailView: View {
                             }
                         }
                         .font(.subheadline)
+                        .foregroundStyle(.white)
                         .padding(.bottom)
 
                         // MARK: - 4. DISTRIBUTION
@@ -85,7 +131,9 @@ struct SeriesDetailView: View {
                                 HStack(alignment: .top) {
                                     ForEach(validActorRoles, id: \.id) { actorRole in
                                         if let currentActor = actorRole.actor {
-                                            NavigationLink(destination: ActorProfileView(actor: currentActor)) {
+                                            NavigationLink {
+                                                ActorProfileView(actor: currentActor)
+                                            } label: {
                                                 VStack {
                                                     Spacer()
                                                     Circle()
@@ -124,7 +172,7 @@ struct SeriesDetailView: View {
                             .padding(.bottom)
                         }
 
-                        // MARK: - 5. SYNOPSIS
+                        // MARK: - 5. SYNOPSIS (Design Écran 2)
                         if !serie.desc.isEmpty {
                             Text("Synopsis")
                                 .font(.title3)
@@ -132,47 +180,61 @@ struct SeriesDetailView: View {
                                 .foregroundStyle(.white)
 
                             Text(serie.desc)
+                                .font(.body)
                                 .foregroundStyle(textSecondary)
                                 .padding()
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .background(Design.cardColor)
-                                .clipShape(.rect(cornerRadius: 20))
+                                .clipShape(RoundedRectangle(cornerRadius: 15))
                                 .padding(.bottom)
                         }
 
-                        // MARK: - 6. CRITIQUES
-                        Text("Critiques")
-                            .font(.title3)
-                            .bold()
-                            .foregroundStyle(.white)
-
-                        VStack {
-                            if serie.reviews.isEmpty {
-                                Text("Soyez le premier à laisser une critique !")
-                                    .font(.caption)
-                                    .italic()
-                                    .foregroundStyle(textSecondary)
-                                    .padding()
-                            } else {
-                                ForEach(serie.reviews) { review in
-                                    HStack(alignment: .top) {
-                                        Text("\(review.user) :")
-                                            .bold()
-                                            .foregroundStyle(.white)
-                                        Text(review.text)
-                                            .foregroundStyle(textSecondary)
-                                        Spacer()
-                                    }
-                                    .padding()
-                                    .background(Design.innerCardColor)
-                                    .clipShape(.rect(cornerRadius: 12))
+                        // MARK: - 6. CRITIQUES & BOUTON CHAT
+                        VStack(alignment: .leading, spacing: 10) {
+                            HStack {
+                                Text("Critiques")
+                                    .font(.title3)
+                                    .bold()
+                                    .foregroundStyle(.white)
+                                
+                                Spacer()
+                                
+                                // BOUTON CHATTER
+                                NavigationLink {
+                                    /// (FAIRE CHAT SERIE ICI)
+                                } label: {
+                                    iconButton(text: "Chatter", icon: "text.bubble.fill")
                                 }
                             }
+
+                            VStack(spacing: 12) {
+                                if serie.reviews.isEmpty {
+                                    Text("Soyez le premier à laisser une critique !")
+                                        .font(.caption)
+                                        .italic()
+                                        .foregroundStyle(textSecondary)
+                                        .padding()
+                                } else {
+                                    ForEach(serie.reviews) { review in
+                                        HStack(alignment: .top) {
+                                            Text("\(review.user) :")
+                                                .bold()
+                                                .foregroundStyle(.white)
+                                            Text(review.text)
+                                                .foregroundStyle(textSecondary)
+                                            Spacer()
+                                        }
+                                        .padding()
+                                        .background(Design.innerCardColor)
+                                        .clipShape(.rect(cornerRadius: 12))
+                                    }
+                                }
+                            }
+                            .padding()
+                            .background(Design.cardColor)
+                            .clipShape(.rect(cornerRadius: 20))
+                            .padding(.bottom, 40)
                         }
-                        .padding()
-                        .background(Design.cardColor)
-                        .clipShape(.rect(cornerRadius: 20))
-                        .padding(.bottom, 40)
                     }
                     .padding(.horizontal)
                 }
@@ -181,6 +243,11 @@ struct SeriesDetailView: View {
             .ignoresSafeArea(edges: .top)
         }
         .navigationBarTitleDisplayMode(.inline)
+        /// Ecran de sélection des playlists (à venir)
+        .sheet(isPresented: $showPlaylistPicker) {
+            Text("Interface de sélection des Playlists (A venir)")
+                .presentationDetents([.medium])
+        }
     }
 }
 
