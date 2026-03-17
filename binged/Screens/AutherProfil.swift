@@ -9,7 +9,9 @@ import SwiftUI
 
 struct AutherProfil: View {
     
-    var user: User
+    @State var user: User
+    @State private var isFollow = false
+    @State var vmuser = UserViewModel()
     
     var body: some View {
         NavigationStack {
@@ -25,30 +27,35 @@ struct AutherProfil: View {
                             AsyncImage(url: url) { image in
                                 image
                                     .resizable()
-                                    .clipShape(Circle())
                                     .scaledToFill()
                             } placeholder: {
                                 ProgressView()
                             }
-                            .frame(width: 100, height: 100)
-
+                            .frame(width: 200, height: 100)
                         }else {
                             Image(systemName : "person.crop.circle")
                                 .font(.system(size: 100))
                         }
-//                            .resizable()
-//                            .scaledToFill()
-//                            .frame(width: 200, height: 220)
-//                            .padding()
+                        Spacer()
                         VStack{
-                            Text("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s")
+                            Text(user.userBio!)
+                                .frame(width: UIScreen.main.bounds.width / 2, height: 100)
                                 .foregroundColor(.white)
                                 .font(.system(size: 16))
-                                .lineLimit(8)
-                            basicButton(text: "Suivre")
+                                .lineLimit(5)
+                            Button(action: {
+                                isFollow.toggle()
+                            }) {
+                                Image(systemName: isFollow ? "person.fill.xmark" : "person.fill.checkmark")
+                                    .padding(8)
+                                    .background(.orange)
+                                    .cornerRadius(20)
+                                    .foregroundColor(.white)
+                            }
                         }
                     }
                     .frame(width: .infinity, height: 220)
+                    
                     VStack(alignment: .leading) {
                         Text("Ces Favoris")
                             .foregroundColor(.white)
@@ -88,7 +95,7 @@ struct AutherProfil: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.horizontal, 10)
                             NavigationLink {
-                                PlaylistsView(user: MockData.colette)
+                                PlaylistsView(user: $user)
                             } label: {
                                 iconButton(text: "Playlist", icon: "book.pages.fill")
                             }
@@ -108,6 +115,12 @@ struct AutherProfil: View {
                         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
                     }
                 }
+            }
+        }.task {
+            do {
+                self.user = try await vmuser.getUserById("rec279AxVMVJ5GrPQ")
+            } catch {
+                print(error)
             }
         }
     }
