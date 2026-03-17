@@ -87,6 +87,7 @@ struct SeriesDetailView: View {
                                         if let currentActor = actorRole.actor {
                                             NavigationLink(destination: ActorProfileView(actor: currentActor)) {
                                                 VStack {
+                                                    Spacer()
                                                     Circle()
                                                         .fill(Design.cardColor)
                                                         .frame(width: 70, height: 70)

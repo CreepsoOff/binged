@@ -37,5 +37,5 @@ struct myFavoris: View {
 }
     
 #Preview {
-    myFavoris(user: .constant(magalie))
+    myFavoris(user: .constant(MockData.magalie))
 }

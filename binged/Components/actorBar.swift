@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct actorBar: View {
-    var actor: Actor
+    var actor: CastMember
     
     var body: some View {
         HStack{
             VStack{
-                Image(actor.actorImage)
+                Image(actor.imageName ?? "netflix_icon")
                     .resizable()
                     .scaledToFill()
                     .frame(width: 75, height: 75)
@@ -27,7 +27,7 @@ struct actorBar: View {
                         RoundedRectangle(cornerRadius: 50)
                             .stroke(.white, lineWidth: 1)
                     )
-                Text(actor.actorName)
+                Text(actor.name)
                     .foregroundColor(.white)
                     .font(.system(size: 16))
             }

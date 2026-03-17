@@ -30,5 +30,5 @@ struct searchSerie: View {
 }
 
 #Preview {
-    searchSerie(user: magalie)
+    searchSerie(user: MockData.magalie)
 }

@@ -49,5 +49,5 @@ struct myProffil: View {
 }
 
 #Preview {
-    myProffil(userConnected: magalie)
+    myProffil(userConnected: MockData.magalie)
 }

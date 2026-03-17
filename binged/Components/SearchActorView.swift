@@ -8,34 +8,48 @@
 import SwiftUI
 
 struct SearchActorView: View {
-    @State private var searchActor = ""
+    @State private var searchText = ""
     @State var vmActor = ActorViewModel()
-    @State var listActors = [Actor]()
+    
+    @State private var listActors: [CastMember] = []
+    
     var user: User
     
-    var filteredActors: [Actor] {
-        if searchActor.isEmpty {
+    var filteredActors: [CastMember] {
+        if searchText.isEmpty {
             return listActors
         }
-        return listActors.filter {
-            $0.actorName.localizedCaseInsensitiveContains(searchActor)
+        return listActors.filter { actor in
+            actor.name.localizedCaseInsensitiveContains(searchText)
         }
     }
+    
     var body: some View {
-        VStack{
-        searchBar(text: $searchActor)
+        VStack {
+            searchBar(text: $searchText)
+            
             ScrollView(showsIndicators: false) {
-                    ForEach(filteredActors, id: \.actorName) { actor in
-                        actorBar(actor: actor)
-                    }
+                // Utilise \.id (le UUID) pour éviter les problèmes si deux acteurs ont le même nom
+                ForEach(filteredActors, id: \.id) { actor in
+                    actorBar(actor: actor)
+                }
             }
-        }.task {
-            if !user.favoriteActor.isEmpty{
-                for actorID in user.favoriteActor{
+        }
+        .task {
+            // 1. On synchronise d'abord avec les données locales du User
+            self.listActors = user.favoriteActorsSafe
+            
+            // 2. Si la liste est vide mais qu'on a des IDs, on charge le reste
+            if self.listActors.isEmpty, let ids = user.favoriteActorIDs {
+                for actorID in ids {
                     do {
-                        self.listActors.append( try await vmActor.getActorById(actorID))
+                        let fetchedActor = try await vmActor.getActorById(actorID)
+                        // On vérifie qu'on ne l'ajoute pas deux fois
+                        if !listActors.contains(where: { $0.id == fetchedActor.id }) {
+                            self.listActors.append(fetchedActor)
+                        }
                     } catch {
-                        print(error)
+                        print("Erreur Airtable Actor: \(error)")
                     }
                 }
             }
@@ -44,5 +58,5 @@ struct SearchActorView: View {
 }
 
 #Preview {
-    SearchActorView(user: magalie)
+    SearchActorView(user: MockData.magalie)
 }

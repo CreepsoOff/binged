@@ -30,7 +30,7 @@ class UserViewModel {
         decoder.dateDecodingStrategy = .iso8601
 
         do {
-            let decoded = try decoder.decode(UserResults.self, from: data)
+            let decoded = try decoder.decode(UserRecord.self, from: data)
             print(decoded.fields)
             return decoded.fields
         } catch {

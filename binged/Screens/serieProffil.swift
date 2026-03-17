@@ -70,8 +70,8 @@ struct serieProffil: View {
                             Text("il n'y a pas de série")
                                 .foregroundColor(.white)
                         }
-                        ForEach(serie.actors, id: \.actorName) { actor in
-                            actorBar(actor: actor)
+                        ForEach(serie.actors, id: \.actor?.name) { actor in
+                            actorBar(actor: actor.actor!)
                         }
                     }
                 }
@@ -125,3 +125,6 @@ struct serieProffil: View {
     }
 }
 
+#Preview {
+    serieProffil(serie: MockData.breakingBad)
+}

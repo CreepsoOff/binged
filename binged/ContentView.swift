@@ -12,7 +12,7 @@ struct ContentView: View {
 //    comedy.isFavorite? = true
     var body: some View {
         VStack {
-            Image(systemName: GenreType.sf.iconName)
+            Image(systemName: GenreType.sf.icon)
                 .font(.system(size: 120))
                 .foregroundStyle(.tint)
             Text(GenreType.sf.rawValue)
