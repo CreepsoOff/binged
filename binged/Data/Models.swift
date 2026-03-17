@@ -8,7 +8,6 @@
 import SwiftUI
 import Observation
 
-enum Genre: String, CaseIterable, Codable, Identifiable {
 
 /// Function to make dates 01/01/1970
 extension Date {
