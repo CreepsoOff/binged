@@ -6,8 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		BF79378D2F62E8C400A95DC5 /* .gitignore in Sources */ = {isa = PBXBuildFile; fileRef = BF79378B2F62E8BE00A95DC5 /* .gitignore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
-		BFD374152F58231C007A0036 /* binged.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = binged.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BF79378B2F62E8BE00A95DC5 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		BFD374152F58231C007A0036 /* binged.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = binged.app; path = "/Users/apprenant105/Documents/binged/build/Debug-iphoneos/binged.app"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -32,17 +37,9 @@
 		BFD3740C2F58231C007A0036 = {
 			isa = PBXGroup;
 			children = (
+				BF79378B2F62E8BE00A95DC5 /* .gitignore */,
 				BFD374172F58231C007A0036 /* binged */,
-				BFD374162F58231C007A0036 /* Products */,
 			);
-			sourceTree = "<group>";
-		};
-		BFD374162F58231C007A0036 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				BFD374152F58231C007A0036 /* binged.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -95,7 +92,7 @@
 			mainGroup = BFD3740C2F58231C007A0036;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = BFD374162F58231C007A0036 /* Products */;
+			productRefGroup = BFD3740C2F58231C007A0036;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -119,6 +116,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BF79378D2F62E8C400A95DC5 /* .gitignore in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
