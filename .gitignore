@@ -38,7 +38,8 @@ xcuserdata/
 # Swift Package Manager (SPM)
 # =========================
 .build/
-
+ binged.xcodeproj/project.xcworkspace/xcuserdata/*
+ binged.xcodeproj/xcuserdata/*
 # =========================
 # Visual Studio Code
 # =========================

@@ -8,6 +8,7 @@
 import SwiftUI
 import Observation
 
+enum Genre: String, CaseIterable, Codable, Identifiable {
 
 /// Function to make dates 01/01/1970
 extension Date {
@@ -58,7 +59,7 @@ enum GenreType: String, CaseIterable, Codable {
     case western = "Western"
     case anime = "Anime"
 
-    var iconName: String {
+    var icon: String {
         switch self {
         case .sf: return "atom"
         case .drama: return "theatermasks.fill"
@@ -81,6 +82,71 @@ enum GenreType: String, CaseIterable, Codable {
         }
     }
 }
+//class Genre {
+//    var id = UUID()
+//    let type: GenreType
+//    var isFavorite: Bool?
+//
+//    var icon: String {
+//        type.iconName
+//    }
+//
+//    var name: String {
+//        type.rawValue
+//    }
+//
+//    init(id: UUID = UUID(), type: GenreType, isFavorite: Bool? = nil) {
+//        self.id = id
+//        self.type = type
+//        self.isFavorite = isFavorite
+//    }
+//
+//}
+//
+//enum GenreType: String, CaseIterable {
+//
+//    case sf = "Sciences Fiction"
+//    case drama = "Drame"
+//    case comedy = "Comédie"
+//    case crime = "Crime"
+//    case fantasy = "Fantastique"
+//    case action = "Action & Aventure"
+//    case thriller = "Thriller"
+//    case horror = "Horreur"
+//    case romance = "Romance"
+//    case documentary = "Documentaire"
+//    case medical = "Médical"
+//    case legal = "Judiciaire"
+//    case animation = "Animation"
+//    case mystery = "Mystère"
+//    case history = "Historique"
+//    case war = "Guerre"
+//    case western = "Western"
+//    case anime = "Anime"
+//
+//    var iconName: String {
+//        switch self {
+//        case .sf: return "atom"
+//        case .drama: return "theatermasks.fill"
+//        case .comedy: return "face.smiling.fill"
+//        case .crime: return "person.badge.shield.checkered.fill"
+//        case .fantasy: return "wand.and.stars"
+//        case .action: return "figure.run"
+//        case .thriller: return "eye.trianglebadge.exclamationmark"
+//        case .horror: return "ghost.fill"
+//        case .romance: return "heart.fill"
+//        case .documentary: return "camera.aperture"
+//        case .medical: return "cross.case.fill"
+//        case .legal: return "gavel.fill"
+//        case .animation: return "paintpalette.fill"
+//        case .mystery: return "magnifyingglass"
+//        case .history: return "columns.2"
+//        case .war: return "shield.fill"
+//        case .western: return "tent.fill"
+//        case .anime: return "mountain.2.fill"
+//        }
+//    }
+//}
 
 
 /// enum Kind = Type
@@ -98,7 +164,7 @@ enum Kind: String, CaseIterable, Codable {
         case .anthology: return "circle.grid.2x2.fill"
         case .docuseries: return "video.badge.waveform.fill"
         case .daily: return "calendar.badge.clock"
-            
+
         }
     }
 }

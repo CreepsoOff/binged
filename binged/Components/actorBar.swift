@@ -7,22 +7,30 @@
 
 import SwiftUI
 
-//struct actorBar: View {
-//    @State var selectedActor: Actor
-//    var participants: [Actor] {
-//        return selectedActor.participants
-//    }
-//    var body: some View {
-//        HStack{
-//            VStack{
-//                Image(selectedActor.actorImage)
-//                Text(selectedActor.actorFirstName)
-//                Text(selectedActor.actorLastName)
-//            }
-//        }
-//    }
-//}
-//
-//#Preview {
-//    actorBar()
-//}
+struct actorBar: View {
+    var actor: Actor
+    
+    var body: some View {
+        HStack{
+            VStack{
+                Image(actor.actorImage)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 75, height: 75)
+                    .clipShape(Circle())
+                    .shadow(
+                        radius: 3,
+                        x: 5,
+                        y: 5
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 50)
+                            .stroke(.white, lineWidth: 1)
+                    )
+                Text(actor.actorName)
+                    .foregroundColor(.white)
+                    .font(.system(size: 16))
+            }
+        }
+    }
+}
