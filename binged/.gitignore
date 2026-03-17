@@ -1,3 +1,5 @@
+ binged.xcodeproj/project.xcworkspace/xcuserdata/*
+ binged.xcodeproj/xcuserdata/*
 # =========================
 # macOS / Système
 # =========================
@@ -70,4 +72,6 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
-Secrets.swift
+Assets.xcassets/
+.DS_Store
+*.xcuserdatad
