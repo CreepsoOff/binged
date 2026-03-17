@@ -19,7 +19,7 @@ struct PlaylistsView: View {
                 VStack {
                     HStack {
                         Text(user.firstName!)
-                            .foregroundColor(.white)
+                            .foregroundStyle(.white)
                             .font(.system(size: 32))
                             .bold()
                         if let url = user.picture?.first?.thumbnails?.large?.url {
@@ -46,7 +46,7 @@ struct PlaylistsView: View {
                     VStack(alignment: .leading) {
                         HStack {
                             Text("Playlits")
-                                .foregroundColor(.white)
+                                .foregroundStyle(.white)
                                 .font(.system(size: 40))
                                 .bold()
                                 .padding(.horizontal, 10)
@@ -56,11 +56,11 @@ struct PlaylistsView: View {
                     ScrollView {
                         HStack {
                             Text("Favories")
-                                .foregroundColor(.white)
+                                .foregroundStyle(.white)
                                 .font(.system(size: 24))
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.horizontal, 10)
-                            sfButton(icon: "plus")
+                            SFButton(icon: "plus")
                         }
                     }
                 }

@@ -1,5 +1,5 @@
 //
-//  searchSerie.swift
+//  SearchSerie.swift
 //  binged
 //
 //  Created by Apprenant 92 on 16/03/2026.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct searchSerie: View {
+struct SearchSerie: View {
     @State private var searchSerie = ""
     
     var user: User
@@ -22,13 +22,13 @@ struct searchSerie: View {
 //    }
     
     var body: some View {
-        searchBar(text: $searchSerie)
+        SearchBar(text: $searchSerie)
 //        ForEach(filteredSeries, id: \.id) { serie in
-//            genreButton(genre: serie.name)
+//            GenreButton(genre: serie.name)
 //        }
     }
 }
 
 #Preview {
-    searchSerie(user: MockData.magalie)
+    SearchSerie(user: MockData.magalie)
 }

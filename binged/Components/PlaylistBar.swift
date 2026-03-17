@@ -20,7 +20,7 @@ struct PlaylistBar: View {
             VStack {
                 HStack {
                     Text("Favories")
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                         .font(.system(size: 24))
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal, 10)
@@ -28,10 +28,11 @@ struct PlaylistBar: View {
                         isAdd.toggle()
                     }) {
                         Image(systemName: isAdd ? "minus" : "plus")
+                            .accessibilityLabel(isAdd ? "Remove from playlist" : "Add to playlist")
                             .padding(isAdd ? 14 : 8)
                             .background(.orange)
-                            .cornerRadius(20)
-                            .foregroundColor(.white)
+                            .clipShape(.rect(cornerRadius: 20))
+                            .foregroundStyle(.white)
                             .clipShape(.circle)
                             .frame(width: 24, height: 24)
                             .padding(.horizontal)

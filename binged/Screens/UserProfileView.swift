@@ -210,6 +210,7 @@ struct UserProfileView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Button(action: { print("Ouvrir les réglages") }) {
                     Image(systemName: "gearshape.fill")
+                        .accessibilityLabel("Réglages")
                         .foregroundStyle(.white)
                 }
             }

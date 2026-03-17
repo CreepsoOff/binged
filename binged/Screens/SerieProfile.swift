@@ -1,5 +1,5 @@
 //
-//  serieProffil.swift
+//  SerieProfile.swift
 //  binged
 //
 //  Created by Apprenant 92 on 10/03/2026.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct serieProffil: View {
+struct SerieProfile: View {
     var serie: Serie
     
     var body: some View {
@@ -25,14 +25,14 @@ struct serieProffil: View {
                     VStack{
                         Text(serie.name)
                             .font(.system(size: 32))
-                            .foregroundColor(.white)
+                            .foregroundStyle(.white)
                             .bold()
                         Spacer()
                         HStack{
-                            iconButton(text: "Trailer", icon: "play.fill")
+                            IconButton(text: "Trailer", icon: "play.fill")
                             Spacer()
                             Spacer()
-                            iconButton(text: "Ajouter", icon: "plus")
+                            IconButton(text: "Ajouter", icon: "plus")
                         }
                     }
                     .padding()
@@ -46,19 +46,19 @@ struct serieProffil: View {
                 
                 HStack{
                     Text("plateforme :")
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                     ForEach(serie.platform, id: \.name) { platform in
-                        logo(icon: platform.icon)
+                        Logo(icon: platform.icon)
                     }
                     Spacer()
-                    iconButton(text: "9,5", icon: "star.fill")
+                    IconButton(text: "9,5", icon: "star.fill")
 
                 }
                 .padding(.horizontal, 8)
                 .padding(.top, 8)
                 HStack{
                     Text("Distribution")
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                         .font(.title2)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.vertical, 8)
@@ -68,10 +68,10 @@ struct serieProffil: View {
                     HStack {
                         if serie.actors.isEmpty{
                             Text("il n'y a pas de série")
-                                .foregroundColor(.white)
+                                .foregroundStyle(.white)
                         }
                         ForEach(serie.actors, id: \.actor?.name) { actor in
-                            actorBar(actor: actor.actor!)
+                            ActorBar(actor: actor.actor!)
                         }
                     }
                 }
@@ -81,12 +81,12 @@ struct serieProffil: View {
                         VStack{
                             VStack(alignment: .leading, spacing: 10){
                                 Text("Synopsis")
-                                    .foregroundColor(.white)
+                                    .foregroundStyle(.white)
                                     .font(.title2)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .bold()
                                 Text(serie.desc)
-                                    .foregroundColor(.white)
+                                    .foregroundStyle(.white)
                                     .font(.title3)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
@@ -94,27 +94,27 @@ struct serieProffil: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(
                                 Color.background1.opacity(50)
-                                    .cornerRadius(10))
+                                    .clipShape(.rect(cornerRadius: 10)))
                             
                             VStack(alignment: .leading, spacing: 10){
                                 HStack{
                                     Text("Critique")
-                                        .foregroundColor(.white)
+                                        .foregroundStyle(.white)
                                         .font(.title2)
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .bold()
 
-                            iconButton(text: "Chatter", icon: "text.bubble.fill")
+                            IconButton(text: "Chatter", icon: "text.bubble.fill")
                                 }
-                                chatBubble(chat:"Yvette : sdjkfbksjdvbksjdbv")
-                                chatBubble(chat:"Yvette : sdjkfbksjdvbksjdbv")
-                                chatBubble(chat:"Yvette : sdjkfbksjdvbksjdbv fekjrnfkj fjklrejnfjk ferjkfnge")
+                                ChatBubble(chat:"Yvette : sdjkfbksjdvbksjdbv")
+                                ChatBubble(chat:"Yvette : sdjkfbksjdvbksjdbv")
+                                ChatBubble(chat:"Yvette : sdjkfbksjdvbksjdbv fekjrnfkj fjklrejnfjk ferjkfnge")
                             }
                             .padding(20)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(
                                 Color.background1.opacity(50)
-                                    .cornerRadius(10))
+                                    .clipShape(.rect(cornerRadius: 10)))
                             
                         }
                         .padding()
@@ -126,5 +126,5 @@ struct serieProffil: View {
 }
 
 #Preview {
-    serieProffil(serie: MockData.breakingBad)
+    SerieProfile(serie: MockData.breakingBad)
 }

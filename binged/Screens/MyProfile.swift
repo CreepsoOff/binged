@@ -1,5 +1,5 @@
 //
-//  myProffil.swift
+//  MyProfile.swift
 //  binged
 //
 //  Created by Apprenant 92 on 06/03/2026.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct myProffil: View {
+struct MyProfile: View {
     @State var vmUser = UserViewModel()
     @State var userConnected: User
     
@@ -17,7 +17,7 @@ struct myProffil: View {
                 .ignoresSafeArea()
             VStack {
                 Text("Mon Profil")
-                    .foregroundColor(.white)
+                    .foregroundStyle(.white)
                     .font(.largeTitle)
                 HStack {
                     Image("pitt")
@@ -29,12 +29,12 @@ struct myProffil: View {
                         Text(
                             "Acteur et producteur américain célèbre pour Fight Club, Seven et Once Upon a Time in Hollywood. Il a remporté plusieurs Oscars."
                         )
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                         .lineLimit(8)
-                        basicButton(text: "Modifier")
+                        BasicButton(text: "Modifier")
                     }
                 }
-                myFavoris(user: self.$userConnected)
+                MyFavoris(user: self.$userConnected)
                     .padding()
 
             }
@@ -49,5 +49,5 @@ struct myProffil: View {
 }
 
 #Preview {
-    myProffil(userConnected: MockData.magalie)
+    MyProfile(userConnected: MockData.magalie)
 }

@@ -1,5 +1,5 @@
 //
-//  logo.swift
+//  Logo.swift
 //  binged
 //
 //  Created by Apprenant 92 on 11/03/2026.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct logo: View {
+struct Logo: View {
     var icon: String
     
     var body: some View {
@@ -29,5 +29,5 @@ struct logo: View {
 }
 
 #Preview {
-    logo(icon: "netflix_icon")
+    Logo(icon: "netflix_icon")
 }

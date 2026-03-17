@@ -1,5 +1,5 @@
 //
-//  chatSerie.swift
+//  ChatSerie.swift
 //  binged
 //
 //  Created by Apprenant 92 on 12/03/2026.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct chatSerie: View {
+struct ChatSerie: View {
     var body: some View {
         ZStack{
             Color("background")
@@ -15,7 +15,7 @@ struct chatSerie: View {
             VStack(alignment: .leading, spacing: 10){
                 
                 Text("Arcane")
-                    .foregroundColor(.white)
+                    .foregroundStyle(.white)
                     .font(.largeTitle)
                     .bold()
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
@@ -33,5 +33,5 @@ struct chatSerie: View {
 }
 
 #Preview {
-    chatSerie()
+    ChatSerie()
 }

@@ -38,7 +38,7 @@ struct SeriesDetailView: View {
                                         /// Fonction pour le trailer à faire
                                         print("Lancement du trailer pour \(serie.name)")
                                     } label: {
-                                        iconButton(text: "Trailer", icon: "play.fill")
+                                        IconButton(text: "Trailer", icon: "play.fill")
                                     }
                                     
                                     Spacer()
@@ -46,7 +46,7 @@ struct SeriesDetailView: View {
                                     Button {
                                         showPlaylistPicker.toggle()
                                     } label: {
-                                        iconButton(text: "Ajouter", icon: "plus")
+                                        IconButton(text: "Ajouter", icon: "plus")
                                     }
                                 }
                                 .padding()
@@ -76,7 +76,7 @@ struct SeriesDetailView: View {
                                     .foregroundStyle(textSecondary)
                                 
                                 ForEach(serie.platform) { platform in
-                                    logo(icon: platform.icon)
+                                    Logo(icon: platform.icon)
                                     
                                 }
                             }
@@ -203,7 +203,7 @@ struct SeriesDetailView: View {
                                 NavigationLink {
                                     /// (FAIRE CHAT SERIE ICI)
                                 } label: {
-                                    iconButton(text: "Chatter", icon: "text.bubble.fill")
+                                    IconButton(text: "Chatter", icon: "text.bubble.fill")
                                 }
                             }
 

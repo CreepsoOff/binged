@@ -1,5 +1,5 @@
 //
-//  chatBubble.swift
+//  ChatBubble.swift
 //  binged
 //
 //  Created by Apprenant 92 on 11/03/2026.
@@ -7,19 +7,19 @@
 
 import SwiftUI
 
-struct chatBubble: View {
+struct ChatBubble: View {
     var chat: String
     
     var body: some View {
         Text(chat)
             .padding(12)
             .background(Color.background)
-            .cornerRadius(20)
-            .foregroundColor(.white)
+            .clipShape(.rect(cornerRadius: 20))
+            .foregroundStyle(.white)
     }
 }
 
 
 #Preview {
-    chatBubble(chat: "Lorem Ipsum")
+    ChatBubble(chat: "Lorem Ipsum")
 }

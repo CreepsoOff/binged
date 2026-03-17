@@ -11,7 +11,7 @@ struct ContentView: View {
     let comedy = GenreType.comedy
 //    comedy.isFavorite? = true
     var body: some View {
-        //AutherProfil()
+        Text("Binged")
     }
 }
 

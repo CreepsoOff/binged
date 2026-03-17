@@ -1,5 +1,5 @@
 //
-//  AutherProfil.swift
+//  AuthorProfile.swift
 //  binged
 //
 //  Created by Apprenant 105 on 12/03/2026.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AutherProfil: View {
+struct AuthorProfile: View {
     
     var user: User
     
@@ -18,7 +18,7 @@ struct AutherProfil: View {
                     .ignoresSafeArea()
                 VStack {
                     Text(user.firstName!)
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                         .font(.system(size: 32))
                     HStack {
                         if let url = user.picture?.first?.thumbnails?.large?.url {
@@ -38,57 +38,57 @@ struct AutherProfil: View {
                         Spacer()
                         VStack{
                             Text(user.userBio!)
-                                .foregroundColor(.white)
+                                .foregroundStyle(.white)
                                 .font(.system(size: 16))
                                 .lineLimit(5)
                             
-                            basicButton(text: "Suivre")
+                            BasicButton(text: "Suivre")
                         }
                         
                     }
                     .frame(width: .infinity, height: 220)
                     VStack(alignment: .leading) {
                         Text("Ces Favoris")
-                            .foregroundColor(.white)
+                            .foregroundStyle(.white)
                             .font(.system(size: 32))
                             .padding(.horizontal, 10)
                     }
                     ScrollView {
                         Text("Genres")
-                            .foregroundColor(.white)
+                            .foregroundStyle(.white)
                             .font(.system(size: 24))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.horizontal, 10)
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 12) {
                                 ForEach(user.favoriteGenres, id:\.rawValue) { genre in
-                                    genreButton(genre: genre.rawValue)
+                                    GenreButton(genre: genre.rawValue)
                                 }
                             }
                         }
                         Text("Acteurs")
-                            .foregroundColor(.white)
+                            .foregroundStyle(.white)
                             .font(.system(size: 24))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.horizontal, 10)
                         ScrollView(.horizontal) {
                             HStack {
                                 ForEach(user.favoriteActorsSafe){ actor in
-                                    actorBar(actor: actor)
+                                    ActorBar(actor: actor)
                                 }
                             }
                         }
                         
                         HStack {
                             Text("Série")
-                                .foregroundColor(.white)
+                                .foregroundStyle(.white)
                                 .font(.title2)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.horizontal, 10)
                             NavigationLink {
                                 PlaylistsView(user: user)
                             } label: {
-                                iconButton(text: "Playlist", icon: "book.pages.fill")
+                                IconButton(text: "Playlist", icon: "book.pages.fill")
                             }
                         }
                         TabView {
@@ -98,7 +98,7 @@ struct AutherProfil: View {
                                     .scaledToFill()
                                     .frame(height: 250)
                                     .clipped()
-                                    .cornerRadius(10)
+                                    .clipShape(.rect(cornerRadius: 10))
                                     .padding(.horizontal)
                             }
                         }
@@ -114,7 +114,7 @@ struct AutherProfil: View {
 
 #Preview("Airtable - Profil Briand") {
     
-    struct AutherProfilPreview: View {
+    struct AuthorProfilePreview: View {
         @State private var userVM = UserViewModel()
         @State private var liveUser: User?
         
@@ -123,7 +123,7 @@ struct AutherProfil: View {
                 Color("background").ignoresSafeArea()
                 
                 if let user = liveUser {
-                    AutherProfil(user: user)
+                    AuthorProfile(user: user)
                         .environment(userVM)
                 } else {
                     ProgressView("Chargement du profil...")
@@ -142,5 +142,5 @@ struct AutherProfil: View {
         }
     }
     
-    return AutherProfilPreview()
+    return AuthorProfilePreview()
 }

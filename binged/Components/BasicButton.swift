@@ -1,5 +1,5 @@
 //
-//  basicButton.swift
+//  BasicButton.swift
 //  binged
 //
 //  Created by Apprenant 92 on 10/03/2026.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct basicButton: View {
+struct BasicButton: View {
     var text: String
     
     var body: some View {
@@ -16,11 +16,11 @@ struct basicButton: View {
         }
                 .padding(8)
                 .background(.orange)
-                .cornerRadius(20)
-                .foregroundColor(.white)
+                .clipShape(.rect(cornerRadius: 20))
+                .foregroundStyle(.white)
     }
 }
 
 #Preview {
-    basicButton(text: "trailer")
+    BasicButton(text: "trailer")
 }

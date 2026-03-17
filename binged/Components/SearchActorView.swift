@@ -26,12 +26,12 @@ struct SearchActorView: View {
     
     var body: some View {
         VStack {
-            searchBar(text: $searchText)
+            SearchBar(text: $searchText)
             
             ScrollView(showsIndicators: false) {
                 // Utilise \.id (le UUID) pour éviter les problèmes si deux acteurs ont le même nom
                 ForEach(filteredActors, id: \.id) { actor in
-                    actorBar(actor: actor)
+                    ActorBar(actor: actor)
                 }
             }
         }
