@@ -1,11 +1,7 @@
 {
   "images" : [
     {
-<<<<<<<< HEAD:binged/Assets.xcassets/actors/yui_ishikawa.imageset/Contents.json
       "filename" : "yui_ishikawa.jpg",
-========
-      "filename" : "Netflix.png",
->>>>>>>> f60979527c48c37063dfce3ea8e1f7ed246275fb:binged/Assets.xcassets/platformIcon/Netflix.imageset/Contents.json
       "idiom" : "universal",
       "scale" : "1x"
     },
