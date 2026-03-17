@@ -19,12 +19,20 @@ var magalie = User(
     picture: "magalie",
     age: 70,
     userBio: "j'adore les séries des années 1990",
-    favoriteGenre: allGenres.filter { [.action, .drama, .fantasy].contains($0.type) },
-    favoriteSerie: series.filter {
-        ["Arcane", "Black Mirror", "The Boys"].contains($0.name)
-    },
-    favoriteActor: actors.filter {
-        ["Brad", "Leonardo", "Scarlett"].contains($0.actorFirstName)
-    },
- //   posts: postsMagalie
+    favoriteGenre: [Genre(type: .action)],
+    favoriteSerie: [series[0]],
+    favoriteActor: [actors[0], actors[1], actors[2]]
+)
+
+var colette = User(
+    lastName: "Fournier",
+    firstName: "Colette",
+    Username: "Colette",
+    email: "colette@lecercle.mali",
+    picture: "colette",
+    age: 71,
+    userBio: "Sportive dans l’âme, je trouve mon équilibre entre la randonnée, la pêche et le plaisir de cuisiner. J’aime les moments simples, en pleine nature ou autour d’un bon repas",
+    favoriteGenre: [Genre(type: .action)],
+    favoriteSerie: [series[0]],
+    favoriteActor: [actors[3], actors[4], actors[5]]
 )

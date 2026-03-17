@@ -166,5 +166,4 @@ var series: [Serie] = [
         nbSaisons: 3,
         nbEpisodes: 34
     )
-
 ]
