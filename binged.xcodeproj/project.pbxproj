@@ -11,8 +11,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BF40F82F2F6988E200F619A9 /* binged.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = binged.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF79378B2F62E8BE00A95DC5 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
-		BFD374152F58231C007A0036 /* binged.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = binged.app; path = "/Users/apprenant105/Documents/binged/build/Debug-iphoneos/binged.app"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -39,6 +39,7 @@
 			children = (
 				BF79378B2F62E8BE00A95DC5 /* .gitignore */,
 				BFD374172F58231C007A0036 /* binged */,
+				BF40F82F2F6988E200F619A9 /* binged.app */,
 			);
 			sourceTree = "<group>";
 		};
@@ -64,7 +65,7 @@
 			packageProductDependencies = (
 			);
 			productName = binged;
-			productReference = BFD374152F58231C007A0036 /* binged.app */;
+			productReference = BF40F82F2F6988E200F619A9 /* binged.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */

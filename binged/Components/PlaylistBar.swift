@@ -39,7 +39,7 @@ struct PlaylistBar: View {
                 }
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(colette.favoriteSerie) { serie in
+                        ForEach(MockData.colette.favoriteSeriesSafe) { serie in
                             Image("the_boys_cover")
                                 .resizable()
                                 .scaledToFill()

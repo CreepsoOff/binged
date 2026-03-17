@@ -306,12 +306,17 @@ class User: Codable, Identifiable {
     var favoriteSeries: [Serie?] = []
     var favoriteActors: [CastMember?] = []
     var playlists: [Playlist?] = []
+    
     var favoriteGenres: [GenreType] {
         return favoriteGenreStrings?.compactMap { GenreType(rawValue: $0) } ?? []
     }
     
     var favoriteActorsSafe: [CastMember] {
         return favoriteActors.compactMap { $0 }
+    }
+    
+    var favoriteSeriesSafe: [Serie] {
+        return favoriteSeries.compactMap { $0 }
     }
     
     enum CodingKeys: String, CodingKey {

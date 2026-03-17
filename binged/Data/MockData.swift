@@ -8,6 +8,12 @@ enum MockData {
     static let mockThumbs = Thumbnails(small: mockThumb, large: mockThumb, full: mockThumb)
     static let mockAttachment = Attachment(id: "att123", url: mockURL, thumbnails: mockThumbs)
     
+    static let mockURLcolette = URL(string: "https://v5.airtableusercontent.com/v3/u/51/51/1773763200000/-Yrw_9xaQFW6SGzio_PMwQ/Iyud4GIUpmDHdmUwDjNPVlkt8rRWakWE8lfsU4CGemjCS921qSr6pn5inXh30Lb77Sx0QVlEZzD2x2__rOG48RDVWwh1jJ2Grvr5VRiPQoLLug3Ws0RZNbAebq1KICi7YWypHlskeTsb_kKvvgIBTSEgYHqEhMTe9tt0L0meDD0/j66TElvDrhqZIXn9JDbs6TyKIRIMAK1Nj608k6KAV9k")!
+    static let mockThumbColette = ThumbnailVariant(url: mockURLcolette)
+    static let mockThumbsColette = Thumbnails(small: mockThumbColette, large: mockThumbColette, full: mockThumbColette)
+    static let mockAttachmentColette = Attachment(id: "att456", url: mockURLcolette, thumbnails: mockThumbsColette)
+    
+    
     // MARK: - 2. Plateformes
     static let netflix = Platform(name: "Netflix", icon: "netflix_icon", baseURL: "https://netflix.com")
     
@@ -113,6 +119,19 @@ enum MockData {
         picture: [mockAttachment],
         favoriteGenreStrings: ["Crime", "Drame", "Thriller"],
         favoriteSeries: [breakingBad, sherlock],
+        favoriteActors: [bryanCranston, aaronPaul],
+        playlists: [playlistHiver]
+    )
+    static let colette = User(
+        lastName: "Briand",
+        firstName: "Colette",
+        email: "colette.briand@email.com",
+        userName: "ColetteB",
+        age: 70,
+        userBio: "Nuggets à volonté !",
+        picture: [mockAttachmentColette],
+        favoriteGenreStrings: ["Action & Aventure"],
+        favoriteSeries: [breakingBad, peakyBlinders],
         favoriteActors: [bryanCranston, aaronPaul],
         playlists: [playlistHiver]
     )

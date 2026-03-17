@@ -10,7 +10,6 @@ import SwiftUI
 struct AutherProfil: View {
     
     var user: User
-    var serie: Serie
     
     var body: some View {
         NavigationStack {
@@ -22,11 +21,25 @@ struct AutherProfil: View {
                         .foregroundColor(.white)
                         .font(.system(size: 32))
                     HStack {
-                        Image(user.picture!)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 200, height: 220)
-                            .padding()
+                        if let url = user.picture?.first?.thumbnails?.large?.url {
+                            AsyncImage(url: url) { image in
+                                image
+                                    .resizable()
+                                    .clipShape(Circle())
+                                    .scaledToFill()
+                            } placeholder: {
+                                ProgressView()
+                            }
+                            .frame(width: 100, height: 100)
+
+                        }else {
+                            Image(systemName : "person.crop.circle")
+                                .font(.system(size: 100))
+                        }
+//                            .resizable()
+//                            .scaledToFill()
+//                            .frame(width: 200, height: 220)
+//                            .padding()
                         VStack{
                             Text("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s")
                                 .foregroundColor(.white)
@@ -62,8 +75,8 @@ struct AutherProfil: View {
                             .padding(.horizontal, 10)
                         ScrollView(.horizontal) {
                             HStack {
-                                ForEach(user.favoriteActor){ index in
-                                    actorBar(actor: index)
+                                ForEach(user.favoriteActorsSafe){ actor in
+                                    actorBar(actor: actor)
                                 }
                             }
                         }
@@ -75,13 +88,13 @@ struct AutherProfil: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.horizontal, 10)
                             NavigationLink {
-                                PlaylistsView(user: colette)
+                                PlaylistsView(user: MockData.colette)
                             } label: {
                                 iconButton(text: "Playlist", icon: "book.pages.fill")
                             }
                         }
                         TabView {
-                            ForEach(user.favoriteSerie) { image in
+                            ForEach(user.favoriteSeriesSafe) { serie in
                                 Image(serie.cover!)
                                     .resizable()
                                     .scaledToFill()
@@ -101,5 +114,5 @@ struct AutherProfil: View {
 }
 
 #Preview {
-    AutherProfil(user: colette, serie: series[0])
+    AutherProfil(user: MockData.colette)
 }
