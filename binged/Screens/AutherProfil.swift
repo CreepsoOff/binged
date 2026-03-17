@@ -25,28 +25,26 @@ struct AutherProfil: View {
                             AsyncImage(url: url) { image in
                                 image
                                     .resizable()
-                                    .clipShape(Circle())
                                     .scaledToFill()
                             } placeholder: {
                                 ProgressView()
                             }
-                            .frame(width: 100, height: 100)
+                            .frame(width: 200, height: 100)
 
                         }else {
                             Image(systemName : "person.crop.circle")
                                 .font(.system(size: 100))
                         }
-//                            .resizable()
-//                            .scaledToFill()
-//                            .frame(width: 200, height: 220)
-//                            .padding()
+                        Spacer()
                         VStack{
-                            Text("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s")
+                            Text(user.userBio!)
                                 .foregroundColor(.white)
                                 .font(.system(size: 16))
-                                .lineLimit(8)
+                                .lineLimit(5)
+                            
                             basicButton(text: "Suivre")
                         }
+                        
                     }
                     .frame(width: .infinity, height: 220)
                     VStack(alignment: .leading) {
@@ -63,9 +61,9 @@ struct AutherProfil: View {
                             .padding(.horizontal, 10)
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 12) {
-                                genreButton(genre: "Action")
-                                genreButton(genre: "Policier")
-                                genreButton(genre: "Romance")
+                                ForEach(user.favoriteGenres, id:\.rawValue) { genre in
+                                    genreButton(genre: genre.rawValue)
+                                }
                             }
                         }
                         Text("Acteurs")
@@ -88,7 +86,7 @@ struct AutherProfil: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.horizontal, 10)
                             NavigationLink {
-                                PlaylistsView(user: MockData.colette)
+                                PlaylistsView(user: user)
                             } label: {
                                 iconButton(text: "Playlist", icon: "book.pages.fill")
                             }
@@ -113,6 +111,36 @@ struct AutherProfil: View {
     }
 }
 
-#Preview {
-    AutherProfil(user: MockData.colette)
+
+#Preview("Airtable - Profil Briand") {
+    
+    struct AutherProfilPreview: View {
+        @State private var userVM = UserViewModel()
+        @State private var liveUser: User?
+        
+        var body: some View {
+            ZStack {
+                Color("background").ignoresSafeArea()
+                
+                if let user = liveUser {
+                    AutherProfil(user: user)
+                        .environment(userVM)
+                } else {
+                    ProgressView("Chargement du profil...")
+                        .tint(.white)
+                        .foregroundStyle(.white)
+                }
+            }
+            .task {
+                do {
+                    let briandID = "rec15VTfdnBrUWmBb"
+                    self.liveUser = try await userVM.getUserById(briandID)
+                } catch {
+                    print("Erreur de chargement dans la Preview : \(error)")
+                }
+            }
+        }
+    }
+    
+    return AutherProfilPreview()
 }

@@ -76,7 +76,7 @@ enum MockData {
         name: "Peaky Blinders",
         desc: "L'épopée d'une famille de gangsters de Birmingham à partir de 1919, menée par le redoutable Tommy Shelby.",
         type: .standard,
-        cover: "peaky_blinders_cover",
+        cover: "peaky_cover",
         year: 2013,
         decennie: "2010s",
         genre: .crime,
