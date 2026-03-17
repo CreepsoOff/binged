@@ -1,3 +1,5 @@
+ binged.xcodeproj/project.xcworkspace/xcuserdata/*
+ binged.xcodeproj/xcuserdata/*
 # =========================
 # macOS / Système
 # =========================
@@ -38,8 +40,7 @@ xcuserdata/
 # Swift Package Manager (SPM)
 # =========================
 .build/
- binged.xcodeproj/project.xcworkspace/xcuserdata/*
- binged.xcodeproj/xcuserdata/*
+
 # =========================
 # Visual Studio Code
 # =========================
@@ -72,3 +73,7 @@ fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
 binged/Secrets.swift
+binged/Assets.xcassets/
+.DS_Store
+*.xcuserdatad
+binged/*.xcuserdatad
