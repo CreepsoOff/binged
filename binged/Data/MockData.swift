@@ -118,6 +118,7 @@ enum MockData {
         userBio: "J'adore les séries des années 1990 et les enquêtes policières !",
         picture: [mockAttachment],
         favoriteGenreStrings: ["Crime", "Drame", "Thriller"],
+        playlistIDs: ["recp6rnl0Vsj0V3Oz", "recNxAIm6HcCZrLgb"],
         favoriteSeries: [breakingBad, sherlock],
         favoriteActors: [bryanCranston, aaronPaul, cillianMurphy],
         playlists: [playlistHiver]

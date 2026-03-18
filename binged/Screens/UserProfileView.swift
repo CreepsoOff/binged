@@ -219,18 +219,16 @@ struct UserProfileView: View {
 }
 
 #Preview {
-    NavigationStack {
-        NavigationLink {
+//    NavigationStack {
+//        NavigationLink {
             UserProfileView(user: MockData.magalie)
-        } label: {
-            Text("User")
-                .padding(64)
-                .background(Design.accentColor)
-                .bold()
-                .foregroundStyle(.black)
-                .clipShape(.rect(cornerRadius: 24))
-        }
-    }
-    .environment(SerieViewModels())
-
+//        } label: {
+//            Text("User")
+//                .padding(64)
+//                .background(Design.accentColor)
+//                .bold()
+//                .foregroundStyle(.black)
+//                .clipShape(.rect(cornerRadius: 24))
+//        }
+//    }
 }

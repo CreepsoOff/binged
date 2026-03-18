@@ -251,25 +251,27 @@ class Playlist: Codable, Identifiable {
     
     var serieIDs: [String]?
     var creatorIDs: [String]?
-    
+    var abonneeIDs: [String]?
     // --- LES VRAIS OBJETS ---
-    var series: [Serie?] = []
+    var series: [Serie]? = []
     var creator: User?
     
     enum CodingKeys: String, CodingKey {
         case name = "Name"
         case serieIDs = "serie"
         case creatorIDs = "creator"
+        case abonneeIDs = "abonnee"
     }
     
-    init(name: String, series: [Serie?] = [], creator: User? = nil) {
+    init(name: String, serieIDs: [String] = [], creatorIDs: [String] = [], abonneeIDs: [String] = [], series: [Serie]? = [], creator: User? = nil) {
         self.name = name
         
         self.series = series
         self.creator = creator
+        self.abonneeIDs = abonneeIDs
         
-        self.serieIDs = nil
-        self.creatorIDs = nil
+        self.serieIDs = serieIDs
+        self.creatorIDs = creatorIDs
     }
 }
 
@@ -324,10 +326,10 @@ class User: Codable, Identifiable {
         case favoriteGenreStrings = "favoriteGenre"
         case favoriteSerieIDs = "favoriteSerie"
         case favoriteActorIDs = "favoriteActor"
-        case playlistIDs = "playlist"
+        case playlistIDs = "myPlaylist"
     }
     
-    init(lastName: String? = nil, firstName: String? = nil, email: String, userName: String, age: Int? = nil, userBio: String? = nil, picture: [Attachment]? = nil, favoriteGenreStrings: [String]? = nil, favoriteSeries: [Serie?] = [], favoriteActors: [CastMember?] = [], playlists: [Playlist?] = []) {
+    init(lastName: String? = nil, firstName: String? = nil, email: String, userName: String, age: Int? = nil, userBio: String? = nil, picture: [Attachment]? = nil, favoriteGenreStrings: [String]? = nil, playlistIDs: [String] = [], favoriteSeries: [Serie?] = [], favoriteActors: [CastMember?] = [], playlists: [Playlist?] = []) {
         self.lastName = lastName
         self.firstName = firstName
         self.email = email
@@ -337,14 +339,13 @@ class User: Codable, Identifiable {
         self.picture = picture
         
         self.favoriteGenreStrings = favoriteGenreStrings
-        
+        self.playlistIDs = playlistIDs
         self.favoriteSeries = favoriteSeries
         self.favoriteActors = favoriteActors
         self.playlists = playlists
         
         self.favoriteSerieIDs = nil
         self.favoriteActorIDs = nil
-        self.playlistIDs = nil
     }
 }
 

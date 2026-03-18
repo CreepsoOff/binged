@@ -79,3 +79,6 @@ binged/Assets.xcassets/
 binged/*.xcuserdatad
 binged/Assets.xcassets/actors/yui_ishikawa.imageset/Contents.json
 binged/Assets.xcassets/platformIcon/Netflix.imageset/Contents.json
+.agents
+.claude
+skills-lock.json

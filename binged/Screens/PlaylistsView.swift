@@ -9,8 +9,9 @@ import SwiftUI
 
 struct PlaylistsView: View {
     
-    var user: User
-    
+    @Binding var user: User
+    @State var vmplaylist = PlayListViewModel()
+    @State var listPl : [Playlist] = []
     var body: some View {
         ZStack {
             Color("background")
@@ -54,14 +55,22 @@ struct PlaylistsView: View {
                         }
                     }
                     ScrollView {
-                        HStack {
-                            Text("Favories")
-                                .foregroundStyle(.white)
-                                .font(.system(size: 24))
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(.horizontal, 10)
-                            SFButton(icon: "plus")
+                        if !listPl.isEmpty {
+                            ForEach(listPl) { playlist in
+                                PlaylistBar(playlist: playlist)
+                            }
                         }
+                    }
+                }
+            }
+        }.task {
+            if let playlistIDs = user.playlistIDs {
+                for plid in playlistIDs {
+                    do {
+                        let p = try await vmplaylist.getPlayListById(plid)
+                        self.listPl.append(p)
+                    } catch {
+                        print(error)
                     }
                 }
             }
@@ -70,5 +79,5 @@ struct PlaylistsView: View {
 }
 
 #Preview {
-    PlaylistsView(user: MockData.magalie)
+    PlaylistsView(user: .constant(MockData.magalie))
 }
