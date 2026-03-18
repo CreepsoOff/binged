@@ -231,4 +231,6 @@ struct UserProfileView: View {
                 .clipShape(.rect(cornerRadius: 24))
         }
     }
+    .environment(SerieViewModels())
+
 }
