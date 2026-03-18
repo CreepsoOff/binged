@@ -2,19 +2,14 @@ import SwiftUI
 
 struct ActorProfileView: View {
     @Environment(\.dismiss) private var dismiss
-    
     @Environment(SerieViewModels.self) private var viewModel
     
     let actor: CastMember
     let textSecondary = Color.white.opacity(0.6)
     
-    var actorSeries: [Serie] {
-        viewModel.series.filter { serie in
-            /// compactMap s'assure de ne pas inclure de "nil"
-            let validActorRoles = serie.actors.compactMap { $0 }
-            return validActorRoles.contains { $0.actor?.name == actor.name }
-        }
-    }
+    // 1. AJOUT : On stocke la série ET le rôle ensemble !
+    @State private var loadedData: [(role: ActorSerie, serie: Serie)] = []
+    @State private var isLoading = true
 
     var body: some View {
         ZStack {
@@ -82,27 +77,33 @@ struct ActorProfileView: View {
                                 .padding(.bottom)
                         }
 
-                        // MARK: - Filmographie
+                        // MARK: - Filmographie (LAZY LOADING)
                         Text("Apparaît dans")
                             .font(.title3)
                             .bold()
                             .foregroundStyle(.white)
 
-                        if actorSeries.isEmpty {
+                        if isLoading {
+                            ProgressView()
+                                .tint(.white)
+                                .padding(.top, 20)
+                                .padding(.bottom, 40)
+                        } else if loadedData.isEmpty {
                             Text("Aucune série répertoriée pour le moment.")
                                 .foregroundStyle(textSecondary)
+                                .padding(.top, 10)
                                 .padding(.bottom, 40)
                         } else {
                             ScrollView(.horizontal) {
                                 HStack(alignment: .top, spacing: 16) {
-                                    ForEach(actorSeries, id: \.id) { serie in
+                                    // On boucle sur notre Tuple
+                                    ForEach(loadedData, id: \.serie.id) { item in
                                         
-                                        NavigationLink
-                                        {
-                                            SeriesDetailView(serie: serie)
+                                        NavigationLink {
+                                            SeriesDetailView(serie: item.serie)
                                         } label: {
                                             VStack(alignment: .leading) {
-                                                if let cover = serie.cover {
+                                                if let cover = item.serie.cover {
                                                     Image(cover)
                                                         .resizable()
                                                         .scaledToFill()
@@ -115,23 +116,20 @@ struct ActorProfileView: View {
                                                         .clipShape(.rect(cornerRadius: 12))
                                                 }
 
-                                                Text(serie.name)
+                                                Text(item.serie.name)
                                                     .font(.caption)
                                                     .bold()
                                                     .foregroundStyle(.white)
                                                     .lineLimit(1)
                                                 
-                                                if let role = serie.actors.compactMap({ $0 }).first(where: { $0.actor?.name == actor.name })?.roleName {
-                                                    Text(role)
-                                                        .font(.caption2)
-                                                        .foregroundStyle(textSecondary)
-                                                        .lineLimit(1)
-                                                }
+                                                // LE RETOUR DU NOM DU RÔLE ! 🎉
+                                                Text(item.role.roleName)
+                                                    .font(.caption2)
+                                                    .foregroundStyle(textSecondary)
+                                                    .lineLimit(1)
                                             }
                                             .frame(width: 120)
                                         }
-                                         
-                                        
                                     }
                                 }
                             }
@@ -142,10 +140,32 @@ struct ActorProfileView: View {
                     .padding(.horizontal)
                 }
             }
-            .scrollIndicators(.hidden)
-            .ignoresSafeArea(edges: .top)
         }
+        .scrollIndicators(.hidden)
+        .ignoresSafeArea(edges: .top)
         
+        // MARK: - 2. MOTEUR DE TÉLÉCHARGEMENT (Cascade)
+        .task {
+            // 1. On parcourt les IDs de "ActorSerie" de l'acteur
+            if let roleIDs = actor.actorSerieIDs {
+                for roleID in roleIDs {
+                    // 2. On télécharge le rôle précis
+                    if let role = try? await viewModel.getRoleById(roleID) {
+                        
+                        // 3. On extrait l'ID de la série depuis le rôle, et on la télécharge
+                        if let serieID = role.serieIDs?.first,
+                           let serie = try? await viewModel.getSerieById(serieID) {
+                            
+                            // 4. On ajoute les deux ensemble pour l'affichage (si la série n'y est pas déjà)
+                            if !loadedData.contains(where: { $0.serie.name == serie.name }) {
+                                loadedData.append((role: role, serie: serie))
+                            }
+                        }
+                    }
+                }
+            }
+            isLoading = false
+        }
     }
 }
 

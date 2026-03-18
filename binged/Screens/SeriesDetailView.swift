@@ -8,7 +8,11 @@ struct SeriesDetailView: View {
     
     @State private var showPlaylistPicker = false
     
+    @State private var serieVM = SerieViewModels()
     
+    @State private var loadedPlatforms: [Platform] = []
+    @State private var loadedReviews: [ReviewItem] = []
+    @State private var loadedRoles: [ActorSerie] = []
 
     var body: some View {
         ZStack {
@@ -32,17 +36,13 @@ struct SeriesDetailView: View {
                                 )
                             }
                             .overlay(alignment: .bottom) {
-            
                                 HStack {
                                     Button {
-                                        /// Fonction pour le trailer à faire
                                         print("Lancement du trailer pour \(serie.name)")
                                     } label: {
                                         IconButton(text: "Trailer", icon: "play.fill")
                                     }
-                                    
                                     Spacer()
-                                    
                                     Button {
                                         showPlaylistPicker.toggle()
                                     } label: {
@@ -75,9 +75,12 @@ struct SeriesDetailView: View {
                                     .font(.caption)
                                     .foregroundStyle(textSecondary)
                                 
-                                ForEach(serie.platform) { platform in
-                                    Logo(icon: platform.icon)
-                                    
+                                if loadedPlatforms.isEmpty && serie.platformIDs != nil {
+                                    ProgressView().scaleEffect(0.7)
+                                } else {
+                                    ForEach(loadedPlatforms) { platform in
+                                        Logo(icon: platform.icon)
+                                    }
                                 }
                             }
                         }
@@ -101,7 +104,6 @@ struct SeriesDetailView: View {
                             
                             if serie.inProgress == true {
                                 Spacer()
-                                
                                 Text("EN COURS")
                                     .font(.system(size: 10, weight: .heavy))
                                     .foregroundStyle(Design.accentColor)
@@ -124,7 +126,7 @@ struct SeriesDetailView: View {
                             .bold()
                             .foregroundStyle(.white)
                         
-                        let validActorRoles = serie.actors.compactMap { $0 }
+                        let validActorRoles = loadedRoles.compactMap { $0 }
                         
                         if !validActorRoles.isEmpty {
                             ScrollView(.horizontal) {
@@ -170,9 +172,11 @@ struct SeriesDetailView: View {
                             }
                             .scrollIndicators(.hidden)
                             .padding(.bottom)
+                        } else if serie.actorIDs != nil {
+                            ProgressView().padding(.bottom)
                         }
 
-                        // MARK: - 5. SYNOPSIS (Design Écran 2)
+                        // MARK: - 5. SYNOPSIS
                         if !serie.desc.isEmpty {
                             Text("Synopsis")
                                 .font(.title3)
@@ -199,7 +203,6 @@ struct SeriesDetailView: View {
                                 
                                 Spacer()
                                 
-                                // BOUTON CHATTER
                                 NavigationLink {
                                     /// (FAIRE CHAT SERIE ICI)
                                 } label: {
@@ -208,14 +211,14 @@ struct SeriesDetailView: View {
                             }
 
                             VStack(spacing: 12) {
-                                if serie.reviews.isEmpty {
+                                if loadedReviews.isEmpty && serie.reviewIDs == nil {
                                     Text("Soyez le premier à laisser une critique !")
                                         .font(.caption)
                                         .italic()
                                         .foregroundStyle(textSecondary)
                                         .padding()
                                 } else {
-                                    ForEach(serie.reviews) { review in
+                                    ForEach(loadedReviews) { review in
                                         HStack(alignment: .top) {
                                             Text("\(review.user) :")
                                                 .bold()
@@ -243,10 +246,42 @@ struct SeriesDetailView: View {
             .ignoresSafeArea(edges: .top)
         }
         .navigationBarTitleDisplayMode(.inline)
-        /// Ecran de sélection des playlists (à venir)
         .sheet(isPresented: $showPlaylistPicker) {
             Text("Interface de sélection des Playlists (A venir)")
                 .presentationDetents([.medium])
+        }
+        
+        // MARK: - (Lazy Loading)
+        .task {
+            // 1. Plateformes
+            if loadedPlatforms.isEmpty, let pIDs = serie.platformIDs {
+                for id in pIDs {
+                    if let p = try? await serieVM.getPlatformById(id) {
+                        loadedPlatforms.append(p)
+                    }
+                }
+            }
+            // 2. Critiques
+            if loadedReviews.isEmpty, let rIDs = serie.reviewIDs {
+                for id in rIDs {
+                    if let r = try? await serieVM.getReviewById(id) {
+                        loadedReviews.append(r)
+                    }
+                }
+            }
+            // 3. Distribution (Rôles + Acteurs réels)
+            if loadedRoles.isEmpty, let roleIDs = serie.actorIDs {
+                for id in roleIDs {
+                    // On va chercher le rôle
+                    if var role = try? await serieVM.getRoleById(id) {
+                        // On va chercher le CastMember lié à ce rôle pour avoir sa photo !
+                        if let actorID = role.actorIDs?.first {
+                            role.actor = try? await serieVM.getActorById(actorID)
+                        }
+                        loadedRoles.append(role)
+                    }
+                }
+            }
         }
     }
 }

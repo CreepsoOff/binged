@@ -15,6 +15,7 @@ struct Logo: View {
         .resizable()
         .scaledToFill()
         .frame(width: 32, height: 32)
+        .background(.white)
         .clipShape(Circle())
 //        .shadow(
 //            radius: 3,
@@ -29,5 +30,8 @@ struct Logo: View {
 }
 
 #Preview {
-    Logo(icon: "netflix_icon")
+    ZStack {
+        Design.bgColor.ignoresSafeArea()
+        Logo(icon: "appletv_icon")
+    }
 }

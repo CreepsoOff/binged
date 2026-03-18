@@ -63,11 +63,11 @@ enum GenreType: String, CaseIterable, Codable {
         case .sf: return "atom"
         case .drama: return "theatermasks.fill"
         case .comedy: return "face.smiling.fill"
-        case .crime: return "person.badge.shield.checkered.fill"
+        case .crime: return "person.badge.shield.checkmark.fill"
         case .fantasy: return "wand.and.stars"
         case .action: return "figure.run"
         case .thriller: return "eye.trianglebadge.exclamationmark"
-        case .horror: return "ghost.fill"
+        case .horror: return "bolt.fill"
         case .romance: return "heart.fill"
         case .documentary: return "camera.aperture"
         case .medical: return "cross.case.fill"
@@ -131,12 +131,17 @@ struct CastMember: Codable, Identifiable {
     var bio: String?
     var dateOfBirthString: String?
     
+    
+    /// AIRTABLE
+    var actorSerieIDs: [String]?
+    
     enum CodingKeys: String, CodingKey {
         case name = "actorName"
         case imageName = "actorImage"
         case cityOfBirth = "actorCityOfBirth"
         case bio = "actorBio"
         case dateOfBirthString = "actorDateOfBirth"
+        case actorSerieIDs = "ActorSerie"
     }
     
     var dateOfBirth: Date {
@@ -166,10 +171,12 @@ struct ActorSerie: Codable, Identifiable {
     var actor: CastMember?
     
     var actorIDs: [String]?
+    var serieIDs: [String]?
     
     enum CodingKeys: String, CodingKey {
         case roleName
         case actorIDs = "actor"
+        case serieIDs = "Serie"
     }
 }
 

@@ -49,7 +49,6 @@ class ActorViewModel {
 
         do {
             let decoded = try decoder.decode(CastMemberRecord.self, from: data)
-            print(decoded.fields)
             return decoded.fields
         } catch {
             print("Échec du décodage:ActorbyID")

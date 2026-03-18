@@ -20,11 +20,24 @@ struct MyProfile: View {
                     .foregroundStyle(.white)
                     .font(.largeTitle)
                 HStack {
-                    Image("pitt")
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 200, height: 200)
-                        .padding()
+                    if let url = userConnected.picture?.first?.thumbnails?.large?.url {
+                        AsyncImage(url: url) { image in
+                            image
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 200, height: 200)
+                                .padding()
+                        } placeholder: {
+                            ProgressView()
+                        }
+                        .frame(width: 200, height: 100)
+
+                    }else {
+                        Image(systemName : "person.crop.circle")
+                            .font(.system(size: 100))
+                    }
+                    
+
                     VStack {
                         Text(
                             "Acteur et producteur américain célèbre pour Fight Club, Seven et Once Upon a Time in Hollywood. Il a remporté plusieurs Oscars."

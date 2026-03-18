@@ -14,6 +14,81 @@ class SerieViewModels {
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         return request
     }
+    
+    
+    func getSerieById(_ id: String) async throws -> Serie {
+        let newURL = URL(string: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Serie/\(id)")!
+        var request = URLRequest(url: newURL)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(Secrets.airtableAPIKey)", forHTTPHeaderField: "Authorization")
+
+        let (data, _) = try await URLSession.shared.data(for: request)
+
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+
+        do {
+            let decoded = try decoder.decode(SerieRecord.self, from: data)
+            return decoded.fields
+        } catch {
+            print("Échec du décodage:userbyID")
+            throw error
+        }
+    }
+    
+    // MARK: - FETCH PAR ID (Lazy Loading)
+        
+        func getPlatformById(_ id: String) async throws -> Platform {
+            let url = URL(string: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Platform/\(id)")!
+            var request = URLRequest(url: url)
+            request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+            let (data, _) = try await URLSession.shared.data(for: request)
+            return try JSONDecoder().decode(PlatformRecord.self, from: data).fields
+        }
+
+        func getReviewById(_ id: String) async throws -> ReviewItem {
+            let url = URL(string: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Reviews/\(id)")!
+            var request = URLRequest(url: url)
+            request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+            let (data, _) = try await URLSession.shared.data(for: request)
+            return try JSONDecoder().decode(ReviewRecord.self, from: data).fields
+        }
+
+        func getRoleById(_ id: String) async throws -> ActorSerie {
+            let url = URL(string: "https://api.airtable.com/v0/appIztQK14x6MyfL9/ActorSerie/\(id)")!
+            var request = URLRequest(url: url)
+            request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+            let (data, _) = try await URLSession.shared.data(for: request)
+            return try JSONDecoder().decode(ActorSerieRecord.self, from: data).fields
+        }
+        
+        func getActorById(_ id: String) async throws -> CastMember {
+            let url = URL(string: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Actor/\(id)")!
+            var request = URLRequest(url: url)
+            request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+            let (data, _) = try await URLSession.shared.data(for: request)
+            
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601
+            return try decoder.decode(CastMemberRecord.self, from: data).fields
+        }
+    
+    // MARK: - FETCH LIGHT (Pour la recherche)
+        func fetchLightSeries() async throws {
+            isLoading = true
+            defer { isLoading = false }
+            
+            // On ne télécharge QUE les séries, pas les acteurs ni les plateformes !
+            let reqSeries = createRequest(urlStr: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Serie")
+            
+            let (dataSeries, _) = try await URLSession.shared.data(for: reqSeries)
+            
+            let decoder = JSONDecoder()
+            let decodedSeries = try decoder.decode(SeriesResponse.self, from: dataSeries).records
+            
+            // On stocke juste les objets de base
+            self.series = decodedSeries.map { $0.fields }
+        }
 
     func fetchSeries() async throws {
         isLoading = true
