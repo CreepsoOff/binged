@@ -8,31 +8,38 @@
 import SwiftUI
 
 struct searchGenre: View {
-    @State private var searchGenre = ""
+    // On renomme la variable d'état pour éviter le conflit avec le nom de la struct
+    @State private var searchText = ""
     var user: User
     
-    var filteredGenres: [Genre] {
-            if searchGenre.isEmpty {
-                return user.favoriteGenre
-            }
-            return user.favoriteGenre.filter {
-                $0.rawValue.localizedCaseInsensitiveContains(searchGenre)
-            }
+    var filteredGenres: [GenreType] {
+        if searchText.isEmpty {
+            // On utilise la nouvelle variable calculée 'favoriteGenres'
+            return user.favoriteGenres
         }
+        return user.favoriteGenres.filter {
+            $0.rawValue.localizedCaseInsensitiveContains(searchText)
+        }
+    }
     
     var body: some View {
-        searchBar(text: $searchGenre)
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack {
-                ForEach(filteredGenres, id: \.rawValue) { genre in
-                    genreButton(genre: genre.rawValue)
+        VStack { // J'ai ajouté un VStack pour bien séparer la searchBar du ScrollView
+            searchBar(text: $searchText) // Modifié ici
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack {
+                    // id: \.self est plus adapté pour un Enum
+                    ForEach(filteredGenres, id: \.self) { genre in
+                        genreButton(genre: genre.rawValue)
+                    }
                 }
+                .padding(.horizontal) // Un peu de padding pour faire respirer la liste
             }
+            Text("a modifier")
         }
-        Text("a modifier")
     }
 }
 
 #Preview {
-    searchGenre(user: magalie)
+    searchGenre(user: MockData.magalie)
 }

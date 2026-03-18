@@ -39,16 +39,8 @@
 			children = (
 				C722A9C42F685F9300125E3A /* Secrets.swift */,
 				BFD374172F58231C007A0036 /* binged */,
-				BFD374162F58231C007A0036 /* Products */,
+				BF40F82F2F6988E200F619A9 /* binged.app */,
 			);
-			sourceTree = "<group>";
-		};
-		BFD374162F58231C007A0036 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				BFD374152F58231C007A0036 /* binged.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -73,7 +65,7 @@
 			packageProductDependencies = (
 			);
 			productName = binged;
-			productReference = BFD374152F58231C007A0036 /* binged.app */;
+			productReference = BF40F82F2F6988E200F619A9 /* binged.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -101,7 +93,7 @@
 			mainGroup = BFD3740C2F58231C007A0036;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = BFD374162F58231C007A0036 /* Products */;
+			productRefGroup = BFD3740C2F58231C007A0036;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (

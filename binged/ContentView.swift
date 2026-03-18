@@ -8,14 +8,10 @@
 import SwiftUI
 
 struct ContentView: View {
+    let comedy = GenreType.comedy
+//    comedy.isFavorite? = true
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Goodbye, world")
-        }
-        .padding()
+        //AutherProfil()
     }
 }
 

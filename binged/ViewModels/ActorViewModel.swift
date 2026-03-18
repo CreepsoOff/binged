@@ -1,5 +1,5 @@
 //
-//  SerieViewModel.swift
+//  ActorViewModel.swift
 //  binged
 //
 //  Created by Yannis on 16/03/2026.
@@ -11,13 +11,12 @@ import Observation
 @Observable @MainActor
 class ActorViewModel {
 
-    private let apiKey: String =
-        "patnKGmO8SdnHdJuu.56fbd66453984cefbd1b800152e6961547529b65ba18c6cbfdfb838ea9e88c60"
+    private let apiKey: String = Secrets.airtableAPIKey
     private let baseURL = URL(
         string: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Actor"
     )!
     
-    func getActorById(_ id: String) async throws -> Actor {
+    func getActorById(_ id: String) async throws -> CastMember {
         let newURL = URL(string: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Actor/\(id)")!
         var request = URLRequest(url: newURL)
         request.httpMethod = "GET"
@@ -49,7 +48,7 @@ class ActorViewModel {
         }
 
         do {
-            let decoded = try decoder.decode(ActorResults.self, from: data)
+            let decoded = try decoder.decode(CastMemberRecord.self, from: data)
             print(decoded.fields)
             return decoded.fields
         } catch {
