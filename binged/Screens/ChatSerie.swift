@@ -25,6 +25,7 @@ struct ChatSerie: View {
                         .scaledToFill()
                         .frame(width: 800, height: 700)
                         .clipped()
+                        .opacity(0.4)
                 }
             }
             .padding()

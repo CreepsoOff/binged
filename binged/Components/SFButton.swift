@@ -14,7 +14,7 @@ struct SFButton: View {
         Image(systemName: icon)
             .padding(8)
             .background(.orange, in: .rect(cornerRadius: 20))
-            .foregroundStyle(.white)
+            .foregroundStyle(Color.background)
     }
 }
 
