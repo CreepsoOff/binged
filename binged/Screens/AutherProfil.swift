@@ -28,6 +28,7 @@ struct AutherProfil: View {
                                 image
                                     .resizable()
                                     .scaledToFill()
+                                    .padding(.horizontal)
                             } placeholder: {
                                 ProgressView()
                             }
@@ -73,7 +74,7 @@ struct AutherProfil: View {
                                 genreButton(genre: "Action")
                                 genreButton(genre: "Policier")
                                 genreButton(genre: "Romance")
-                            }
+                            }.padding(.horizontal, 8)
                         }
                         Text("Acteurs")
                             .foregroundColor(.white)
@@ -86,6 +87,7 @@ struct AutherProfil: View {
                                     actorBar(actor: actor)
                                 }
                             }
+                            .padding(.horizontal, 8)
                         }
                         
                         HStack {
@@ -114,14 +116,16 @@ struct AutherProfil: View {
                         .frame(height: 250)
                         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
                     }
+                    .padding(.horizontal, 8)
                 }
+                .padding(.horizontal, 8)
             }
-        }.task {
-            do {
-                self.user = try await vmuser.getUserById("rec279AxVMVJ5GrPQ")
-            } catch {
-                print(error)
-            }
+//        }.task {
+//            do {
+//                self.user = try await vmuser.getUserById("rec279AxVMVJ5GrPQ")
+//            } catch {
+//                print(error)
+//            }
         }
     }
 }
