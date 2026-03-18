@@ -29,10 +29,15 @@ struct SearchActorView: View {
             SearchBar(text: $searchText)
             
             ScrollView(showsIndicators: false) {
-                // Utilise \.id (le UUID) pour éviter les problèmes si deux acteurs ont le même nom
-                ForEach(filteredActors, id: \.id) { actor in
-                    ActorBar(actor: actor)
+                let columns = Array(repeating: GridItem(.flexible(), spacing: 12), count: 3)
+                
+                LazyVGrid(columns: columns, alignment: .center, spacing: 12) {
+                    ForEach(filteredActors, id: \.id) { actor in
+                        ActorBar(actor: actor)
+                    }
                 }
+                .padding(.horizontal, 16)
+                .frame(maxWidth: .infinity, alignment: .center)
             }
         }
         .task {

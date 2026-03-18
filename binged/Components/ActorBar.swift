@@ -34,3 +34,7 @@ struct ActorBar: View {
         }
     }
 }
+
+#Preview {
+    ActorBar(actor: MockData.bryanCranston)
+}

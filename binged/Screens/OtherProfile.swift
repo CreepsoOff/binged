@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AuthorProfile: View {
+struct OtherProfile: View {
     
     var user: User
     
@@ -114,7 +114,7 @@ struct AuthorProfile: View {
 
 #Preview("Airtable - Profil Briand") {
     
-    struct AuthorProfilePreview: View {
+    struct OtherProfilePreview: View {
         @State private var userVM = UserViewModel()
         @State private var liveUser: User?
         
@@ -123,7 +123,7 @@ struct AuthorProfile: View {
                 Color("background").ignoresSafeArea()
                 
                 if let user = liveUser {
-                    AuthorProfile(user: user)
+                    OtherProfile(user: user)
                         .environment(userVM)
                 } else {
                     ProgressView("Chargement du profil...")
@@ -142,5 +142,5 @@ struct AuthorProfile: View {
         }
     }
     
-    return AuthorProfilePreview()
+    return OtherProfilePreview()
 }

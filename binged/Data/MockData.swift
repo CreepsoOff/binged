@@ -119,7 +119,7 @@ enum MockData {
         picture: [mockAttachment],
         favoriteGenreStrings: ["Crime", "Drame", "Thriller"],
         favoriteSeries: [breakingBad, sherlock],
-        favoriteActors: [bryanCranston, aaronPaul],
+        favoriteActors: [bryanCranston, aaronPaul, cillianMurphy],
         playlists: [playlistHiver]
     )
     static let colette = User(
