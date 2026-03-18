@@ -9,7 +9,7 @@ import SwiftUI
 
 struct OtherProfile: View {
     
-    var user: User
+   @Binding var user: User
     
     var body: some View {
         NavigationStack {
@@ -86,7 +86,7 @@ struct OtherProfile: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.horizontal, 10)
                             NavigationLink {
-                                PlaylistsView(user: user)
+                                PlaylistsView(user: $user)
                             } label: {
                                 IconButton(text: "Playlist", icon: "book.pages.fill")
                             }
@@ -123,7 +123,7 @@ struct OtherProfile: View {
                 Color("background").ignoresSafeArea()
                 
                 if let user = liveUser {
-                    OtherProfile(user: user)
+                    OtherProfile(user: .constant(user))
                         .environment(userVM)
                 } else {
                     ProgressView("Chargement du profil...")
