@@ -13,20 +13,32 @@ struct ActorBar: View {
     var body: some View {
         HStack{
             VStack{
-                Image(actor.imageName ?? "netflix_icon")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 75, height: 75)
-                    .clipShape(Circle())
-                    .shadow(
-                        radius: 3,
-                        x: 5,
-                        y: 5
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 50)
-                            .stroke(.white, lineWidth: 1)
-                    )
+                if let url = actor.imageName.first??.thumbnails?.large?.url {
+                    AsyncImage(url: url) { image in
+                        image
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 75, height: 75)
+                            .clipShape(Circle())
+                            .shadow(
+                                radius: 3,
+                                x: 5,
+                                y: 5
+                            )
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 50)
+                                    .stroke(.white, lineWidth: 1)
+                            )
+                    } placeholder: {
+                        ProgressView()
+                    }
+//                    .frame(width: 200, height: 100)
+                }else {
+                    Image(systemName : "person.crop.circle")
+                        .font(.system(size: 100))
+                }
+                
+                    
                 Text(actor.name)
                     .foregroundStyle(.white)
                     .font(.system(size: 16))

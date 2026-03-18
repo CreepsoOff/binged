@@ -126,7 +126,7 @@ struct CastMember: Codable, Identifiable {
     var id = UUID()
     
     let name: String
-    let imageName: String?
+    let imageName: [Attachment?]
     var cityOfBirth: String?
     var bio: String?
     var dateOfBirthString: String?
@@ -289,7 +289,7 @@ struct PlaylistRecord: Codable {
 }
 
 
-
+// MARK: - Classe USER
 class User: Codable, Identifiable {
     var id = UUID()
     

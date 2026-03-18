@@ -20,7 +20,7 @@ enum MockData {
     // MARK: - 3. Acteurs (CastMember)
     static let bryanCranston = CastMember(
         name: "Bryan Cranston",
-        imageName: "bryan_cranston",
+        imageName: [mockAttachment],
         cityOfBirth: "Hollywood",
         bio: "Acteur de génie, inoubliable dans Malcolm et Breaking Bad.",
         dateOfBirthString: "1956-03-07"
@@ -28,7 +28,7 @@ enum MockData {
     
     static let aaronPaul = CastMember(
         name: "Aaron Paul",
-        imageName: "aaron_paul",
+        imageName: [mockAttachment],
         cityOfBirth: "Emmett",
         bio: "Yeah, Science, bitch!",
         dateOfBirthString: "1979-08-27"
@@ -36,7 +36,7 @@ enum MockData {
     
     static let cillianMurphy = CastMember(
         name: "Cillian Murphy",
-        imageName: "cillian_murphy",
+        imageName: [mockAttachment],
         cityOfBirth: "Douglas",
         bio: "Acteur irlandais charismatique, célèbre pour son rôle de Thomas Shelby.",
         dateOfBirthString: "1976-05-25"
@@ -44,7 +44,7 @@ enum MockData {
     
     static let benedictCumberbatch = CastMember(
         name: "Benedict Cumberbatch",
-        imageName: "benedict_cumberbatch",
+        imageName: [mockAttachment],
         cityOfBirth: "Londres",
         bio: "Acteur britannique mondialement connu pour son interprétation du détective Sherlock Holmes.",
         dateOfBirthString: "1976-07-19"

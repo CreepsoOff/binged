@@ -1,6 +1,5 @@
 import SwiftUI
 
-
 struct SeriesDetailView: View {
     @Environment(\.dismiss) private var dismiss
     let serie: Serie
@@ -8,20 +7,22 @@ struct SeriesDetailView: View {
     
     @State private var showPlaylistPicker = false
     
-    @State private var serieVM = SerieViewModels()
+    // ✅ On garde bien l'Environment pour le Lazy Loading en cascade !
+    @Environment(SerieViewModels.self) private var serieVM
     
     @State private var loadedPlatforms: [Platform] = []
     @State private var loadedReviews: [ReviewItem] = []
     @State private var loadedRoles: [ActorSerie] = []
-
+    
     var body: some View {
         ZStack {
             Design.bgColor.ignoresSafeArea()
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
-                    
+
                     // MARK: - 1. AFFICHE
+                    // (On suppose ici que serie.cover est toujours un String. S'il est passé en [Attachment], remplace ça aussi par un AsyncImage !)
                     if let coverName = serie.cover {
                         Image(coverName)
                             .resizable()
@@ -62,19 +63,19 @@ struct SeriesDetailView: View {
                     }
 
                     VStack(alignment: .leading) {
-                        
+
                         // MARK: - 2. TITRE & PLATEFORMES
                         VStack(alignment: .leading, spacing: 8) {
                             Text(serie.name)
                                 .font(.largeTitle)
                                 .bold()
                                 .foregroundStyle(.white)
-                            
+
                             HStack {
                                 Text("Plateformes :")
                                     .font(.caption)
                                     .foregroundStyle(textSecondary)
-                                
+
                                 if loadedPlatforms.isEmpty && serie.platformIDs != nil {
                                     ProgressView().scaleEffect(0.7)
                                 } else {
@@ -85,7 +86,7 @@ struct SeriesDetailView: View {
                             }
                         }
                         .padding(.bottom, 10)
-                        
+
                         // MARK: - 3. MÉTADONNÉES
                         HStack(spacing: 15) {
                             HStack(spacing: 4) {
@@ -98,10 +99,10 @@ struct SeriesDetailView: View {
                             .padding(.vertical, 5)
                             .background(.orange.opacity(0.2))
                             .clipShape(Capsule())
-                            
+
                             Text("• \(String(serie.year)) • \(serie.nbSaisons) \(serie.nbSaisons <= 1 ? "Saison" : "Saisons")")
                                 .foregroundStyle(textSecondary)
-                            
+
                             if serie.inProgress == true {
                                 Spacer()
                                 Text("EN COURS")
@@ -125,9 +126,9 @@ struct SeriesDetailView: View {
                             .font(.title3)
                             .bold()
                             .foregroundStyle(.white)
-                        
+
                         let validActorRoles = loadedRoles.compactMap { $0 }
-                        
+
                         if !validActorRoles.isEmpty {
                             ScrollView(.horizontal) {
                                 HStack(alignment: .top) {
@@ -142,11 +143,16 @@ struct SeriesDetailView: View {
                                                         .fill(Design.cardColor)
                                                         .frame(width: 70, height: 70)
                                                         .overlay {
-                                                            if let imageName = currentActor.imageName {
-                                                                Image(imageName)
-                                                                    .resizable()
-                                                                    .scaledToFill()
-                                                                    .clipShape(Circle())
+                                                            // ✅ CORRECTION ICI : Utilisation de AsyncImage pour le tableau d'Attachments
+                                                            if let url = currentActor.imageName.first??.thumbnails?.large?.url {
+                                                                AsyncImage(url: url) { image in
+                                                                    image
+                                                                        .resizable()
+                                                                        .scaledToFill()
+                                                                        .clipShape(Circle())
+                                                                } placeholder: {
+                                                                    ProgressView() // Affiche une roue pendant que l'image de l'acteur se télécharge
+                                                                }
                                                             }
                                                         }
                                                         .overlay {
@@ -200,9 +206,9 @@ struct SeriesDetailView: View {
                                     .font(.title3)
                                     .bold()
                                     .foregroundStyle(.white)
-                                
+
                                 Spacer()
-                                
+
                                 NavigationLink {
                                     /// (FAIRE CHAT SERIE ICI)
                                 } label: {
@@ -250,14 +256,16 @@ struct SeriesDetailView: View {
             Text("Interface de sélection des Playlists (A venir)")
                 .presentationDetents([.medium])
         }
-        
+
         // MARK: - (Lazy Loading)
         .task {
             // 1. Plateformes
             if loadedPlatforms.isEmpty, let pIDs = serie.platformIDs {
                 for id in pIDs {
                     if let p = try? await serieVM.getPlatformById(id) {
-                        loadedPlatforms.append(p)
+                        withAnimation {
+                            loadedPlatforms.append(p)
+                        }
                     }
                 }
             }
@@ -265,7 +273,9 @@ struct SeriesDetailView: View {
             if loadedReviews.isEmpty, let rIDs = serie.reviewIDs {
                 for id in rIDs {
                     if let r = try? await serieVM.getReviewById(id) {
-                        loadedReviews.append(r)
+                        withAnimation {
+                            loadedReviews.append(r)
+                        }
                     }
                 }
             }
@@ -278,7 +288,9 @@ struct SeriesDetailView: View {
                         if let actorID = role.actorIDs?.first {
                             role.actor = try? await serieVM.getActorById(actorID)
                         }
-                        loadedRoles.append(role)
+                        withAnimation {
+                            loadedRoles.append(role)
+                        }
                     }
                 }
             }
@@ -288,10 +300,10 @@ struct SeriesDetailView: View {
 
 // MARK: - Preview Live Airtable
 #Preview("Test Live Séries") {
-    
+
     struct LiveSeriesListPreview: View {
         @State private var viewModel = SerieViewModels()
-        
+
         var body: some View {
             NavigationStack {
                 Group {
@@ -321,12 +333,12 @@ struct SeriesDetailView: View {
                                             .fill(Design.cardColor)
                                             .frame(width: 45, height: 65)
                                     }
-                                    
+
                                     VStack(alignment: .leading, spacing: 4) {
                                         Text(serie.name)
                                             .font(.headline)
                                             .foregroundStyle(.primary)
-                                        
+
                                         Text("\(String(serie.year)) • \(serie.genre.rawValue)")
                                             .font(.caption)
                                             .foregroundStyle(.secondary)
@@ -340,16 +352,16 @@ struct SeriesDetailView: View {
                 }
                 .navigationTitle("Séries")
             }
-            .environment(viewModel)
+            .environment(viewModel) // ✅ Super important pour la preview du DetailView
             .task {
                 do {
-                    try await viewModel.fetchSeries()
+                    try await viewModel.fetchLightSeries() // 💡 J'ai mis fetchLightSeries pour que la Preview aille plus vite !
                 } catch {
                     print("Erreur Preview Séries: \(error)")
                 }
             }
         }
     }
-    
+
     return LiveSeriesListPreview()
 }

@@ -19,20 +19,26 @@ struct ActorProfileView: View {
                 VStack(alignment: .leading, spacing: 0) {
 
                     // MARK: - Image de couverture
-                    if let imgName = actor.imageName, !imgName.isEmpty {
-                        Image(imgName)
-                            .resizable()
-                            .scaledToFill()
-                            .containerRelativeFrame(.horizontal)
-                            .frame(height: Design.coverHeight, alignment: .top)
-                            .overlay(alignment: .bottom) {
-                                LinearGradient(
-                                    gradient: Gradient(colors: [.clear, Design.bgColor]),
-                                    startPoint: .center,
-                                    endPoint: .bottom
-                                )
-                            }
-                            .clipped()
+                    if let url = actor.imageName.first??.thumbnails?.large?.url {
+                        AsyncImage(url: url) { image in
+                            image
+                                .resizable()
+                                .scaledToFill()
+                                .containerRelativeFrame(.horizontal)
+                                .frame(height: Design.coverHeight, alignment: .top)
+                                .overlay(alignment: .bottom) {
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [.clear, Design.bgColor]),
+                                        startPoint: .center,
+                                        endPoint: .bottom
+                                    )
+                                }
+                                .clipped()
+
+                        } placeholder: {
+                            ProgressView()
+                        }
+                        .frame(height: Design.coverHeight, alignment: .top)
                     } else {
                         Rectangle()
                             .fill(Design.cardColor)
@@ -170,75 +176,48 @@ struct ActorProfileView: View {
 }
 
 // MARK: - Preview
-#Preview("Test Live Airtable") {
+// MARK: - Preview Lazy Loading
+#Preview("Test Live Airtable - Un Acteur") {
     
-    struct LiveAirtablePreview: View {
+    struct SingleActorPreview: View {
+        // 1. Initialisation du ViewModel
         @State private var viewModel = SerieViewModels()
-        
-        /// Dictionnaire des acteurs reliés à CastMember
-        var allActors: [CastMember] {
-            var uniqueActors: [String: CastMember] = [:]
-            
-            for serie in viewModel.series {
-                let roles = serie.actors.compactMap { $0 }
-                for role in roles {
-                    if let actor = role.actor {
-                        uniqueActors[actor.name] = actor
-                    }
-                }
-            }
-            return Array(uniqueActors.values)
-        }
+        // 2. La variable pour stocker notre acteur cible
+        @State private var liveActor: CastMember?
         
         var body: some View {
             NavigationStack {
-                Group {
-                    if viewModel.isLoading {
+                ZStack {
+                    Design.bgColor.ignoresSafeArea()
+                    
+                    // 3. Affichage conditionnel
+                    if let actor = liveActor {
+                        // On injecte l'environnement pour que la vue puisse faire ses propres fetchs (les séries de l'acteur)
+                        ActorProfileView(actor: actor)
+                            .environment(viewModel)
+                    } else {
                         VStack(spacing: 16) {
                             ProgressView()
-                            Text("Téléchargement depuis Airtable...")
-                                .foregroundStyle(.secondary)
-                        }
-                    } else if allActors.isEmpty {
-                        Text("Aucun acteur trouvé.")
-                            .foregroundStyle(.secondary)
-                    } else {
-                        List(allActors, id: \.id) { actor in
-                            NavigationLink {
-                                ActorProfileView(actor: actor)
-                            } label: {
-                                HStack {
-                                    if let img = actor.imageName, !img.isEmpty {
-                                        Image(img)
-                                            .resizable()
-                                            .scaledToFill()
-                                            .frame(width: 40, height: 40)
-                                            .clipShape(Circle())
-                                    } else {
-                                        Circle()
-                                            .fill(Design.cardColor)
-                                            .frame(width: 40, height: 40)
-                                    }
-                                    
-                                    Text(actor.name)
-                                        .foregroundStyle(.primary)
-                                }
-                            }
+                                .tint(.white)
+                                .scaleEffect(1.5)
+                            Text("Téléchargement de l'acteur...")
+                                .foregroundStyle(.white.opacity(0.6))
                         }
                     }
                 }
-                .navigationTitle("Acteurs (Airtable)")
             }
-            .environment(viewModel)
+            // 4. Le fameux .task pour le FetchByID !
             .task {
                 do {
-                    try await viewModel.fetchSeries()
+                    // Remplace par n'importe quel ID "rec..." d'acteur de ta base Airtable (ici Aaron Paul)
+                    let targetID = "recNqCTo2Rdq9gzAT"
+                    self.liveActor = try await viewModel.getActorById(targetID)
                 } catch {
-                    print("Erreur Airtable dans la Preview : \(error)")
+                    print("Erreur de chargement dans la Preview : \(error)")
                 }
             }
         }
     }
     
-    return LiveAirtablePreview()
+    return SingleActorPreview()
 }
