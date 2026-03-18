@@ -103,6 +103,7 @@ struct SearchSerie: View {
                                         .clipped()
                                         .padding(.horizontal, 4)
                                     Text(serie.name)
+                                        .foregroundStyle(.white)
                                 }
                             }
                         }

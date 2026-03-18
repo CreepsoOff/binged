@@ -17,7 +17,7 @@ struct basicButton: View {
                 .padding(8)
                 .background(.orange)
                 .cornerRadius(20)
-                .foregroundColor(.white)
+                .foregroundColor(.background)
     }
 }
 

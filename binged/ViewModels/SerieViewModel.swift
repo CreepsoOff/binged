@@ -2,18 +2,18 @@
 //  SerieViewModel.swift
 //  binged
 //
-//  Created by Yannis on 16/03/2026.
+//  Created by Apprenant 92 on 18/03/2026.
 //
 
 import Foundation
 import Observation
 
-@Observable @MainActor
-class PlayListViewModel {
-    func getPlayListById(_ id: String) async throws -> Playlist {
+//@Observable @MainActor
+struct SerieViewModel {
+    func getSerieById(_ id: String) async throws -> Serie {
         let newURL = URL(
             string:
-                "https://api.airtable.com/v0/appIztQK14x6MyfL9/Playlist/\(id)"
+                "https://api.airtable.com/v0/appIztQK14x6MyfL9/Serie/\(id)"
         )!
         var request = URLRequest(url: newURL)
         request.httpMethod = "GET"
@@ -28,11 +28,11 @@ class PlayListViewModel {
         decoder.dateDecodingStrategy = .iso8601
 
         do {
-            let decoded = try decoder.decode(PlaylistRecord.self, from: data)
+            let decoded = try decoder.decode(SerieRecord.self, from: data)
             print(decoded.fields)
             return decoded.fields
         } catch {
-            print("Échec du décodage:playlistbyID")
+            print("Échec du décodage: serieByID")
             throw error
         }
     }

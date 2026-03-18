@@ -20,32 +20,30 @@ struct serieProffil: View {
                         Image(cover)
                             .resizable()
                             .scaledToFill()
-                            .frame(width:400, height: 300)
+                            .frame(maxWidth: .infinity, minHeight: 300, maxHeight: 300)
+                            .clipped()
+                            .overlay {
+                                VStack{
+                                    Text(serie.name)
+                                        .font(.system(size: 32))
+                                        .foregroundColor(.white)
+                                        .bold()
+                                    Spacer()
+                                    HStack{
+                                        iconButton(text: "Trailer", icon: "play.fill")
+                                        Spacer()
+                                        iconButton(text: "Ajouter", icon: "plus")
+                                    }
+                                }
+                                .padding()
+                                .background(
+                                    LinearGradient(gradient: Gradient(colors: [.black.opacity(0.0), .black.opacity(0.5)]), startPoint: .bottom, endPoint: .top)
+                                )
+                            }
                     }
-                    VStack{
-                        Text(serie.name)
-                            .font(.system(size: 32))
-                            .foregroundColor(.white)
-                            .bold()
-                        Spacer()
-                        HStack{
-                            iconButton(text: "Trailer", icon: "play.fill")
-                            Spacer()
-                            Spacer()
-                            iconButton(text: "Ajouter", icon: "plus")
-                        }
-                    }
-                    .padding()
-                    .frame(width: 400, height: 300)
-                    .frame(maxWidth: .infinity)
-                    .background(
-                        LinearGradient(gradient: Gradient(colors: [.black.opacity(0.0), .black.opacity(0.5)]), startPoint: .bottom, endPoint: .top)
-                    )
                 }
-                
-                
                 HStack{
-                    Text("plateforme :")
+                    Text("Plateformes :")
                         .foregroundColor(.white)
                     ForEach(serie.platform, id: \.name) { platform in
                         logo(icon: platform.icon)

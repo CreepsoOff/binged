@@ -3,12 +3,12 @@ import Foundation
 enum MockData {
     
     // MARK: - 1. Fausse Image (Airtable Attachment)
-    static let mockURL = URL(string: "https://v5.airtableusercontent.com/v3/u/51/51/1773662400000/lDW9sKbCzHoEusWz3clzeg/bMfJaFqxygsCL7zVTiWicpp-4PoOZm8jDdFblFt9vfwZz5Quf7mXKmpR_f2jnbkjIrO1ReX4YtO-ih6cOIQ61_umscdrHD2o1eph5B-9y4J8wtZ8IL6_6liySTSnhOw1QJtUAt9SQl1Rhs5N3pdNUw/I5vsx-coCwdAiAUvmOAIW6YFhEN8_tvPkdxLv6wJ5RU")!
+    static let mockURL = URL(string: "https://movix.rodeo/avatars/mickey/mickey_avatar_1.png")!
     static let mockThumb = ThumbnailVariant(url: mockURL)
     static let mockThumbs = Thumbnails(small: mockThumb, large: mockThumb, full: mockThumb)
     static let mockAttachment = Attachment(id: "att123", url: mockURL, thumbnails: mockThumbs)
     
-    static let mockURLcolette = URL(string: "https://v5.airtableusercontent.com/v3/u/51/51/1773763200000/-Yrw_9xaQFW6SGzio_PMwQ/Iyud4GIUpmDHdmUwDjNPVlkt8rRWakWE8lfsU4CGemjCS921qSr6pn5inXh30Lb77Sx0QVlEZzD2x2__rOG48RDVWwh1jJ2Grvr5VRiPQoLLug3Ws0RZNbAebq1KICi7YWypHlskeTsb_kKvvgIBTSEgYHqEhMTe9tt0L0meDD0/j66TElvDrhqZIXn9JDbs6TyKIRIMAK1Nj608k6KAV9k")!
+    static let mockURLcolette = URL(string: "https://movix.rodeo/avatars/mickey/mickey_avatar_1.png")!
     static let mockThumbColette = ThumbnailVariant(url: mockURLcolette)
     static let mockThumbsColette = Thumbnails(small: mockThumbColette, large: mockThumbColette, full: mockThumbColette)
     static let mockAttachmentColette = Attachment(id: "att456", url: mockURLcolette, thumbnails: mockThumbsColette)

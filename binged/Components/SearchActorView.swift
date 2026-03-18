@@ -13,6 +13,12 @@ struct SearchActorView: View {
     
     @State private var listActors: [CastMember] = []
     
+    let columns = [
+        GridItem(.flexible()),
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
+    
     var user: User
     
     var filteredActors: [CastMember] {
@@ -30,8 +36,10 @@ struct SearchActorView: View {
             
             ScrollView(showsIndicators: false) {
                 // Utilise \.id (le UUID) pour éviter les problèmes si deux acteurs ont le même nom
-                ForEach(filteredActors, id: \.id) { actor in
-                    actorBar(actor: actor)
+                LazyVGrid(columns: columns, spacing: 20){
+                    ForEach(filteredActors, id: \.id) { actor in
+                        actorBar(actor: actor)
+                    }
                 }
             }
         }

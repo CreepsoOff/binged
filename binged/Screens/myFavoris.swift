@@ -26,7 +26,7 @@ struct myFavoris: View {
                 case 1:
                     SearchActorView(user: user)
                 case 2:
-                    searchSerie(user: user)
+                    SearchSerie(user: user)
                 default:
                 searchGenre(user: user)
                 }
