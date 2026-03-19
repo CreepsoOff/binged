@@ -1,5 +1,5 @@
 //
-//  AuthorProfile.swift
+//  AutherProfil.swift
 //  binged
 //
 //  Created by Apprenant 105 on 12/03/2026.
@@ -7,9 +7,11 @@
 
 import SwiftUI
 
-struct AuthorProfile: View {
+struct AutherProfil: View {
     
-    var user: User
+    @State var user: User
+    @State private var isFollow = false
+    @State var vmuser = UserViewModel()
     
     var body: some View {
         NavigationStack {
@@ -18,7 +20,7 @@ struct AuthorProfile: View {
                     .ignoresSafeArea()
                 VStack {
                     Text(user.firstName!)
-                        .foregroundStyle(.white)
+                        .foregroundColor(.white)
                         .font(.system(size: 32))
                     HStack {
                         if let url = user.picture?.first?.thumbnails?.large?.url {
@@ -26,11 +28,11 @@ struct AuthorProfile: View {
                                 image
                                     .resizable()
                                     .scaledToFill()
+                                    .padding(.horizontal)
                             } placeholder: {
                                 ProgressView()
                             }
                             .frame(width: 200, height: 100)
-
                         }else {
                             Image(systemName : "person.crop.circle")
                                 .font(.system(size: 100))
@@ -38,57 +40,66 @@ struct AuthorProfile: View {
                         Spacer()
                         VStack{
                             Text(user.userBio!)
-                                .foregroundStyle(.white)
+                                .frame(width: UIScreen.main.bounds.width / 2, height: 100)
+                                .foregroundColor(.white)
                                 .font(.system(size: 16))
                                 .lineLimit(5)
-                            
-                            BasicButton(text: "Suivre")
+                            Button(action: {
+                                isFollow.toggle()
+                            }) {
+                                Image(systemName: isFollow ? "person.fill.xmark" : "person.fill.checkmark")
+                                    .padding(8)
+                                    .background(.orange)
+                                    .cornerRadius(20)
+                                    .foregroundColor(.white)
+                            }
                         }
-                        
                     }
                     .frame(width: .infinity, height: 220)
+                    
                     VStack(alignment: .leading) {
                         Text("Ces Favoris")
-                            .foregroundStyle(.white)
+                            .foregroundColor(.white)
                             .font(.system(size: 32))
                             .padding(.horizontal, 10)
                     }
                     ScrollView {
                         Text("Genres")
-                            .foregroundStyle(.white)
+                            .foregroundColor(.white)
                             .font(.system(size: 24))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.horizontal, 10)
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 12) {
-                                ForEach(user.favoriteGenres, id:\.rawValue) { genre in
-                                    GenreButton(genre: genre.rawValue)
-                                }
-                            }
+                                genreButton(genre: "Action")
+                                genreButton(genre: "Policier")
+                                genreButton(genre: "Romance")
+                            }.padding(.horizontal, 8)
                         }
                         Text("Acteurs")
-                            .foregroundStyle(.white)
+                            .foregroundColor(.white)
                             .font(.system(size: 24))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.horizontal, 10)
                         ScrollView(.horizontal) {
                             HStack {
                                 ForEach(user.favoriteActorsSafe){ actor in
-                                    ActorBar(actor: actor)
+                                    actorBar(actor: actor)
                                 }
                             }
+                            .padding(.horizontal, 8)
                         }
                         
                         HStack {
                             Text("Série")
-                                .foregroundStyle(.white)
+                                .foregroundColor(.white)
                                 .font(.title2)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.horizontal, 10)
                             NavigationLink {
-                                PlaylistsView(user: user)
+                                PlaylistsView(user: $user)
                             } label: {
-                                IconButton(text: "Playlist", icon: "book.pages.fill")
+                                iconButton(text: "Playlist", icon: "book.pages.fill")
                             }
                         }
                         TabView {
@@ -98,49 +109,27 @@ struct AuthorProfile: View {
                                     .scaledToFill()
                                     .frame(height: 250)
                                     .clipped()
-                                    .clipShape(.rect(cornerRadius: 10))
+                                    .cornerRadius(10)
                                     .padding(.horizontal)
                             }
                         }
                         .frame(height: 250)
                         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
                     }
+                    .padding(.horizontal, 8)
                 }
+                .padding(.horizontal, 8)
             }
+//        }.task {
+//            do {
+//                self.user = try await vmuser.getUserById("rec279AxVMVJ5GrPQ")
+//            } catch {
+//                print(error)
+//            }
         }
     }
 }
 
-
-#Preview("Airtable - Profil Briand") {
-    
-    struct AuthorProfilePreview: View {
-        @State private var userVM = UserViewModel()
-        @State private var liveUser: User?
-        
-        var body: some View {
-            ZStack {
-                Color("background").ignoresSafeArea()
-                
-                if let user = liveUser {
-                    AuthorProfile(user: user)
-                        .environment(userVM)
-                } else {
-                    ProgressView("Chargement du profil...")
-                        .tint(.white)
-                        .foregroundStyle(.white)
-                }
-            }
-            .task {
-                do {
-                    let briandID = "rec15VTfdnBrUWmBb"
-                    self.liveUser = try await userVM.getUserById(briandID)
-                } catch {
-                    print("Erreur de chargement dans la Preview : \(error)")
-                }
-            }
-        }
-    }
-    
-    return AuthorProfilePreview()
+#Preview {
+    AutherProfil(user: MockData.colette)
 }

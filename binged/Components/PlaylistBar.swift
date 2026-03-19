@@ -12,6 +12,7 @@ struct PlaylistBar: View {
     //    var user: User
     //    var serie: [Serie]
     @State private var isAdd = false
+    var playlist: Playlist
     
     var body: some View {
         ZStack {
@@ -19,8 +20,8 @@ struct PlaylistBar: View {
                 .ignoresSafeArea()
             VStack {
                 HStack {
-                    Text("Favories")
-                        .foregroundStyle(.white)
+                    Text(playlist.name)
+                        .foregroundColor(.white)
                         .font(.system(size: 24))
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal, 10)
@@ -28,11 +29,10 @@ struct PlaylistBar: View {
                         isAdd.toggle()
                     }) {
                         Image(systemName: isAdd ? "minus" : "plus")
-                            .accessibilityLabel(isAdd ? "Remove from playlist" : "Add to playlist")
                             .padding(isAdd ? 14 : 8)
                             .background(.orange)
-                            .clipShape(.rect(cornerRadius: 20))
-                            .foregroundStyle(.white)
+                            .cornerRadius(20)
+                            .foregroundColor(.white)
                             .clipShape(.circle)
                             .frame(width: 24, height: 24)
                             .padding(.horizontal)
@@ -41,10 +41,10 @@ struct PlaylistBar: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         ForEach(MockData.colette.favoriteSeriesSafe) { serie in
-                            Image("the_boys_cover")
+                            Image(serie.cover!)
                                 .resizable()
                                 .scaledToFill()
-                                .frame(width: 85, height: 110)
+                                .frame(width: 100, height: 150)
                                 .clipped()
                                 .padding(.horizontal, 4)
                         }
@@ -56,6 +56,4 @@ struct PlaylistBar: View {
     }
 }
 
-#Preview {
-    PlaylistBar()
-}
+

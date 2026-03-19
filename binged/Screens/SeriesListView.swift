@@ -17,7 +17,7 @@ struct SeriesListView: View {
                         VStack(alignment: .leading, spacing: 6) {
                             Text(serie.name)
                                 .font(.headline)
-                                .foregroundStyle(.primary)
+                                .foregroundColor(.primary)
                             
                             if !serie.actors.isEmpty {
                                 Text("Acteurs :")
@@ -27,12 +27,12 @@ struct SeriesListView: View {
                                 ForEach(serie.actors.compactMap { $0 }) { role in
                                     Text("🎭 \(role.actor?.name ?? "Inconnu") (rôle : \(role.roleName))")
                                         .font(.caption)
-                                        .foregroundStyle(.secondary)
+                                        .foregroundColor(.secondary)
                                 }
                             } else {
                                 Text("Aucun acteur trouvé")
                                     .font(.caption)
-                                    .foregroundStyle(.gray)
+                                    .foregroundColor(.gray)
                                     .italic()
                             }
                         }

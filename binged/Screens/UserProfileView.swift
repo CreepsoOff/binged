@@ -210,7 +210,6 @@ struct UserProfileView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Button(action: { print("Ouvrir les réglages") }) {
                     Image(systemName: "gearshape.fill")
-                        .accessibilityLabel("Réglages")
                         .foregroundStyle(.white)
                 }
             }
@@ -219,16 +218,16 @@ struct UserProfileView: View {
 }
 
 #Preview {
-    NavigationStack {
-        NavigationLink {
+//    NavigationStack {
+//        NavigationLink {
             UserProfileView(user: MockData.magalie)
-        } label: {
-            Text("User")
-                .padding(64)
-                .background(Design.accentColor)
-                .bold()
-                .foregroundStyle(.black)
-                .clipShape(.rect(cornerRadius: 24))
-        }
-    }
+//        } label: {
+//            Text("User")
+//                .padding(64)
+//                .background(Design.accentColor)
+//                .bold()
+//                .foregroundStyle(.black)
+//                .clipShape(.rect(cornerRadius: 24))
+//        }
+//    }
 }

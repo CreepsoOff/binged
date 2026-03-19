@@ -1,5 +1,5 @@
 //
-//  SearchBar.swift
+//  searchBar.swift
 //  binged
 //
 //  Created by Apprenant 92 on 11/03/2026.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SearchBar: View {
+struct searchBar: View {
     @Binding var text: String
 
     var body: some View {
@@ -19,11 +19,11 @@ struct SearchBar: View {
         }
         .padding(10)
         .background(Color(.systemGray6))
-        .clipShape(.rect(cornerRadius: 10))
+        .cornerRadius(10)
         .padding(.horizontal, 20)
     }
 }
 
 #Preview {
-    SearchBar(text: .constant("Genre"))
+    searchBar(text: .constant("Genre"))
 }

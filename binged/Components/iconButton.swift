@@ -1,5 +1,5 @@
 //
-//  IconButton.swift
+//  iconButton.swift
 //  binged
 //
 //  Created by Apprenant 92 on 10/03/2026.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct IconButton: View {
+struct iconButton: View {
     var text: String
     var icon: String
 
@@ -19,11 +19,11 @@ struct IconButton: View {
         .font(.system(size: 16))
         .padding(8)
         .background(.orange)
-        .clipShape(.rect(cornerRadius: 20))
-        .foregroundStyle(.white)
+        .cornerRadius(20)
+        .foregroundColor(.background)
     }
 }
 
 #Preview {
-    IconButton(text: "trailer", icon: "play.fill")
+    iconButton(text: "trailer", icon: "play.fill")
 }

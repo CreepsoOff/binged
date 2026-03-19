@@ -1,5 +1,5 @@
 //
-//  SearchGenre.swift
+//  searchGenre.swift
 //  binged
 //
 //  Created by Apprenant 92 on 13/03/2026.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SearchGenre: View {
+struct searchGenre: View {
     // On renomme la variable d'état pour éviter le conflit avec le nom de la struct
     @State private var searchText = ""
     var user: User
@@ -23,14 +23,14 @@ struct SearchGenre: View {
     }
     
     var body: some View {
-        VStack { // J'ai ajouté un VStack pour bien séparer la SearchBar du ScrollView
-            SearchBar(text: $searchText) // Modifié ici
+        VStack { // J'ai ajouté un VStack pour bien séparer la searchBar du ScrollView
+            searchBar(text: $searchText) // Modifié ici
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
                     // id: \.self est plus adapté pour un Enum
                     ForEach(filteredGenres, id: \.self) { genre in
-                        GenreButton(genre: genre.rawValue)
+                        genreButton(genre: genre.rawValue)
                     }
                 }
                 .padding(.horizontal) // Un peu de padding pour faire respirer la liste
@@ -41,5 +41,5 @@ struct SearchGenre: View {
 }
 
 #Preview {
-    SearchGenre(user: MockData.magalie)
+    searchGenre(user: MockData.magalie)
 }

@@ -1,5 +1,5 @@
 //
-//  MyFavoris.swift
+//  myFavoris.swift
 //  binged
 //
 //  Created by Apprenant 92 on 11/03/2026.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MyFavoris: View {
+struct myFavoris: View {
     @State private var selectedScreen = 0
     
     @Binding var user: User
@@ -28,7 +28,7 @@ struct MyFavoris: View {
                 case 2:
                     SearchSerie(user: user)
                 default:
-                SearchGenre(user: user)
+                searchGenre(user: user)
                 }
                 Spacer()
             }
@@ -37,5 +37,5 @@ struct MyFavoris: View {
 }
     
 #Preview {
-    MyFavoris(user: .constant(MockData.magalie))
+    myFavoris(user: .constant(MockData.magalie))
 }

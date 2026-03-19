@@ -1,5 +1,5 @@
 //
-//  MyProfile.swift
+//  myProffil.swift
 //  binged
 //
 //  Created by Apprenant 92 on 06/03/2026.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MyProfile: View {
+struct myProffil: View {
     @State var vmUser = UserViewModel()
     @State var userConnected: User
     
@@ -17,24 +17,33 @@ struct MyProfile: View {
                 .ignoresSafeArea()
             VStack {
                 Text("Mon Profil")
-                    .foregroundStyle(.white)
+                    .foregroundColor(.white)
                     .font(.largeTitle)
                 HStack {
-                    Image("pitt")
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 200, height: 200)
-                        .padding()
+                    if let url = userConnected.picture?.first?.thumbnails?.large?.url {
+                        AsyncImage(url: url) { image in
+                            image
+                                .resizable()
+                                .scaledToFill()
+                                .padding(.horizontal)
+                        } placeholder: {
+                            ProgressView()
+                        }
+                        .frame(width: 200, height: 100)
+                    }else {
+                        Image(systemName : "person.crop.circle")
+                            .font(.system(size: 100))
+                    }                    
                     VStack {
                         Text(
                             "Acteur et producteur américain célèbre pour Fight Club, Seven et Once Upon a Time in Hollywood. Il a remporté plusieurs Oscars."
                         )
-                        .foregroundStyle(.white)
+                        .foregroundColor(.white)
                         .lineLimit(8)
-                        BasicButton(text: "Modifier")
+                        basicButton(text: "Modifier")
                     }
                 }
-                MyFavoris(user: self.$userConnected)
+                myFavoris(user: self.$userConnected)
                     .padding()
 
             }
@@ -49,5 +58,5 @@ struct MyProfile: View {
 }
 
 #Preview {
-    MyProfile(userConnected: MockData.magalie)
+    myProffil(userConnected: MockData.magalie)
 }

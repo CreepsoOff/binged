@@ -1,5 +1,5 @@
 //
-//  ActorBar.swift
+//  actorBar.swift
 //  binged
 //
 //  Created by Apprenant 92 on 06/03/2026.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ActorBar: View {
+struct actorBar: View {
     var actor: CastMember
     
     var body: some View {
@@ -28,7 +28,7 @@ struct ActorBar: View {
                             .stroke(.white, lineWidth: 1)
                     )
                 Text(actor.name)
-                    .foregroundStyle(.white)
+                    .foregroundColor(.white)
                     .font(.system(size: 16))
             }
         }
