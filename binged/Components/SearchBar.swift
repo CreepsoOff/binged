@@ -1,5 +1,5 @@
 //
-//  SearchBar.swift
+//  searchBar.swift
 //  binged
 //
 //  Created by Apprenant 92 on 11/03/2026.
@@ -19,7 +19,7 @@ struct SearchBar: View {
         }
         .padding(10)
         .background(Color(.systemGray6))
-        .clipShape(.rect(cornerRadius: 10))
+        .cornerRadius(10)
         .padding(.horizontal, 20)
     }
 }

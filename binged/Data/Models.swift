@@ -469,7 +469,7 @@ struct ReviewResponse: Codable {
 }
 
 struct Message: Identifiable {
-    var id = UUID()
+    let id = UUID()
     let text: String
     let isMe: Bool
 }

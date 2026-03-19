@@ -1,5 +1,5 @@
 //
-//  SearchGenre.swift
+//  searchGenre.swift
 //  binged
 //
 //  Created by Apprenant 92 on 13/03/2026.
@@ -23,7 +23,7 @@ struct SearchGenre: View {
     }
     
     var body: some View {
-        VStack { // J'ai ajouté un VStack pour bien séparer la SearchBar du ScrollView
+        VStack { // J'ai ajouté un VStack pour bien séparer la searchBar du ScrollView
             SearchBar(text: $searchText) // Modifié ici
             
             ScrollView(.horizontal, showsIndicators: false) {
@@ -38,7 +38,6 @@ struct SearchGenre: View {
                 }
                 .padding(.horizontal) // Un peu de padding pour faire respirer la liste
             }
-            Text("a modifier")
         }
     }
 }

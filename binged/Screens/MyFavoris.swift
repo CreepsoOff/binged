@@ -1,5 +1,5 @@
 //
-//  MyFavoris.swift
+//  myFavoris.swift
 //  binged
 //
 //  Created by Apprenant 92 on 11/03/2026.

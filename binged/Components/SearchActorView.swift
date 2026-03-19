@@ -13,6 +13,12 @@ struct SearchActorView: View {
     
     @State private var listActors: [CastMember] = []
     
+    let columns = [
+        GridItem(.flexible()),
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
+    
     var user: User
     
     var filteredActors: [CastMember] {

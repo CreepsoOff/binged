@@ -1,5 +1,5 @@
 //
-//  ActorBar.swift
+//  actorBar.swift
 //  binged
 //
 //  Created by Apprenant 92 on 06/03/2026.
@@ -40,13 +40,19 @@ struct ActorBar: View {
                 
                     
                 Text(actor.name)
-                    .foregroundStyle(.white)
+                    //.foregroundColor(.white)
                     .font(.system(size: 16))
+                    .frame(width: 125)
+                    .lineLimit(2)
             }
         }
     }
 }
 
 #Preview {
-    ActorBar(actor: MockData.bryanCranston)
+    HStack{
+        ActorBar(actor: MockData.bryanCranston)
+        ActorBar(actor: MockData.bryanCranston)
+        ActorBar(actor: MockData.bryanCranston)
+    }
 }

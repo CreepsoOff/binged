@@ -27,11 +27,10 @@ struct PlaylistBar: View {
                         isAdd.toggle()
                     }) {
                         Image(systemName: isAdd ? "minus" : "plus")
-                            .accessibilityLabel(isAdd ? "Remove from playlist" : "Add to playlist")
                             .padding(isAdd ? 14 : 8)
                             .background(.orange)
-                            .clipShape(.rect(cornerRadius: 20))
-                            .foregroundStyle(.white)
+                            .cornerRadius(20)
+                            .foregroundColor(.white)
                             .clipShape(.circle)
                             .frame(width: 24, height: 24)
                             .padding(.horizontal)

@@ -19,7 +19,7 @@ enum MockData {
     
     // MARK: - 3. Acteurs (CastMember)
     static let bryanCranston = CastMember(
-        name: "Bryan Cranston",
+        name: "Bryce Dallas Howard",
         imageName: [mockAttachment],
         cityOfBirth: "Hollywood",
         bio: "Acteur de génie, inoubliable dans Malcolm et Breaking Bad.",

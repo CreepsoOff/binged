@@ -1,5 +1,5 @@
 //
-//  BasicButton.swift
+//  basicButton.swift
 //  binged
 //
 //  Created by Apprenant 92 on 10/03/2026.
