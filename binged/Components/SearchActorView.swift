@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SearchActorView: View {
     @State private var searchText = ""
-    @State var vmActor = ActorViewModel()
+    @Environment(ActorViewModel.self) private var vmActor
     
     @State private var listActors: [CastMember] = []
     
@@ -35,12 +35,19 @@ struct SearchActorView: View {
             SearchBar(text: $searchText)
             
             ScrollView(showsIndicators: false) {
-                // Utilise \.id (le UUID) pour éviter les problèmes si deux acteurs ont le même nom
-                LazyVGrid(columns: columns, spacing: 20){
+                let columns = Array(repeating: GridItem(.flexible(), spacing: 12), count: 3)
+                
+                LazyVGrid(columns: columns, alignment: .center, spacing: 12) {
                     ForEach(filteredActors, id: \.id) { actor in
-                        ActorBar(actor: actor)
+                        NavigationLink {
+                            ActorProfileView(actor: actor)
+                        } label: {
+                            ActorBar(actor: actor)
+                        }
                     }
                 }
+                .padding(.horizontal, 16)
+                .frame(maxWidth: .infinity, alignment: .center)
             }
         }
         .task {
@@ -53,7 +60,7 @@ struct SearchActorView: View {
                     do {
                         let fetchedActor = try await vmActor.getActorById(actorID)
                         // On vérifie qu'on ne l'ajoute pas deux fois
-                        if !listActors.contains(where: { $0.id == fetchedActor.id }) {
+                        if !listActors.contains(where: { $0.name == fetchedActor.name }) {
                             self.listActors.append(fetchedActor)
                         }
                     } catch {
@@ -67,4 +74,8 @@ struct SearchActorView: View {
 
 #Preview {
     SearchActorView(user: MockData.magalie)
+        .environment(SerieViewModels())
+        .environment(UserViewModel())
+        .environment(PlayListViewModel())
+        .environment(ActorViewModel())
 }

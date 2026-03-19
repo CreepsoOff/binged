@@ -30,10 +30,8 @@ class UserViewModel {
 
         do {
             let decoded = try decoder.decode(UserRecord.self, from: data)
-            print(decoded.fields)
             return decoded.fields
         } catch {
-            print("Échec du décodage:userbyID")
             throw error
         }
     }

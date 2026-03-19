@@ -3,24 +3,24 @@ import Foundation
 enum MockData {
     
     // MARK: - 1. Fausse Image (Airtable Attachment)
-    static let mockURL = URL(string: "https://movix.rodeo/avatars/mickey/mickey_avatar_1.png")!
+    static let mockURL = URL(string: "https://movix.rodeo/avatars/disney+/ice_age/sid.png")!
     static let mockThumb = ThumbnailVariant(url: mockURL)
     static let mockThumbs = Thumbnails(small: mockThumb, large: mockThumb, full: mockThumb)
     static let mockAttachment = Attachment(id: "att123", url: mockURL, thumbnails: mockThumbs)
     
-    static let mockURLcolette = URL(string: "https://movix.rodeo/avatars/mickey/mickey_avatar_1.png")!
+    static let mockURLcolette = URL(string: "https://movix.rodeo/avatars/disney+/ice_age/sid.png")!
     static let mockThumbColette = ThumbnailVariant(url: mockURLcolette)
     static let mockThumbsColette = Thumbnails(small: mockThumbColette, large: mockThumbColette, full: mockThumbColette)
     static let mockAttachmentColette = Attachment(id: "att456", url: mockURLcolette, thumbnails: mockThumbsColette)
     
     
     // MARK: - 2. Plateformes
-    static let netflix = Platform(name: "Netflix", icon: "netflix_icon", baseURL: "https://netflix.com")
+    static let netflix = Platform(name: "Netflix", icon: [mockAttachment], baseURL: "https://netflix.com")
     
     // MARK: - 3. Acteurs (CastMember)
     static let bryanCranston = CastMember(
         name: "Bryan Cranston",
-        imageName: "bryan_cranston",
+        imageName: [mockAttachment],
         cityOfBirth: "Hollywood",
         bio: "Acteur de génie, inoubliable dans Malcolm et Breaking Bad.",
         dateOfBirthString: "1956-03-07"
@@ -28,7 +28,7 @@ enum MockData {
     
     static let aaronPaul = CastMember(
         name: "Aaron Paul",
-        imageName: "aaron_paul",
+        imageName: [mockAttachment],
         cityOfBirth: "Emmett",
         bio: "Yeah, Science, bitch!",
         dateOfBirthString: "1979-08-27"
@@ -36,7 +36,7 @@ enum MockData {
     
     static let cillianMurphy = CastMember(
         name: "Cillian Murphy",
-        imageName: "cillian_murphy",
+        imageName: [mockAttachment],
         cityOfBirth: "Douglas",
         bio: "Acteur irlandais charismatique, célèbre pour son rôle de Thomas Shelby.",
         dateOfBirthString: "1976-05-25"
@@ -44,7 +44,7 @@ enum MockData {
     
     static let benedictCumberbatch = CastMember(
         name: "Benedict Cumberbatch",
-        imageName: "benedict_cumberbatch",
+        imageName: [mockAttachment],
         cityOfBirth: "Londres",
         bio: "Acteur britannique mondialement connu pour son interprétation du détective Sherlock Holmes.",
         dateOfBirthString: "1976-07-19"
@@ -61,7 +61,7 @@ enum MockData {
         name: "Breaking Bad",
         desc: "Un professeur de chimie atteint d'un cancer s'associe à un ancien élève pour fabriquer et vendre de la méthamphétamine.",
         type: .standard,
-        cover: "breaking_bad_cover",
+        cover: [mockAttachment],
         year: 2008,
         decennie: "2000s",
         genre: .crime,
@@ -76,7 +76,7 @@ enum MockData {
         name: "Peaky Blinders",
         desc: "L'épopée d'une famille de gangsters de Birmingham à partir de 1919, menée par le redoutable Tommy Shelby.",
         type: .standard,
-        cover: "peaky_cover",
+        cover: [mockAttachment],
         year: 2013,
         decennie: "2010s",
         genre: .crime,
@@ -91,7 +91,7 @@ enum MockData {
         name: "Sherlock",
         desc: "Une adaptation moderne des aventures du détective Sherlock Holmes et de son colocataire le Dr Watson.",
         type: .standard,
-        cover: "sherlock_cover",
+        cover: [mockAttachment],
         year: 2010,
         decennie: "2010s",
         genre: .crime,
@@ -120,7 +120,7 @@ enum MockData {
         favoriteGenreStrings: ["Crime", "Drame", "Thriller"],
         playlistIDs: ["recp6rnl0Vsj0V3Oz", "recNxAIm6HcCZrLgb"],
         favoriteSeries: [breakingBad, sherlock],
-        favoriteActors: [bryanCranston, aaronPaul],
+        favoriteActors: [bryanCranston, aaronPaul, cillianMurphy],
         playlists: [playlistHiver]
     )
     static let colette = User(

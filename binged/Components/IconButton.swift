@@ -19,8 +19,8 @@ struct IconButton: View {
         .font(.system(size: 16))
         .padding(8)
         .background(.orange)
-        .cornerRadius(20)
-        .foregroundColor(.background)
+        .clipShape(.rect(cornerRadius: 20))
+        .foregroundStyle(Color.background)
     }
 }
 

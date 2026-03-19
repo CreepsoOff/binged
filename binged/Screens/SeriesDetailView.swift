@@ -1,6 +1,5 @@
 import SwiftUI
 
-
 struct SeriesDetailView: View {
     @Environment(\.dismiss) private var dismiss
     let serie: Serie
@@ -8,50 +7,54 @@ struct SeriesDetailView: View {
     
     @State private var showPlaylistPicker = false
     
+    @Environment(SerieViewModels.self) private var serieVM
     
-
+    @State private var loadedPlatforms: [Platform] = []
+    @State private var loadedReviews: [ReviewItem] = []
+    @State private var loadedRoles: [ActorSerie] = []
+    
     var body: some View {
         ZStack {
             Design.bgColor.ignoresSafeArea()
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
-                    
+
                     // MARK: - 1. AFFICHE
-                    if let coverName = serie.cover {
-                        Image(coverName)
-                            .resizable()
-                            .scaledToFill()
-                            .containerRelativeFrame(.horizontal)
-                            .frame(height: Design.coverHeight, alignment: .top)
-                            .overlay(alignment: .bottom) {
-                                LinearGradient(
-                                    gradient: Gradient(colors: [.clear, Design.bgColor]),
-                                    startPoint: .center,
-                                    endPoint: .bottom
-                                )
-                            }
-                            .overlay(alignment: .bottom) {
-            
-                                HStack {
-                                    Button {
-                                        /// Fonction pour le trailer à faire
-                                        print("Lancement du trailer pour \(serie.name)")
-                                    } label: {
-                                        IconButton(text: "Trailer", icon: "play.fill")
-                                    }
-                                    
-                                    Spacer()
-                                    
-                                    Button {
-                                        showPlaylistPicker.toggle()
-                                    } label: {
-                                        IconButton(text: "Ajouter", icon: "plus")
-                                    }
+                    if let url = serie.cover?.first?.thumbnails?.large?.url {
+                        AsyncImage(url: url) { image in
+                            image
+                                .resizable()
+                                .scaledToFill()
+                        } placeholder: {
+                            ProgressView()
+                        }
+                        .containerRelativeFrame(.horizontal)
+                        .frame(height: Design.coverHeight, alignment: .top)
+                        .overlay(alignment: .bottom) {
+                            LinearGradient(
+                                gradient: Gradient(colors: [.clear, Design.bgColor]),
+                                startPoint: .center,
+                                endPoint: .bottom
+                            )
+                        }
+                        .overlay(alignment: .bottom) {
+                            HStack {
+                                Button {
+                                    print("Lancement du trailer pour \(serie.name)")
+                                } label: {
+                                    IconButton(text: "Trailer", icon: "play.fill")
                                 }
-                                .padding()
+                                Spacer()
+                                Button {
+                                    showPlaylistPicker.toggle()
+                                } label: {
+                                    IconButton(text: "Ajouter", icon: "plus")
+                                }
                             }
-                            .clipped()
+                            .padding()
+                        }
+                        .clipped()
                     } else {
                         Rectangle()
                             .fill(Design.cardColor)
@@ -62,27 +65,29 @@ struct SeriesDetailView: View {
                     }
 
                     VStack(alignment: .leading) {
-                        
+
                         // MARK: - 2. TITRE & PLATEFORMES
                         VStack(alignment: .leading, spacing: 8) {
                             Text(serie.name)
                                 .font(.largeTitle)
                                 .bold()
                                 .foregroundStyle(.white)
-                            
+
                             HStack {
                                 Text("Plateformes :")
                                     .font(.caption)
                                     .foregroundStyle(textSecondary)
-                                
-                                ForEach(serie.platform) { platform in
-                                    Logo(icon: platform.icon)
-                                    
-                                }
-                            }
+
+                                if loadedPlatforms.isEmpty && serie.platformIDs != nil {
+                                    ProgressView().scaleEffect(0.7)
+                                } else {
+                                    ForEach(loadedPlatforms) { platform in
+                                        Logo(attachments: platform.icon)
+                                    }
+                                }                            }
                         }
                         .padding(.bottom, 10)
-                        
+
                         // MARK: - 3. MÉTADONNÉES
                         HStack(spacing: 15) {
                             HStack(spacing: 4) {
@@ -95,13 +100,12 @@ struct SeriesDetailView: View {
                             .padding(.vertical, 5)
                             .background(.orange.opacity(0.2))
                             .clipShape(Capsule())
-                            
+
                             Text("• \(String(serie.year)) • \(serie.nbSaisons) \(serie.nbSaisons <= 1 ? "Saison" : "Saisons")")
                                 .foregroundStyle(textSecondary)
-                            
+
                             if serie.inProgress == true {
                                 Spacer()
-                                
                                 Text("EN COURS")
                                     .font(.system(size: 10, weight: .heavy))
                                     .foregroundStyle(Design.accentColor)
@@ -123,9 +127,9 @@ struct SeriesDetailView: View {
                             .font(.title3)
                             .bold()
                             .foregroundStyle(.white)
-                        
-                        let validActorRoles = serie.actors.compactMap { $0 }
-                        
+
+                        let validActorRoles = loadedRoles.compactMap { $0 }
+
                         if !validActorRoles.isEmpty {
                             ScrollView(.horizontal) {
                                 HStack(alignment: .top) {
@@ -140,11 +144,16 @@ struct SeriesDetailView: View {
                                                         .fill(Design.cardColor)
                                                         .frame(width: 70, height: 70)
                                                         .overlay {
-                                                            if let imageName = currentActor.imageName {
-                                                                Image(imageName)
-                                                                    .resizable()
-                                                                    .scaledToFill()
-                                                                    .clipShape(Circle())
+                                                            // ✅ CORRECTION ICI : Utilisation de AsyncImage pour le tableau d'Attachments
+                                                            if let url = currentActor.imageName.first??.thumbnails?.large?.url {
+                                                                AsyncImage(url: url) { image in
+                                                                    image
+                                                                        .resizable()
+                                                                        .scaledToFill()
+                                                                        .clipShape(Circle())
+                                                                } placeholder: {
+                                                                    ProgressView() // Affiche une roue pendant que l'image de l'acteur se télécharge
+                                                                }
                                                             }
                                                         }
                                                         .overlay {
@@ -170,9 +179,11 @@ struct SeriesDetailView: View {
                             }
                             .scrollIndicators(.hidden)
                             .padding(.bottom)
+                        } else if serie.actorIDs != nil {
+                            ProgressView().padding(.bottom)
                         }
 
-                        // MARK: - 5. SYNOPSIS (Design Écran 2)
+                        // MARK: - 5. SYNOPSIS
                         if !serie.desc.isEmpty {
                             Text("Synopsis")
                                 .font(.title3)
@@ -196,10 +207,9 @@ struct SeriesDetailView: View {
                                     .font(.title3)
                                     .bold()
                                     .foregroundStyle(.white)
-                                
+
                                 Spacer()
-                                
-                                // BOUTON CHATTER
+
                                 NavigationLink {
                                     /// (FAIRE CHAT SERIE ICI)
                                 } label: {
@@ -208,14 +218,14 @@ struct SeriesDetailView: View {
                             }
 
                             VStack(spacing: 12) {
-                                if serie.reviews.isEmpty {
+                                if loadedReviews.isEmpty && serie.reviewIDs == nil {
                                     Text("Soyez le premier à laisser une critique !")
                                         .font(.caption)
                                         .italic()
                                         .foregroundStyle(textSecondary)
                                         .padding()
                                 } else {
-                                    ForEach(serie.reviews) { review in
+                                    ForEach(loadedReviews) { review in
                                         HStack(alignment: .top) {
                                             Text("\(review.user) :")
                                                 .bold()
@@ -243,78 +253,56 @@ struct SeriesDetailView: View {
             .ignoresSafeArea(edges: .top)
         }
         .navigationBarTitleDisplayMode(.inline)
-        /// Ecran de sélection des playlists (à venir)
         .sheet(isPresented: $showPlaylistPicker) {
             Text("Interface de sélection des Playlists (A venir)")
                 .presentationDetents([.medium])
+        }
+
+        // MARK: - (Lazy Loading)
+        .task {
+            // 1. Plateformes
+            if loadedPlatforms.isEmpty, let pIDs = serie.platformIDs {
+                for id in pIDs {
+                    if let p = try? await serieVM.getPlatformById(id) {
+                        withAnimation {
+                            loadedPlatforms.append(p)
+                        }
+                    }
+                }
+            }
+            // 2. Critiques
+            if loadedReviews.isEmpty, let rIDs = serie.reviewIDs {
+                for id in rIDs {
+                    if let r = try? await serieVM.getReviewById(id) {
+                        withAnimation {
+                            loadedReviews.append(r)
+                        }
+                    }
+                }
+            }
+            // 3. Distribution (Rôles + Acteurs réels)
+            if loadedRoles.isEmpty, let roleIDs = serie.actorIDs {
+                for id in roleIDs {
+                    // On va chercher le rôle
+                    if var role = try? await serieVM.getRoleById(id) {
+                        // On va chercher le CastMember lié à ce rôle pour avoir sa photo !
+                        if let actorID = role.actorIDs?.first {
+                            role.actor = try? await serieVM.getActorById(actorID)
+                        }
+                        withAnimation {
+                            loadedRoles.append(role)
+                        }
+                    }
+                }
+            }
         }
     }
 }
 
 // MARK: - Preview Live Airtable
 #Preview("Test Live Séries") {
-    
-    struct LiveSeriesListPreview: View {
-        @State private var viewModel = SerieViewModels()
-        
-        var body: some View {
-            NavigationStack {
-                Group {
-                    if viewModel.isLoading {
-                        VStack(spacing: 16) {
-                            ProgressView()
-                            Text("Récupération séries")
-                                .foregroundStyle(.secondary)
-                        }
-                    } else if viewModel.series.isEmpty {
-                        Text("Aucune série trouvée")
-                            .foregroundStyle(.secondary)
-                    } else {
-                        List(viewModel.series) { serie in
-                            NavigationLink {
-                                SeriesDetailView(serie: serie)
-                            } label: {
-                                HStack(spacing: 12) {
-                                    if let cover = serie.cover {
-                                        Image(cover)
-                                            .resizable()
-                                            .scaledToFill()
-                                            .frame(width: 45, height: 65)
-                                            .clipShape(.rect(cornerRadius: 6))
-                                    } else {
-                                        RoundedRectangle(cornerRadius: 6)
-                                            .fill(Design.cardColor)
-                                            .frame(width: 45, height: 65)
-                                    }
-                                    
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text(serie.name)
-                                            .font(.headline)
-                                            .foregroundStyle(.primary)
-                                        
-                                        Text("\(String(serie.year)) • \(serie.genre.rawValue)")
-                                            .font(.caption)
-                                            .foregroundStyle(.secondary)
-                                    }
-                                }
-                                .padding(.vertical, 4)
-                            }
-                        }
-                        .listStyle(.plain)
-                    }
-                }
-                .navigationTitle("Séries")
-            }
-            .environment(viewModel)
-            .task {
-                do {
-                    try await viewModel.fetchSeries()
-                } catch {
-                    print("Erreur Preview Séries: \(error)")
-                }
-            }
-        }
-    }
-    
     return LiveSeriesListPreview()
+        .environment(SerieViewModels())
+        .environment(UserViewModel())
+        .environment(PlayListViewModel())
 }

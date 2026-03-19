@@ -9,7 +9,7 @@ import SwiftUI
 import Observation
 
 
-/// Function to make dates 01/01/1970
+// MARK: - Function to make dates 01/01/1970
 extension Date {
     func formatDDMMYYYY() -> String {
         let formatter = DateFormatter()
@@ -18,7 +18,7 @@ extension Date {
     }
 }
 
-// MARK: - Gestion des Images Airtable
+// MARK: - Gestion des Images Airtable Attachment
 struct Attachment: Codable {
     let id: String
     let url: URL
@@ -36,7 +36,7 @@ struct ThumbnailVariant: Codable {
 }
 
 
-/// enum GenreType
+// MARK: - enum GenreType
 enum GenreType: String, CaseIterable, Codable {
     
     case sf = "Sciences Fiction"
@@ -63,11 +63,11 @@ enum GenreType: String, CaseIterable, Codable {
         case .sf: return "atom"
         case .drama: return "theatermasks.fill"
         case .comedy: return "face.smiling.fill"
-        case .crime: return "person.badge.shield.checkered.fill"
+        case .crime: return "person.badge.shield.checkmark.fill"
         case .fantasy: return "wand.and.stars"
         case .action: return "figure.run"
         case .thriller: return "eye.trianglebadge.exclamationmark"
-        case .horror: return "ghost.fill"
+        case .horror: return "bolt.fill"
         case .romance: return "heart.fill"
         case .documentary: return "camera.aperture"
         case .medical: return "cross.case.fill"
@@ -101,15 +101,14 @@ enum Kind: String, CaseIterable, Codable {
 }
 
 
-
 // MARK: - Netflix, Prime Video, Paramount, Crunchyroll, ADN
 struct Platform: Codable, Identifiable {
     var id = UUID()
-    
+
     let name: String
-    let icon: String
+    let icon: [Attachment]?
     let baseURL: String?
-    
+
     enum CodingKeys: String, CodingKey {
         case name, icon, baseURL
     }
@@ -122,14 +121,20 @@ struct PlatformRecord: Codable {
     let fields: Platform
 }
 
+
+// MARK: - CastMember (Actor)
 struct CastMember: Codable, Identifiable {
     var id = UUID()
     
     let name: String
-    let imageName: String?
+    let imageName: [Attachment?]
     var cityOfBirth: String?
     var bio: String?
     var dateOfBirthString: String?
+    
+    
+    /// AIRTABLE
+    var actorSerieIDs: [String]?
     
     enum CodingKeys: String, CodingKey {
         case name = "actorName"
@@ -137,6 +142,7 @@ struct CastMember: Codable, Identifiable {
         case cityOfBirth = "actorCityOfBirth"
         case bio = "actorBio"
         case dateOfBirthString = "actorDateOfBirth"
+        case actorSerieIDs = "ActorSerie"
     }
     
     var dateOfBirth: Date {
@@ -159,6 +165,7 @@ struct CastMemberRecord: Codable {
 }
 
 
+// MARK: - ActorSerie (Roles)
 struct ActorSerie: Codable, Identifiable {
     var id = UUID()
     var roleName: String
@@ -166,10 +173,12 @@ struct ActorSerie: Codable, Identifiable {
     var actor: CastMember?
     
     var actorIDs: [String]?
+    var serieIDs: [String]?
     
     enum CodingKeys: String, CodingKey {
         case roleName
         case actorIDs = "actor"
+        case serieIDs = "Serie"
     }
 }
 
@@ -181,17 +190,14 @@ struct ActorSerieRecord: Codable {
 }
 
 
-/// USER = Ses favorites kinds seront un tableau de Kind
-
-
-
-
+// MARK: - Serie
+@Observable
 class Serie: Codable, Identifiable {
     var id = UUID()
     let name: String
     let desc: String
     let type: Kind
-    let cover: String?
+    let cover: [Attachment]?
     let year: Int
     let decennie: String
     let genre: GenreType
@@ -215,7 +221,7 @@ class Serie: Codable, Identifiable {
         case reviewIDs = "Reviews"
     }
     
-    init(name: String, desc: String, type: Kind, cover: String?, year: Int, decennie: String, genre: GenreType, actors: [ActorSerie] = [], platform: [Platform] = [], reviews: [ReviewItem] = [], nbSaisons: Int, nbEpisodes: Int, inProgress: Bool? = nil, trailerURL: String? = nil) {
+    init(name: String, desc: String, type: Kind, cover: [Attachment]?, year: Int, decennie: String, genre: GenreType, actors: [ActorSerie] = [], platform: [Platform] = [], reviews: [ReviewItem] = [], nbSaisons: Int, nbEpisodes: Int, inProgress: Bool? = nil, trailerURL: String? = nil) {
         self.name = name
         self.desc = desc
         self.type = type
@@ -231,6 +237,42 @@ class Serie: Codable, Identifiable {
         self.reviews = reviews
         self.trailerURL = trailerURL
     }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.name = try container.decode(String.self, forKey: .name)
+        self.desc = try container.decode(String.self, forKey: .desc)
+        self.type = try container.decode(Kind.self, forKey: .type)
+        self.cover = try container.decodeIfPresent([Attachment].self, forKey: .cover)
+        self.year = try container.decode(Int.self, forKey: .year)
+        self.decennie = try container.decode(String.self, forKey: .decennie)
+        self.genre = try container.decode(GenreType.self, forKey: .genre)
+        self.nbSaisons = try container.decode(Int.self, forKey: .nbSaisons)
+        self.nbEpisodes = try container.decode(Int.self, forKey: .nbEpisodes)
+        self.inProgress = try container.decodeIfPresent(Bool.self, forKey: .inProgress)
+        self.trailerURL = try container.decodeIfPresent(String.self, forKey: .trailerURL)
+        self.actorIDs = try container.decodeIfPresent([String].self, forKey: .actorIDs)
+        self.platformIDs = try container.decodeIfPresent([String].self, forKey: .platformIDs)
+        self.reviewIDs = try container.decodeIfPresent([String].self, forKey: .reviewIDs)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(name, forKey: .name)
+        try container.encode(desc, forKey: .desc)
+        try container.encode(type, forKey: .type)
+        try container.encode(cover, forKey: .cover)
+        try container.encode(year, forKey: .year)
+        try container.encode(decennie, forKey: .decennie)
+        try container.encode(genre, forKey: .genre)
+        try container.encode(nbSaisons, forKey: .nbSaisons)
+        try container.encode(nbEpisodes, forKey: .nbEpisodes)
+        try container.encode(inProgress, forKey: .inProgress)
+        try container.encode(trailerURL, forKey: .trailerURL)
+        try container.encode(actorIDs, forKey: .actorIDs)
+        try container.encode(platformIDs, forKey: .platformIDs)
+        try container.encode(reviewIDs, forKey: .reviewIDs)
+    }
 }
 
 struct SeriesResponse: Codable {
@@ -238,12 +280,13 @@ struct SeriesResponse: Codable {
 }
 
 struct SerieRecord: Codable {
-    let id: String?
+    let id: String
     let fields: Serie
 }
 
 
 // MARK: - Modèle Playlist
+@Observable
 class Playlist: Codable, Identifiable {
     var id = UUID()
     
@@ -273,6 +316,22 @@ class Playlist: Codable, Identifiable {
         self.serieIDs = serieIDs
         self.creatorIDs = creatorIDs
     }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.name = try container.decode(String.self, forKey: .name)
+        self.serieIDs = try container.decodeIfPresent([String].self, forKey: .serieIDs)
+        self.creatorIDs = try container.decodeIfPresent([String].self, forKey: .creatorIDs)
+        self.abonneeIDs = try container.decodeIfPresent([String].self, forKey: .abonneeIDs)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(name, forKey: .name)
+        try container.encode(serieIDs, forKey: .serieIDs)
+        try container.encode(creatorIDs, forKey: .creatorIDs)
+        try container.encode(abonneeIDs, forKey: .abonneeIDs)
+    }
 }
 
 struct PlaylistsResponse: Codable { let records: [PlaylistRecord] }
@@ -282,7 +341,8 @@ struct PlaylistRecord: Codable {
 }
 
 
-
+// MARK: - Classe USER
+@Observable
 class User: Codable, Identifiable {
     var id = UUID()
     
@@ -347,6 +407,36 @@ class User: Codable, Identifiable {
         self.favoriteSerieIDs = nil
         self.favoriteActorIDs = nil
     }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.lastName = try container.decodeIfPresent(String.self, forKey: .lastName)
+        self.firstName = try container.decodeIfPresent(String.self, forKey: .firstName)
+        self.email = try container.decode(String.self, forKey: .email)
+        self.userName = try container.decode(String.self, forKey: .userName)
+        self.age = try container.decodeIfPresent(Int.self, forKey: .age)
+        self.userBio = try container.decodeIfPresent(String.self, forKey: .userBio)
+        self.picture = try container.decodeIfPresent([Attachment].self, forKey: .picture)
+        self.favoriteGenreStrings = try container.decodeIfPresent([String].self, forKey: .favoriteGenreStrings)
+        self.favoriteSerieIDs = try container.decodeIfPresent([String].self, forKey: .favoriteSerieIDs)
+        self.favoriteActorIDs = try container.decodeIfPresent([String].self, forKey: .favoriteActorIDs)
+        self.playlistIDs = try container.decodeIfPresent([String].self, forKey: .playlistIDs)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(lastName, forKey: .lastName)
+        try container.encode(firstName, forKey: .firstName)
+        try container.encode(email, forKey: .email)
+        try container.encode(userName, forKey: .userName)
+        try container.encode(age, forKey: .age)
+        try container.encode(userBio, forKey: .userBio)
+        try container.encode(picture, forKey: .picture)
+        try container.encode(favoriteGenreStrings, forKey: .favoriteGenreStrings)
+        try container.encode(favoriteSerieIDs, forKey: .favoriteSerieIDs)
+        try container.encode(favoriteActorIDs, forKey: .favoriteActorIDs)
+        try container.encode(playlistIDs, forKey: .playlistIDs)
+    }
 }
 
 struct UsersResponse: Codable { let records: [UserRecord] }
@@ -356,6 +446,8 @@ struct UserRecord: Codable {
 }
 
 
+
+// MARK: - ReviewItem
 struct ReviewItem: Codable, Identifiable {
     var id = UUID()
     let user: String
@@ -374,10 +466,4 @@ struct ReviewRecord: Codable {
 
 struct ReviewResponse: Codable {
     let records: [ReviewRecord]
-}
-
-struct Message: Identifiable {
-    let id = UUID()
-    let text: String
-    let isMe: Bool
 }
