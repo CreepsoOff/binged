@@ -9,8 +9,6 @@ import SwiftUI
 
 struct PlaylistBar: View {
     
-    //    var user: User
-    //    var serie: [Serie]
     @State private var isAdd = false
     var playlist: Playlist
     
@@ -41,13 +39,24 @@ struct PlaylistBar: View {
                 }
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(MockData.colette.favoriteSeriesSafe) { serie in
-                            Image(serie.cover!)
-                                .resizable()
-                                .scaledToFill()
+                        ForEach(playlist.series ?? []) { serie in
+                            if let url = serie.cover?.first?.thumbnails?.large?.url {
+                                AsyncImage(url: url) { image in
+                                    image
+                                        .resizable()
+                                        .scaledToFill()
+                                } placeholder: {
+                                    ProgressView()
+                                }
                                 .frame(width: 100, height: 150)
                                 .clipped()
                                 .padding(.horizontal, 4)
+                            } else {
+                                Rectangle()
+                                    .fill(Color.gray.opacity(0.3))
+                                    .frame(width: 100, height: 150)
+                                    .padding(.horizontal, 4)
+                            }
                         }
                     }
                     .padding(.horizontal)

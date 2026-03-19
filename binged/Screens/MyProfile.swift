@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct MyProfile: View {
-    @State var vmUser = UserViewModel()
+    @Environment(UserViewModel.self) private var vmUser
+    @Environment(SerieViewModels.self) private var vmSerie
     @State var userConnected: User
     
     var body: some View {
@@ -52,10 +53,26 @@ struct MyProfile: View {
 
             }
         }.task {
-            do {
-                self.userConnected = try await vmUser.getUserById("rec279AxVMVJ5GrPQ")
-            } catch {
-                print(error)
+            // Cascade fetch for Series
+            if let seriesIDs = userConnected.favoriteSerieIDs {
+                for id in seriesIDs {
+                    if let s = try? await vmSerie.getSerieById(id) {
+                        if !userConnected.favoriteSeries.contains(where: { $0?.id == s.id }) {
+                            userConnected.favoriteSeries.append(s)
+                        }
+                    }
+                }
+            }
+            
+            // Cascade fetch for Actors
+            if let actorIDs = userConnected.favoriteActorIDs {
+                for id in actorIDs {
+                    if let a = try? await vmSerie.getActorById(id) {
+                        if !userConnected.favoriteActors.contains(where: { $0?.id == a.id }) {
+                            userConnected.favoriteActors.append(a)
+                        }
+                    }
+                }
             }
         }
     }
@@ -63,4 +80,8 @@ struct MyProfile: View {
 
 #Preview {
     MyProfile(userConnected: MockData.magalie)
+        .environment(SerieViewModels())
+        .environment(UserViewModel())
+        .environment(PlayListViewModel())
+        .environment(ActorViewModel())
 }

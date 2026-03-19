@@ -101,15 +101,14 @@ enum Kind: String, CaseIterable, Codable {
 }
 
 
-
 // MARK: - Netflix, Prime Video, Paramount, Crunchyroll, ADN
 struct Platform: Codable, Identifiable {
     var id = UUID()
-    
+
     let name: String
     let icon: [Attachment]?
     let baseURL: String?
-    
+
     enum CodingKeys: String, CodingKey {
         case name, icon, baseURL
     }
@@ -192,6 +191,7 @@ struct ActorSerieRecord: Codable {
 
 
 // MARK: - Serie
+@Observable
 class Serie: Codable, Identifiable {
     var id = UUID()
     let name: String
@@ -237,6 +237,42 @@ class Serie: Codable, Identifiable {
         self.reviews = reviews
         self.trailerURL = trailerURL
     }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.name = try container.decode(String.self, forKey: .name)
+        self.desc = try container.decode(String.self, forKey: .desc)
+        self.type = try container.decode(Kind.self, forKey: .type)
+        self.cover = try container.decodeIfPresent([Attachment].self, forKey: .cover)
+        self.year = try container.decode(Int.self, forKey: .year)
+        self.decennie = try container.decode(String.self, forKey: .decennie)
+        self.genre = try container.decode(GenreType.self, forKey: .genre)
+        self.nbSaisons = try container.decode(Int.self, forKey: .nbSaisons)
+        self.nbEpisodes = try container.decode(Int.self, forKey: .nbEpisodes)
+        self.inProgress = try container.decodeIfPresent(Bool.self, forKey: .inProgress)
+        self.trailerURL = try container.decodeIfPresent(String.self, forKey: .trailerURL)
+        self.actorIDs = try container.decodeIfPresent([String].self, forKey: .actorIDs)
+        self.platformIDs = try container.decodeIfPresent([String].self, forKey: .platformIDs)
+        self.reviewIDs = try container.decodeIfPresent([String].self, forKey: .reviewIDs)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(name, forKey: .name)
+        try container.encode(desc, forKey: .desc)
+        try container.encode(type, forKey: .type)
+        try container.encode(cover, forKey: .cover)
+        try container.encode(year, forKey: .year)
+        try container.encode(decennie, forKey: .decennie)
+        try container.encode(genre, forKey: .genre)
+        try container.encode(nbSaisons, forKey: .nbSaisons)
+        try container.encode(nbEpisodes, forKey: .nbEpisodes)
+        try container.encode(inProgress, forKey: .inProgress)
+        try container.encode(trailerURL, forKey: .trailerURL)
+        try container.encode(actorIDs, forKey: .actorIDs)
+        try container.encode(platformIDs, forKey: .platformIDs)
+        try container.encode(reviewIDs, forKey: .reviewIDs)
+    }
 }
 
 struct SeriesResponse: Codable {
@@ -250,6 +286,7 @@ struct SerieRecord: Codable {
 
 
 // MARK: - Modèle Playlist
+@Observable
 class Playlist: Codable, Identifiable {
     var id = UUID()
     
@@ -279,6 +316,22 @@ class Playlist: Codable, Identifiable {
         self.serieIDs = serieIDs
         self.creatorIDs = creatorIDs
     }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.name = try container.decode(String.self, forKey: .name)
+        self.serieIDs = try container.decodeIfPresent([String].self, forKey: .serieIDs)
+        self.creatorIDs = try container.decodeIfPresent([String].self, forKey: .creatorIDs)
+        self.abonneeIDs = try container.decodeIfPresent([String].self, forKey: .abonneeIDs)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(name, forKey: .name)
+        try container.encode(serieIDs, forKey: .serieIDs)
+        try container.encode(creatorIDs, forKey: .creatorIDs)
+        try container.encode(abonneeIDs, forKey: .abonneeIDs)
+    }
 }
 
 struct PlaylistsResponse: Codable { let records: [PlaylistRecord] }
@@ -289,6 +342,7 @@ struct PlaylistRecord: Codable {
 
 
 // MARK: - Classe USER
+@Observable
 class User: Codable, Identifiable {
     var id = UUID()
     
@@ -352,6 +406,36 @@ class User: Codable, Identifiable {
         
         self.favoriteSerieIDs = nil
         self.favoriteActorIDs = nil
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.lastName = try container.decodeIfPresent(String.self, forKey: .lastName)
+        self.firstName = try container.decodeIfPresent(String.self, forKey: .firstName)
+        self.email = try container.decode(String.self, forKey: .email)
+        self.userName = try container.decode(String.self, forKey: .userName)
+        self.age = try container.decodeIfPresent(Int.self, forKey: .age)
+        self.userBio = try container.decodeIfPresent(String.self, forKey: .userBio)
+        self.picture = try container.decodeIfPresent([Attachment].self, forKey: .picture)
+        self.favoriteGenreStrings = try container.decodeIfPresent([String].self, forKey: .favoriteGenreStrings)
+        self.favoriteSerieIDs = try container.decodeIfPresent([String].self, forKey: .favoriteSerieIDs)
+        self.favoriteActorIDs = try container.decodeIfPresent([String].self, forKey: .favoriteActorIDs)
+        self.playlistIDs = try container.decodeIfPresent([String].self, forKey: .playlistIDs)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(lastName, forKey: .lastName)
+        try container.encode(firstName, forKey: .firstName)
+        try container.encode(email, forKey: .email)
+        try container.encode(userName, forKey: .userName)
+        try container.encode(age, forKey: .age)
+        try container.encode(userBio, forKey: .userBio)
+        try container.encode(picture, forKey: .picture)
+        try container.encode(favoriteGenreStrings, forKey: .favoriteGenreStrings)
+        try container.encode(favoriteSerieIDs, forKey: .favoriteSerieIDs)
+        try container.encode(favoriteActorIDs, forKey: .favoriteActorIDs)
+        try container.encode(playlistIDs, forKey: .playlistIDs)
     }
 }
 

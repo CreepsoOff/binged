@@ -17,9 +17,9 @@ struct CalendarEvent: Codable, Identifiable {
     var serie: Serie?
     
     enum CodingKeys: String, CodingKey {
-        case episodeName = "EpisodeName"
-        case date = "Date"
-        case serieID = "Serie"
+        case episodeName
+        case date
+        case serieID = "serie"
     }
 }
 

@@ -8,30 +8,35 @@
 import SwiftUI
 
 struct Logo: View {
-    var icon: String
+    var attachments: [Attachment]?
     
     var body: some View {
-        Image(icon)
-        .resizable()
-        .scaledToFill()
-        .frame(width: 32, height: 32)
-        .background(.white)
-        .clipShape(Circle())
-//        .shadow(
-//            radius: 3,
-//            x: 5,
-//            y: 5
-//        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 50)
-                .stroke(.white, lineWidth: 1)
-        )
+        if let url = attachments?.first?.thumbnails?.large?.url {
+            AsyncImage(url: url) { image in
+                image
+                    .resizable()
+                    .scaledToFill()
+            } placeholder: {
+                ProgressView()
+            }
+            .frame(width: 32, height: 32)
+            .background(.white)
+            .clipShape(Circle())
+            .overlay(
+                RoundedRectangle(cornerRadius: 50)
+                    .stroke(.white, lineWidth: 1)
+            )
+        } else {
+            Circle()
+                .fill(Color.gray.opacity(0.3))
+                .frame(width: 32, height: 32)
+        }
     }
 }
 
 #Preview {
     ZStack {
         Design.bgColor.ignoresSafeArea()
-        Logo(icon: "appletv_icon")
+        Logo(attachments: [MockData.mockAttachment])
     }
 }

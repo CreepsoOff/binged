@@ -9,9 +9,10 @@ import SwiftUI
 
 struct AutherProfil: View {
     
-    @State var user: User
+    @Binding var user: User
     @State private var isFollow = false
-    @State var vmuser = UserViewModel()
+    @Environment(UserViewModel.self) private var vmuser
+    @Environment(SerieViewModels.self) private var vmSerie
     
     var body: some View {
         NavigationStack {
@@ -107,13 +108,25 @@ struct AutherProfil: View {
                         }
                         TabView {
                             ForEach(user.favoriteSeriesSafe) { serie in
-                                Image(serie.cover!)
-                                    .resizable()
-                                    .scaledToFill()
+                                if let url = serie.cover?.first?.thumbnails?.large?.url {
+                                    AsyncImage(url: url) { image in
+                                        image
+                                            .resizable()
+                                            .scaledToFill()
+                                    } placeholder: {
+                                        ProgressView()
+                                    }
                                     .frame(height: 250)
                                     .clipped()
                                     .cornerRadius(10)
                                     .padding(.horizontal)
+                                } else {
+                                    Rectangle()
+                                        .fill(Color.gray.opacity(0.3))
+                                        .frame(height: 250)
+                                        .cornerRadius(10)
+                                        .padding(.horizontal)
+                                }
                             }
                         }
                         .frame(height: 250)
@@ -123,16 +136,35 @@ struct AutherProfil: View {
                 }
                 .padding(.horizontal, 8)
             }
-//        }.task {
-//            do {
-//                self.user = try await vmuser.getUserById("rec279AxVMVJ5GrPQ")
-//            } catch {
-//                print(error)
-//            }
+        }.task {
+            // Cascade fetch for Series
+            if let seriesIDs = user.favoriteSerieIDs {
+                for id in seriesIDs {
+                    if let s = try? await vmSerie.getSerieById(id) {
+                        if !user.favoriteSeries.contains(where: { $0?.id == s.id }) {
+                            user.favoriteSeries.append(s)
+                        }
+                    }
+                }
+            }
+            
+            // Cascade fetch for Actors
+            if let actorIDs = user.favoriteActorIDs {
+                for id in actorIDs {
+                    if let a = try? await vmSerie.getActorById(id) {
+                        if !user.favoriteActors.contains(where: { $0?.id == a.id }) {
+                            user.favoriteActors.append(a)
+                        }
+                    }
+                }
+            }
         }
     }
 }
 
 #Preview() {
-    AutherProfil(user: MockData.magalie)
+    AutherProfil(user: .constant(MockData.magalie))
+        .environment(SerieViewModels())
+        .environment(UserViewModel())
+        .environment(PlayListViewModel())
 }

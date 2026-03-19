@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SearchActorView: View {
     @State private var searchText = ""
-    @State var vmActor = ActorViewModel()
+    @Environment(ActorViewModel.self) private var vmActor
     
     @State private var listActors: [CastMember] = []
     
@@ -64,4 +64,8 @@ struct SearchActorView: View {
 
 #Preview {
     SearchActorView(user: MockData.magalie)
+        .environment(SerieViewModels())
+        .environment(UserViewModel())
+        .environment(PlayListViewModel())
+        .environment(ActorViewModel())
 }

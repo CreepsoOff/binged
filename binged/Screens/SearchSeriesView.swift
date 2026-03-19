@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct SearchSeriesView: View {
-    @State private var serieVM = SerieViewModels()
+    @Environment(SerieViewModels.self) private var serieVM
     @State private var searchText = ""
     
     // 1. Filtrage dynamique en fonction de la barre de recherche
@@ -61,16 +61,20 @@ struct SearchSeriesView: View {
                                     } label: {
                                         VStack(alignment: .leading, spacing: 8) {
                                             // L'Affiche
-                                            if let cover = serie.cover {
-                                                Image(cover)
-                                                    .resizable()
-                                                    .aspectRatio(2/3, contentMode: .fill)
-                                                    .frame(maxWidth: .infinity)
-                                                    .frame(height: 220)
-                                                    .clipped()
-                                                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                                                    .contentShape(RoundedRectangle(cornerRadius: 10))
-                                                    .padding(.bottom, 6)
+                                            if let url = serie.cover?.first?.thumbnails?.large?.url {
+                                                AsyncImage(url: url) { image in
+                                                    image
+                                                        .resizable()
+                                                        .aspectRatio(2/3, contentMode: .fill)
+                                                } placeholder: {
+                                                    ProgressView()
+                                                }
+                                                .frame(maxWidth: .infinity)
+                                                .frame(height: 220)
+                                                .clipped()
+                                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                                                .contentShape(RoundedRectangle(cornerRadius: 10))
+                                                .padding(.bottom, 6)
                                             } else {
                                                 RoundedRectangle(cornerRadius: 10)
                                                     .fill(Color.gray.opacity(0.3))
@@ -127,4 +131,7 @@ struct SearchSeriesView: View {
 
 #Preview {
     SearchSeriesView()
+        .environment(SerieViewModels())
+        .environment(UserViewModel())
+        .environment(PlayListViewModel())
 }

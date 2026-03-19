@@ -10,6 +10,7 @@ import SwiftUI
 struct OtherProfile: View {
     
    @Binding var user: User
+   @Environment(SerieViewModels.self) private var vmSerie
     
     var body: some View {
         NavigationStack {
@@ -93,17 +94,50 @@ struct OtherProfile: View {
                         }
                         TabView {
                             ForEach(user.favoriteSeriesSafe) { serie in
-                                Image(serie.cover!)
-                                    .resizable()
-                                    .scaledToFill()
+                                if let url = serie.cover?.first?.thumbnails?.large?.url {
+                                    AsyncImage(url: url) { image in
+                                        image
+                                            .resizable()
+                                            .scaledToFill()
+                                    } placeholder: {
+                                        ProgressView()
+                                    }
                                     .frame(height: 250)
                                     .clipped()
                                     .clipShape(.rect(cornerRadius: 10))
                                     .padding(.horizontal)
+                                } else {
+                                    Rectangle()
+                                        .fill(Color.gray.opacity(0.3))
+                                        .frame(height: 250)
+                                        .clipShape(.rect(cornerRadius: 10))
+                                        .padding(.horizontal)
+                                }
                             }
                         }
                         .frame(height: 250)
                         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
+                    }
+                }
+            }
+        }
+        .task {
+            if let seriesIDs = user.favoriteSerieIDs {
+                for id in seriesIDs {
+                    if let s = try? await vmSerie.getSerieById(id) {
+                        if !user.favoriteSeries.contains(where: { $0?.id == s.id }) {
+                            user.favoriteSeries.append(s)
+                        }
+                    }
+                }
+            }
+            
+            if let actorIDs = user.favoriteActorIDs {
+                for id in actorIDs {
+                    if let a = try? await vmSerie.getActorById(id) {
+                        if !user.favoriteActors.contains(where: { $0?.id == a.id }) {
+                            user.favoriteActors.append(a)
+                        }
                     }
                 }
             }
@@ -113,34 +147,8 @@ struct OtherProfile: View {
 
 
 #Preview("Airtable - Profil Briand") {
-    
-    struct OtherProfilePreview: View {
-        @State private var userVM = UserViewModel()
-        @State private var liveUser: User?
-        
-        var body: some View {
-            ZStack {
-                Color("background").ignoresSafeArea()
-                
-                if let user = liveUser {
-                    OtherProfile(user: .constant(user))
-                        .environment(userVM)
-                } else {
-                    ProgressView("Chargement du profil...")
-                        .tint(.white)
-                        .foregroundStyle(.white)
-                }
-            }
-            .task {
-                do {
-                    let briandID = "rec15VTfdnBrUWmBb"
-                    self.liveUser = try await userVM.getUserById(briandID)
-                } catch {
-                    print("Erreur de chargement dans la Preview : \(error)")
-                }
-            }
-        }
-    }
-    
     return OtherProfilePreview()
+        .environment(SerieViewModels())
+        .environment(UserViewModel())
+        .environment(PlayListViewModel())
 }

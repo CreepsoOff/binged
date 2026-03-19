@@ -2,19 +2,60 @@
 //  ContentView.swift
 //  binged
 //
-//  Created by apprenant85 on 04/03/2026.
-//
 
 import SwiftUI
 
 struct ContentView: View {
-    let comedy = GenreType.comedy
-//    comedy.isFavorite? = true
+    @State private var userVM = UserViewModel()
+    @State private var serieVM = SerieViewModels()
+    @State private var playlistVM = PlayListViewModel()
+    @State private var actorVM = ActorViewModel()
+    @State private var currentUser: User?
+    
     var body: some View {
-        Text("Binged")
+        Group {
+            if let user = currentUser {
+                TabView {
+                    SeriesListView()
+                        .tabItem {
+                            Label("Séries", systemImage: "tv")
+                        }
+                    
+                    SearchSeriesView()
+                        .tabItem {
+                            Label("Recherche", systemImage: "magnifyingglass")
+                        }
+                    
+                    CalendarView()
+                        .tabItem {
+                            Label("Calendrier", systemImage: "calendar")
+                        }
+                    
+                    MyProfile(userConnected: user)
+                        .tabItem {
+                            Label("Profil", systemImage: "person.fill")
+                        }
+                }
+                .environment(serieVM)
+                .environment(userVM)
+                .environment(playlistVM)
+                .environment(actorVM)
+            } else {
+                ProgressView("Chargement de votre session...")
+                    .task {
+                        do {
+                            // On récupère l'utilisateur par défaut pour la démo/prod
+                            self.currentUser = try await userVM.getUserById("rec279AxVMVJ5GrPQ")
+                        } catch {
+                            print("Erreur initialisation session: \(error)")
+                        }
+                    }
+            }
+        }
     }
 }
 
 #Preview {
     ContentView()
 }
+

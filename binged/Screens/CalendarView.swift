@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct CalendarView: View {
-    let events: [CalendarEvent] = MockData.calendarMocks
+    @Environment(SerieViewModels.self) private var viewModel
     
     var body: some View {
         NavigationStack {
@@ -19,15 +19,22 @@ struct CalendarView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 25) {
                         
-                        SectionView(title: "Prochaines Sorties", isEmpty: events.isEmpty)
+                        SectionView(title: "Prochaines Sorties", isEmpty: viewModel.events.isEmpty)
                         
-                        ForEach(events) { event in
-                            NavigationLink {
-                                if let serie = event.serie {
-                                    SeriesDetailView(serie: serie)
+                        if viewModel.isLoading && viewModel.events.isEmpty {
+                            ProgressView("Chargement du calendrier...")
+                                .tint(.white)
+                                .foregroundStyle(.white)
+                                .padding()
+                        } else {
+                            ForEach(viewModel.events) { event in
+                                NavigationLink {
+                                    if let serie = event.serie {
+                                        SeriesDetailView(serie: serie)
+                                    }
+                                } label: {
+                                    CalendarRow(event: event)
                                 }
-                            } label: {
-                                CalendarRow(event: event)
                             }
                         }
                     }
@@ -35,19 +42,25 @@ struct CalendarView: View {
                 }
             }
             .navigationTitle("Calendrier")
-                        .toolbarBackground(.hidden, for: .navigationBar)
-                    }
-                    .preferredColorScheme(.dark)
-            
-        
+            .toolbarBackground(.hidden, for: .navigationBar)
+        }
+        .preferredColorScheme(.dark)
+        .task {
+            if viewModel.events.isEmpty {
+                do {
+                    try await viewModel.fetchCalendarEvents()
+                } catch {
+                    print("Erreur chargement calendrier: \(error)")
+                }
+            }
+        }
     }
-    
- 
 }
-
-
 
 #Preview {
     CalendarView()
         .environment(SerieViewModels())
+        .environment(UserViewModel())
+        .environment(PlayListViewModel())
+        .environment(ActorViewModel())
 }

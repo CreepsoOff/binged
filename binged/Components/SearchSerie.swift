@@ -17,7 +17,7 @@ struct SearchSerie: View {
     
     var user: User
     
-    @State var vmSerie = SerieViewModels()
+    @Environment(SerieViewModels.self) private var vmSerie
     
     @State private var listSeries: [Serie] = []
     
@@ -39,13 +39,25 @@ struct SearchSerie: View {
                 HStack {
                     LazyVGrid(columns: columns, spacing: 20){
                         ForEach(filteredSeries) { serie in
-                            if let cover = serie.cover {
-                                VStack{
-                                    Image(cover)
-                                        .resizable()
-                                        .scaledToFill()
+                            if let url = serie.cover?.first?.thumbnails?.large?.url {
+                                VStack {
+                                    AsyncImage(url: url) { image in
+                                        image
+                                            .resizable()
+                                            .scaledToFill()
+                                    } placeholder: {
+                                        ProgressView()
+                                    }
+                                    .frame(width: 100, height: 150)
+                                    .clipped()
+                                    .padding(.horizontal, 4)
+                                    Text(serie.name)
+                                }
+                            } else {
+                                VStack {
+                                    Rectangle()
+                                        .fill(Color.gray.opacity(0.3))
                                         .frame(width: 100, height: 150)
-                                        .clipped()
                                         .padding(.horizontal, 4)
                                     Text(serie.name)
                                 }
@@ -79,4 +91,8 @@ struct SearchSerie: View {
 
 #Preview {
     SearchSerie(user: MockData.magalie)
+        .environment(SerieViewModels())
+        .environment(UserViewModel())
+        .environment(PlayListViewModel())
+        .environment(ActorViewModel())
 }

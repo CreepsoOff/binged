@@ -6,6 +6,9 @@ class SerieViewModels {
 
     private let apiKey = Secrets.airtableAPIKey
     var series: [Serie] = []
+    var allPlatforms: [Platform] = []
+    var platformIDToName: [String: String] = [:]
+    var events: [CalendarEvent] = []
     var isLoading: Bool = true
 
     private func createRequest(urlStr: String) -> URLRequest {
@@ -14,7 +17,6 @@ class SerieViewModels {
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         return request
     }
-    
     
     func getSerieById(_ id: String) async throws -> Serie {
         let newURL = URL(string: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Serie/\(id)")!
@@ -31,64 +33,115 @@ class SerieViewModels {
             let decoded = try decoder.decode(SerieRecord.self, from: data)
             return decoded.fields
         } catch {
-            print("Échec du décodage:userbyID")
             throw error
         }
     }
     
     // MARK: - FETCH PAR ID (Lazy Loading)
         
-        func getPlatformById(_ id: String) async throws -> Platform {
-            let url = URL(string: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Platform/\(id)")!
-            var request = URLRequest(url: url)
-            request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-            let (data, _) = try await URLSession.shared.data(for: request)
-            return try JSONDecoder().decode(PlatformRecord.self, from: data).fields
-        }
+    func getPlatformById(_ id: String) async throws -> Platform {
+        let url = URL(string: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Platform/\(id)")!
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        let (data, _) = try await URLSession.shared.data(for: request)
+        return try JSONDecoder().decode(PlatformRecord.self, from: data).fields
+    }
 
-        func getReviewById(_ id: String) async throws -> ReviewItem {
-            let url = URL(string: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Reviews/\(id)")!
-            var request = URLRequest(url: url)
-            request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-            let (data, _) = try await URLSession.shared.data(for: request)
-            return try JSONDecoder().decode(ReviewRecord.self, from: data).fields
-        }
+    func getReviewById(_ id: String) async throws -> ReviewItem {
+        let url = URL(string: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Reviews/\(id)")!
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        let (data, _) = try await URLSession.shared.data(for: request)
+        return try JSONDecoder().decode(ReviewRecord.self, from: data).fields
+    }
 
-        func getRoleById(_ id: String) async throws -> ActorSerie {
-            let url = URL(string: "https://api.airtable.com/v0/appIztQK14x6MyfL9/ActorSerie/\(id)")!
-            var request = URLRequest(url: url)
-            request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-            let (data, _) = try await URLSession.shared.data(for: request)
-            return try JSONDecoder().decode(ActorSerieRecord.self, from: data).fields
+    func getRoleById(_ id: String) async throws -> ActorSerie {
+        let url = URL(string: "https://api.airtable.com/v0/appIztQK14x6MyfL9/ActorSerie/\(id)")!
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        let (data, _) = try await URLSession.shared.data(for: request)
+        return try JSONDecoder().decode(ActorSerieRecord.self, from: data).fields
+    }
+    
+    func getActorById(_ id: String) async throws -> CastMember {
+        let url = URL(string: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Actor/\(id)")!
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        let (data, _) = try await URLSession.shared.data(for: request)
+        
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        return try decoder.decode(CastMemberRecord.self, from: data).fields
+    }
+
+    func getEventById(_ id: String) async throws -> CalendarEvent {
+        let url = URL(string: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Calendar/\(id)")!
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        
+        let (data, _) = try await URLSession.shared.data(for: request)
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        
+        var event = try decoder.decode(CalendarRecord.self, from: data).fields
+        
+        if let sID = event.serieID?.first {
+            event.serie = try? await getSerieById(sID)
         }
         
-        func getActorById(_ id: String) async throws -> CastMember {
-            let url = URL(string: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Actor/\(id)")!
-            var request = URLRequest(url: url)
-            request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-            let (data, _) = try await URLSession.shared.data(for: request)
-            
-            let decoder = JSONDecoder()
-            decoder.dateDecodingStrategy = .iso8601
-            return try decoder.decode(CastMemberRecord.self, from: data).fields
-        }
+        return event
+    }
     
-    // MARK: - FETCH LIGHT (Pour la recherche)
-        func fetchLightSeries() async throws {
-            isLoading = true
-            defer { isLoading = false }
-            
-            // On ne télécharge QUE les séries, pas les acteurs ni les plateformes !
-            let reqSeries = createRequest(urlStr: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Serie")
-            
-            let (dataSeries, _) = try await URLSession.shared.data(for: reqSeries)
-            
-            let decoder = JSONDecoder()
-            let decodedSeries = try decoder.decode(SeriesResponse.self, from: dataSeries).records
-            
-            // On stocke juste les objets de base
-            self.series = decodedSeries.map { $0.fields }
+    // MARK: - FETCH LISTS
+    
+    func fetchLightSeries() async throws {
+        isLoading = true
+        defer { isLoading = false }
+        
+        let reqSeries = createRequest(urlStr: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Serie")
+        let (dataSeries, _) = try await URLSession.shared.data(for: reqSeries)
+        
+        let decoder = JSONDecoder()
+        let decodedSeries = try decoder.decode(SeriesResponse.self, from: dataSeries).records
+        self.series = decodedSeries.map { $0.fields }
+    }
+    
+    func fetchPlatforms() async throws {
+        let req = createRequest(urlStr: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Platform")
+        let (data, _) = try await URLSession.shared.data(for: req)
+        let decoder = JSONDecoder()
+        let decoded = try decoder.decode(PlatformsResponse.self, from: data).records
+
+        self.allPlatforms = decoded.map { $0.fields }
+
+        var mapping: [String: String] = [:]
+        for record in decoded {
+            mapping[record.id] = record.fields.name
         }
+        self.platformIDToName = mapping
+    }
+    
+    func fetchCalendarEvents() async throws {
+        isLoading = true
+        defer { isLoading = false }
+        
+        let req = createRequest(urlStr: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Calendar")
+        let (data, _) = try await URLSession.shared.data(for: req)
+        
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        let records = try decoder.decode(CalendarResponse.self, from: data).records
+        
+        var fetchedEvents: [CalendarEvent] = []
+        for record in records {
+            var event = record.fields
+            if let sID = event.serieID?.first {
+                event.serie = try? await getSerieById(sID)
+            }
+            fetchedEvents.append(event)
+        }
+        self.events = fetchedEvents.sorted(by: { $0.date < $1.date })
+    }
 
     func fetchSeries() async throws {
         isLoading = true
@@ -114,15 +167,11 @@ class SerieViewModels {
         let decodedReviews = try decoder.decode(ReviewResponse.self, from: dataReviews).records
         let decodedPlatforms = try decoder.decode(PlatformsResponse.self, from: dataPlatforms).records
 
-        // --- MAPPING ---
-        
-        // A. Dictionnaire des Acteurs
         var dictActors: [String: CastMember] = [:]
         for record in decodedActors {
             dictActors[record.id] = record.fields
         }
 
-        // B. Dictionnaire des Rôles (avec lien Acteur)
         var dictRoles: [String: ActorSerie] = [:]
         for record in decodedRoles {
             var role = record.fields
@@ -132,33 +181,24 @@ class SerieViewModels {
             dictRoles[record.id] = role
         }
         
-        // C. Dictionnaire des Reviews
         var dictReviews: [String: ReviewItem] = [:]
         for record in decodedReviews {
             dictReviews[record.id] = record.fields
         }
         
-        // D. Dictionnaire des Plateformes
         var dictPlatforms: [String: Platform] = [:]
         for record in decodedPlatforms {
             dictPlatforms[record.id] = record.fields
         }
 
-        // E. Remplissage final des Séries
         let finalSeries = decodedSeries.map { $0.fields }
         for serie in finalSeries {
-            
-            // Mapping des Acteurs
             if let roleIDs = serie.actorIDs {
                 serie.actors = roleIDs.compactMap { dictRoles[$0] }
             }
-            
-            // Mapping des Reviews
             if let revIDs = serie.reviewIDs {
                 serie.reviews = revIDs.compactMap { dictReviews[$0] }
             }
-            
-            // Mapping des Plateformes
             if let platIDs = serie.platformIDs {
                 serie.platform = platIDs.compactMap { dictPlatforms[$0] }
             }

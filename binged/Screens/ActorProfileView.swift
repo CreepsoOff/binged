@@ -7,217 +7,217 @@ struct ActorProfileView: View {
     let actor: CastMember
     let textSecondary = Color.white.opacity(0.6)
     
-    // 1. AJOUT : On stocke la série ET le rôle ensemble !
-    @State private var loadedData: [(role: ActorSerie, serie: Serie)] = []
-    @State private var isLoading = true
-
+    // État local pour stocker les résultats du fetch en cascade
+    @State private var loadedData: [(serie: Serie, role: ActorSerie)] = []
+    @State private var isLoadingData = true
+    
     var body: some View {
         ZStack {
             Design.bgColor.ignoresSafeArea()
-
+            
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
-
-                    // MARK: - Image de couverture
-                    if let url = actor.imageName.first??.thumbnails?.large?.url {
-                        AsyncImage(url: url) { image in
-                            image
-                                .resizable()
-                                .scaledToFill()
-                                .containerRelativeFrame(.horizontal)
-                                .frame(height: Design.coverHeight, alignment: .top)
-                                .overlay(alignment: .bottom) {
-                                    LinearGradient(
-                                        gradient: Gradient(colors: [.clear, Design.bgColor]),
-                                        startPoint: .center,
-                                        endPoint: .bottom
-                                    )
-                                }
-                                .clipped()
-
-                        } placeholder: {
-                            ProgressView()
-                        }
-                        .frame(height: Design.coverHeight, alignment: .top)
-                    } else {
-                        Rectangle()
-                            .fill(Design.cardColor)
-                            .frame(height: Design.coverHeight)
-                            .overlay {
-                                Text("Pas d'image").foregroundStyle(textSecondary)
+                    
+                    // MARK: - 1. EN-TÊTE (PHOTO & NOM)
+                    ZStack(alignment: .bottomLeading) {
+                        if let url = actor.imageName.first??.thumbnails?.large?.url {
+                            AsyncImage(url: url) { image in
+                                image
+                                    .resizable()
+                                    .scaledToFill()
+                            } placeholder: {
+                                ProgressView()
                             }
-                    }
-
-                    VStack(alignment: .leading) {
-
-                        // MARK: - Informations personnelles
-                        Text(actor.name)
-                            .font(.largeTitle)
-                            .bold()
-                            .foregroundStyle(.white)
-
-                        HStack {
-                            Text("\(actor.age) ans")
-                                .bold()
+                            .frame(height: 400)
+                            .clipped()
+                        } else {
+                            Rectangle()
+                                .fill(Design.cardColor)
+                                .frame(height: 400)
+                                .overlay {
+                                    Image(systemName: "person.fill")
+                                        .font(.system(size: 80))
+                                        .foregroundStyle(.white.opacity(0.2))
+                                }
+                        }
+                        
+                        // Dégradé pour la lisibilité du nom
+                        LinearGradient(
+                            gradient: Gradient(colors: [.clear, Design.bgColor]),
+                            startPoint: .center,
+                            endPoint: .bottom
+                        )
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(actor.name)
+                                .font(.system(size: 40, weight: .heavy))
                                 .foregroundStyle(.white)
                             
-                            Text("• Né(e) à \(actor.cityOfBirth ?? "Inconnu") • \(actor.dateOfBirth.formatDDMMYYYY())")
-                                .foregroundStyle(textSecondary)
+                            HStack {
+                                Text(actor.cityOfBirth ?? "Lieu inconnu")
+                                Text("•")
+                                Text("\(actor.age) ans")
+                            }
+                            .font(.subheadline)
+                            .foregroundStyle(textSecondary)
                         }
-                        .font(.subheadline)
-                        .padding(.bottom)
-
-                        // MARK: - Biographie
+                        .padding()
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 25) {
+                        
+                        // MARK: - 2. BIO
                         if let bio = actor.bio, !bio.isEmpty {
-                            Text("Biographie")
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text("Biographie")
+                                    .font(.title3)
+                                    .bold()
+                                    .foregroundStyle(.white)
+                                
+                                Text(bio)
+                                    .font(.body)
+                                    .foregroundStyle(textSecondary)
+                                    .lineLimit(nil)
+                            }
+                            .padding(.horizontal)
+                        }
+                        
+                        // MARK: - 3. FILMOGRAPHIE (LA CASCADE !)
+                        VStack(alignment: .leading, spacing: 15) {
+                            Text("Filmographie")
                                 .font(.title3)
                                 .bold()
                                 .foregroundStyle(.white)
-
-                            Text(bio)
-                                .foregroundStyle(textSecondary)
+                                .padding(.horizontal)
+                            
+                            if isLoadingData {
+                                HStack {
+                                    Spacer()
+                                    ProgressView("Chargement des rôles...")
+                                        .tint(.white)
+                                        .foregroundStyle(.white)
+                                    Spacer()
+                                }
                                 .padding()
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(Design.cardColor)
-                                .clipShape(.rect(cornerRadius: 16))
-                                .padding(.bottom)
-                        }
-
-                        // MARK: - Filmographie (LAZY LOADING)
-                        Text("Apparaît dans")
-                            .font(.title3)
-                            .bold()
-                            .foregroundStyle(.white)
-
-                        if isLoading {
-                            ProgressView()
-                                .tint(.white)
-                                .padding(.top, 20)
-                                .padding(.bottom, 40)
-                        } else if loadedData.isEmpty {
-                            Text("Aucune série répertoriée pour le moment.")
-                                .foregroundStyle(textSecondary)
-                                .padding(.top, 10)
-                                .padding(.bottom, 40)
-                        } else {
-                            ScrollView(.horizontal) {
-                                HStack(alignment: .top, spacing: 16) {
-                                    // On boucle sur notre Tuple
-                                    ForEach(loadedData, id: \.serie.id) { item in
-                                        
-                                        NavigationLink {
-                                            SeriesDetailView(serie: item.serie)
-                                        } label: {
-                                            VStack(alignment: .leading) {
-                                                if let cover = item.serie.cover {
-                                                    Image(cover)
-                                                        .resizable()
-                                                        .scaledToFill()
+                            } else if loadedData.isEmpty {
+                                Text("Aucune série trouvée pour cet acteur.")
+                                    .italic()
+                                    .foregroundStyle(.gray)
+                                    .padding(.horizontal)
+                            } else {
+                                ScrollView(.horizontal) {
+                                    HStack(alignment: .top, spacing: 16) {
+                                        ForEach(loadedData, id: \.serie.id) { item in
+                                            
+                                            NavigationLink {
+                                                SeriesDetailView(serie: item.serie)
+                                            } label: {
+                                                VStack(alignment: .leading) {
+                                                    if let url = item.serie.cover?.first?.thumbnails?.large?.url {
+                                                        AsyncImage(url: url) { image in
+                                                            image
+                                                                .resizable()
+                                                                .scaledToFill()
+                                                        } placeholder: {
+                                                            ProgressView()
+                                                        }
                                                         .frame(width: 120, height: 180)
                                                         .clipShape(.rect(cornerRadius: 12))
-                                                } else {
-                                                    Rectangle()
-                                                        .fill(Design.cardColor)
-                                                        .frame(width: 120, height: 180)
-                                                        .clipShape(.rect(cornerRadius: 12))
+                                                    } else {
+                                                        Rectangle()
+                                                            .fill(Design.cardColor)
+                                                            .frame(width: 120, height: 180)
+                                                            .clipShape(.rect(cornerRadius: 12))
+                                                    }
+
+                                                    Text(item.serie.name)
+                                                        .font(.caption)
+                                                        .bold()
+                                                        .foregroundStyle(.white)
+                                                        .lineLimit(1)
+                                                    
+                                                    // LE RETOUR DU NOM DU RÔLE ! 🎉
+                                                    Text(item.role.roleName)
+                                                        .font(.caption2)
+                                                        .foregroundStyle(textSecondary)
+                                                        .lineLimit(1)
                                                 }
-
-                                                Text(item.serie.name)
-                                                    .font(.caption)
-                                                    .bold()
-                                                    .foregroundStyle(.white)
-                                                    .lineLimit(1)
-                                                
-                                                // LE RETOUR DU NOM DU RÔLE ! 🎉
-                                                Text(item.role.roleName)
-                                                    .font(.caption2)
-                                                    .foregroundStyle(textSecondary)
-                                                    .lineLimit(1)
+                                                .frame(width: 120)
                                             }
-                                            .frame(width: 120)
                                         }
                                     }
+                                    .padding(.horizontal)
                                 }
+                                .scrollIndicators(.hidden)
                             }
-                            .scrollIndicators(.hidden)
-                            .padding(.bottom, 40)
                         }
                     }
-                    .padding(.horizontal)
+                    .padding(.top, 10)
+                    .padding(.bottom, 50)
                 }
+            }
+            .scrollIndicators(.hidden)
+            .ignoresSafeArea(edges: .top)
+            
+            // Bouton Retour
+            VStack {
+                HStack {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .font(.title3.bold())
+                            .foregroundStyle(.white)
+                            .padding(12)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Circle())
+                    }
+                    Spacer()
+                }
+                .padding()
+                Spacer()
             }
         }
-        .scrollIndicators(.hidden)
-        .ignoresSafeArea(edges: .top)
+        .navigationBarHidden(true)
         
-        // MARK: - 2. MOTEUR DE TÉLÉCHARGEMENT (Cascade)
+        // MARK: - LOGIQUE DE FETCH EN CASCADE
         .task {
-            // 1. On parcourt les IDs de "ActorSerie" de l'acteur
+            // Si on a déjà chargé les données, on ne recommence pas
+            guard loadedData.isEmpty else { return }
+            
+            isLoadingData = true
+            
+            // 1. On récupère la liste des IDs de rôles (ActorSerie)
             if let roleIDs = actor.actorSerieIDs {
                 for roleID in roleIDs {
-                    // 2. On télécharge le rôle précis
-                    if let role = try? await viewModel.getRoleById(roleID) {
+                    do {
+                        // 2. On fetch chaque objet ActorSerie (le Rôle)
+                        let role = try await viewModel.getRoleById(roleID)
                         
-                        // 3. On extrait l'ID de la série depuis le rôle, et on la télécharge
-                        if let serieID = role.serieIDs?.first,
-                           let serie = try? await viewModel.getSerieById(serieID) {
+                        // 3. On fetch la Série associée à ce rôle
+                        if let serieID = role.serieIDs?.first {
+                            let serie = try await viewModel.getSerieById(serieID)
                             
-                            // 4. On ajoute les deux ensemble pour l'affichage (si la série n'y est pas déjà)
-                            if !loadedData.contains(where: { $0.serie.name == serie.name }) {
-                                loadedData.append((role: role, serie: serie))
+                            // 4. On ajoute le couple (Série, Rôle) à notre liste locale
+                            withAnimation {
+                                loadedData.append((serie: serie, role: role))
                             }
                         }
+                    } catch {
+                        print("Erreur cascade acteur: \(error)")
                     }
                 }
             }
-            isLoading = false
+            
+            isLoadingData = false
         }
     }
 }
 
-// MARK: - Preview
-// MARK: - Preview Lazy Loading
-#Preview("Test Live Airtable - Un Acteur") {
-    
-    struct SingleActorPreview: View {
-        // 1. Initialisation du ViewModel
-        @State private var viewModel = SerieViewModels()
-        // 2. La variable pour stocker notre acteur cible
-        @State private var liveActor: CastMember?
-        
-        var body: some View {
-            NavigationStack {
-                ZStack {
-                    Design.bgColor.ignoresSafeArea()
-                    
-                    // 3. Affichage conditionnel
-                    if let actor = liveActor {
-                        // On injecte l'environnement pour que la vue puisse faire ses propres fetchs (les séries de l'acteur)
-                        ActorProfileView(actor: actor)
-                            .environment(viewModel)
-                    } else {
-                        VStack(spacing: 16) {
-                            ProgressView()
-                                .tint(.white)
-                                .scaleEffect(1.5)
-                            Text("Téléchargement de l'acteur...")
-                                .foregroundStyle(.white.opacity(0.6))
-                        }
-                    }
-                }
-            }
-            // 4. Le fameux .task pour le FetchByID !
-            .task {
-                do {
-                    // Remplace par n'importe quel ID "rec..." d'acteur de ta base Airtable (ici Aaron Paul)
-                    let targetID = "recNqCTo2Rdq9gzAT"
-                    self.liveActor = try await viewModel.getActorById(targetID)
-                } catch {
-                    print("Erreur de chargement dans la Preview : \(error)")
-                }
-            }
-        }
-    }
-    
+// MARK: - Preview Live Airtable
+#Preview("Test Live Actor") {
     return SingleActorPreview()
+        .environment(SerieViewModels())
+        .environment(UserViewModel())
+        .environment(PlayListViewModel())
 }

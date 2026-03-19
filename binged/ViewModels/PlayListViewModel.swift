@@ -25,7 +25,6 @@ class PlayListViewModel {
             let decoded = try decoder.decode(PlaylistRecord.self, from: data)
             return decoded.fields
         } catch {
-            print("Échec du décodage:playlistbyID")
             throw error
         }
     }

@@ -30,7 +30,6 @@ struct ProfileCarouselView: View {
                 // BOUTON PLAYLISTS
                 Button {
                     // TODO: Navigation vers l'écran des playlists
-                    print("Ouvrir Mes Playlists")
                 } label: {
                     HStack(spacing: 6) {
                         Image(systemName: "text.book.closed.fill")
@@ -62,7 +61,7 @@ struct ProfileCarouselView: View {
                             // Le modulo (%) permet de boucler à l'infini
                             let leftIndex = (currentIndex - 1 + series.count) % series.count
                             
-                            cardView(for: series[leftIndex], isCenter: false, isLeft: true)
+                            ProfileCarouselCard(serie: series[leftIndex], isCenter: false, isLeft: true)
                                 .offset(x: -width * 0.30) // Pousse la carte à gauche
                                 .onTapGesture {
                                     slide(to: leftIndex)
@@ -73,7 +72,7 @@ struct ProfileCarouselView: View {
                         if series.count >= 3 {
                             let rightIndex = (currentIndex + 1) % series.count
                             
-                            cardView(for: series[rightIndex], isCenter: false, isLeft: false)
+                            ProfileCarouselCard(serie: series[rightIndex], isCenter: false, isLeft: false)
                                 .offset(x: width * 0.30) // Pousse la carte à droite
                                 .onTapGesture {
                                     slide(to: rightIndex)
@@ -81,7 +80,7 @@ struct ProfileCarouselView: View {
                         }
                         
                         // CARTE CENTRALE
-                        cardView(for: series[currentIndex], isCenter: true, isLeft: false)
+                        ProfileCarouselCard(serie: series[currentIndex], isCenter: true, isLeft: false)
                             .offset(x: 0)
                             // GESTION DU SWIPE (Glissement au doigt)
                             .gesture(
@@ -105,40 +104,6 @@ struct ProfileCarouselView: View {
         }
     }
     
-    // MARK: - 3. DESIGN DE LA CARTE
-    @ViewBuilder
-    private func cardView(for serie: Serie, isCenter: Bool, isLeft: Bool) -> some View {
-        ZStack {
-            // L'image
-            if let coverName = serie.cover {
-                Image(coverName)
-                    .resizable()
-                    .scaledToFill()
-            } else {
-                Rectangle().fill(Color.gray.opacity(0.3))
-            }
-            
-            // Le filtre noir et la flèche pour les cartes sur le côté
-            if !isCenter {
-                Color.black.opacity(0.4) // Assombrit la carte
-                
-                Image(systemName: isLeft ? "chevron.left" : "chevron.right")
-                    .font(.title2)
-                    .bold()
-                    .foregroundStyle(.white.opacity(0.8))
-                    .padding(12)
-                    .background(.ultraThinMaterial)
-                    .clipShape(Circle())
-            }
-        }
-        // Tailles dynamiques : Grande au centre, petite sur les côtés
-        .frame(width: isCenter ? 220 : 160, height: isCenter ? 320 : 240)
-        .clipShape(RoundedRectangle(cornerRadius: 15))
-        .shadow(color: .black.opacity(0.5), radius: 10, x: 0, y: isCenter ? 15 : 5)
-        // La carte du centre passe TOUJOURS au-dessus des autres
-        .zIndex(isCenter ? 1 : 0)
-    }
-    
     // Fonction utilitaire pour l'animation
     private func slide(to index: Int) {
         withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
@@ -152,7 +117,7 @@ struct ProfileCarouselView: View {
         name: "Série 1",
         desc: "Description 1",
         type: .standard,
-        cover: "breaking_bad_cover", // Mets le nom exact d'une image de tes Assets
+        cover: [MockData.mockAttachment], // Mise à jour type [Attachment]
         year: 2008,
         decennie: "2000s",
         genre: .drama,
@@ -164,7 +129,7 @@ struct ProfileCarouselView: View {
         name: "Série 2",
         desc: "Description 2",
         type: .standard,
-        cover: "aot_cover", // Remplace par une autre image
+        cover: [MockData.mockAttachment], // Mise à jour type [Attachment]
         year: 2016,
         decennie: "2010s",
         genre: .sf,
@@ -176,7 +141,7 @@ struct ProfileCarouselView: View {
         name: "Série 3",
         desc: "Description 3",
         type: .standard,
-        cover: "got_cover", // Et une troisième
+        cover: [MockData.mockAttachment], // Mise à jour type [Attachment]
         year: 2011,
         decennie: "2010s",
         genre: .fantasy,

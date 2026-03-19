@@ -16,10 +16,18 @@ struct SerieProfile: View {
                 .ignoresSafeArea()
             VStack{
                 ZStack(alignment: .topLeading){
-                    if let cover = serie.cover {
-                        Image(cover)
-                            .resizable()
-                            .scaledToFill()
+                    if let url = serie.cover?.first?.thumbnails?.large?.url {
+                        AsyncImage(url: url) { image in
+                            image
+                                .resizable()
+                                .scaledToFill()
+                        } placeholder: {
+                            ProgressView()
+                        }
+                        .frame(width:400, height: 300)
+                    } else {
+                        Rectangle()
+                            .fill(Color.gray.opacity(0.3))
                             .frame(width:400, height: 300)
                     }
                     VStack{
@@ -48,7 +56,7 @@ struct SerieProfile: View {
                     Text("plateforme :")
                         .foregroundStyle(.white)
                     ForEach(serie.platform, id: \.name) { platform in
-                        Logo(icon: platform.icon)
+                        Logo(attachments: platform.icon)
                     }
                     Spacer()
                     IconButton(text: "9,5", icon: "star.fill")
