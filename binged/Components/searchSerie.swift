@@ -8,10 +8,10 @@
 //import SwiftUI
 //
 //struct searchSerie: View {
-//    @State private var searchSerie = ""    
+//    @State private var searchSerie = ""
 //    var user: User
 //    var allSeries: [Serie]
-//    
+//
 //    var filteredSeries: [Serie] {
 //        let favorites = user.favoriteSerie(allSeries: allSeries)
 //
@@ -22,12 +22,12 @@
 //                    $0.name.localizedCaseInsensitiveContains(searchSerie)
 //                }
 //            }
-//        
-//    
+//
+//
 //    var body: some View {
 //        VStack(alignment: .leading) {
 //                    searchBar(text: $searchSerie)
-//                    
+//
 //                    ScrollView(.horizontal, showsIndicators: false) {
 //                        HStack {
 //                            ForEach(filteredSeries) { serie in
@@ -118,3 +118,4 @@ struct SearchSerie: View {
 #Preview {
     SearchSerie(user: MockData.magalie)
 }
+

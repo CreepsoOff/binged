@@ -1,9 +1,3 @@
-//
-//  chatSerie.swift
-//  binged
-//
-//  Created by Apprenant 92 on 12/03/2026.
-//
 
 import SwiftUI
 
@@ -84,7 +78,7 @@ struct ChatSerie: View {
             }
         }
     }
-}   
+}
 #Preview {
     ChatSerie()
 }

@@ -25,3 +25,4 @@ struct sfButton: View {
 #Preview {
     sfButton(icon: "play.fill")
 }
+
