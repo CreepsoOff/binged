@@ -97,29 +97,18 @@ class PlayListViewModel {
     func isSerieInUserPlaylists(serieName: String, user: User, serieVM: SerieViewModels) async -> Bool {
         guard let playlistIDs = user.playlistIDs else { return false }
         
+        // 1. On récupère l'ID Airtable de la série qu'on regarde
+        guard let targetSerieId = await fetchSerieRecordId(named: serieName) else { return false }
+        
+        // 2. On parcourt les playlists de l'utilisateur pour voir si cet ID s'y trouve
         for plid in playlistIDs {
             do {
                 let playlist = try await getPlayListById(plid)
-                if let sIDs = playlist.serieIDs {
-                    for sid in sIDs {
-                        // Pour éviter de charger la série complète si on peut l'éviter, 
-                        // on regarde si elle est déjà dans le cache du SerieViewModels
-                        if let cachedSerie = serieVM.series.first(where: { $0.id.uuidString == sid || $0.name == serieName }) {
-                            if cachedSerie.name == serieName {
-                                return true
-                            }
-                        } else {
-                            // Sinon on fait un fetch
-                            if let s = try? await serieVM.getSerieById(sid) {
-                                if s.name == serieName {
-                                    return true
-                                }
-                            }
-                        }
-                    }
+                if let sIDs = playlist.serieIDs, sIDs.contains(targetSerieId) {
+                    return true // Trouvé dans au moins une playlist !
                 }
             } catch {
-                print("Erreur lors de la vérification de la playlist \(plid)")
+                print("Erreur vérification playlist \(plid)")
             }
         }
         return false
