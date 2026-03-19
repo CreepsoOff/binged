@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct iconButton: View {
+struct IconButton: View {
     var text: String
     var icon: String
 
@@ -25,5 +25,5 @@ struct iconButton: View {
 }
 
 #Preview {
-    iconButton(text: "trailer", icon: "play.fill")
+    IconButton(text: "trailer", icon: "play.fill")
 }

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct searchBar: View {
+struct SearchBar: View {
     @Binding var text: String
 
     var body: some View {
@@ -25,5 +25,5 @@ struct searchBar: View {
 }
 
 #Preview {
-    searchBar(text: .constant("Genre"))
+    SearchBar(text: .constant("Genre"))
 }

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct myFavoris: View {
+struct MyFavoris: View {
     @State private var selectedScreen = 0
     
     @Binding var user: User
@@ -28,7 +28,7 @@ struct myFavoris: View {
                 case 2:
                     SearchSerie(user: user)
                 default:
-                searchGenre(user: user)
+                SearchGenre(user: user)
                 }
                 Spacer()
             }
@@ -37,5 +37,5 @@ struct myFavoris: View {
 }
     
 #Preview {
-    myFavoris(user: .constant(MockData.magalie))
+    MyFavoris(user: .constant(MockData.magalie))
 }

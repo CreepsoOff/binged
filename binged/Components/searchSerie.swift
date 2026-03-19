@@ -87,7 +87,7 @@ struct SearchSerie: View {
     
     var body: some View {
         VStack { // J'ai ajouté un VStack pour bien séparer la searchBar du ScrollView
-            searchBar(text: $searchText) // Modifié ici
+            SearchBar(text: $searchText) // Modifié ici
             
             ScrollView(showsIndicators: false) {
                 HStack {

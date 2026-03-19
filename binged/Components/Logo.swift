@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct logo: View {
+struct Logo: View {
     var icon: String
     
     var body: some View {
@@ -29,5 +29,5 @@ struct logo: View {
 }
 
 #Preview {
-    logo(icon: "netflix_icon")
+    Logo(icon: "netflix_icon")
 }

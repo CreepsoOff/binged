@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct actorBar: View {
+struct ActorBar: View {
     var actor: CastMember
     
     var body: some View {

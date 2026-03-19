@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct genreButton: View {
+struct GenreButton: View {
     var genre: String
     
     var body: some View {
@@ -20,5 +20,5 @@ struct genreButton: View {
 }
 
 #Preview {
-    genreButton(genre: "Action")
+    GenreButton(genre: "Action")
 }

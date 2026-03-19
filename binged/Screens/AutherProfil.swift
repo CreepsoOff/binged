@@ -71,9 +71,9 @@ struct AutherProfil: View {
                             .padding(.horizontal, 10)
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 12) {
-                                genreButton(genre: "Action")
-                                genreButton(genre: "Policier")
-                                genreButton(genre: "Romance")
+                                GenreButton(genre: "Action")
+                                GenreButton(genre: "Policier")
+                                GenreButton(genre: "Romance")
                             }.padding(.horizontal, 8)
                         }
                         Text("Acteurs")
@@ -84,7 +84,7 @@ struct AutherProfil: View {
                         ScrollView(.horizontal) {
                             HStack {
                                 ForEach(user.favoriteActorsSafe){ actor in
-                                    actorBar(actor: actor)
+                                    ActorBar(actor: actor)
                                 }
                             }
                             .padding(.horizontal, 8)
@@ -99,7 +99,7 @@ struct AutherProfil: View {
                             NavigationLink {
                                 PlaylistsView(user: $user)
                             } label: {
-                                iconButton(text: "Playlist", icon: "book.pages.fill")
+                                IconButton(text: "Playlist", icon: "book.pages.fill")
                             }
                         }
                         TabView {

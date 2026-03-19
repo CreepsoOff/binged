@@ -6,7 +6,7 @@
 //
 import SwiftUI
 
-struct serieProffil: View {
+struct SerieProfile: View {
     var serie: Serie
     
     var messages: [Message] = [
@@ -36,9 +36,9 @@ struct serieProffil: View {
                                         .bold()
                                     Spacer()
                                     HStack{
-                                        iconButton(text: "Trailer", icon: "play.fill")
+                                        IconButton(text: "Trailer", icon: "play.fill")
                                         Spacer()
-                                        iconButton(text: "Ajouter", icon: "plus")
+                                        IconButton(text: "Ajouter", icon: "plus")
                                     }
                                 }
                                 .padding()
@@ -52,10 +52,10 @@ struct serieProffil: View {
                     Text("Plateformes :")
                         .foregroundColor(.white)
                     ForEach(serie.platform, id: \.name) { platform in
-                        logo(icon: platform.icon)
+                        Logo(icon: platform.icon)
                     }
                     Spacer()
-                    iconButton(text: "9,5", icon: "star.fill")
+                    IconButton(text: "9,5", icon: "star.fill")
 
                 }
                 .padding(.horizontal, 8)
@@ -75,7 +75,7 @@ struct serieProffil: View {
                                 .foregroundColor(.white)
                         }
                         ForEach(serie.actors, id: \.actor?.name) { actor in
-                            actorBar(actor: actor.actor!)
+                            ActorBar(actor: actor.actor!)
                         }
                     }
                 }
@@ -110,7 +110,7 @@ struct serieProffil: View {
                                                 .frame(maxWidth: .infinity, alignment: .leading)
                                                 .bold()
 
-                                    iconButton(text: "Chatter", icon: "text.bubble.fill")
+                                    IconButton(text: "Chatter", icon: "text.bubble.fill")
                                         }
                                         ForEach(messages) { message in
                                             HStack {
@@ -142,5 +142,5 @@ struct serieProffil: View {
 }
 
 #Preview {
-    serieProffil(serie: MockData.breakingBad)
+    SerieProfile(serie: MockData.breakingBad)
 }

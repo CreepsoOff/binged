@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct myProffil: View {
+struct MyProfile: View {
     @State var vmUser = UserViewModel()
     @State var userConnected: User
     
@@ -40,10 +40,10 @@ struct myProffil: View {
                         )
                         .foregroundColor(.white)
                         .lineLimit(8)
-                        basicButton(text: "Modifier")
+                        BasicButton(text: "Modifier")
                     }
                 }
-                myFavoris(user: self.$userConnected)
+                MyFavoris(user: self.$userConnected)
                     .padding()
 
             }
@@ -58,5 +58,5 @@ struct myProffil: View {
 }
 
 #Preview {
-    myProffil(userConnected: MockData.magalie)
+    MyProfile(userConnected: MockData.magalie)
 }
