@@ -159,26 +159,26 @@ struct ActorProfileView: View {
             .scrollIndicators(.hidden)
             .ignoresSafeArea(edges: .top)
             
-            // Bouton Retour
-            VStack {
-                HStack {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .font(.title3.bold())
-                            .foregroundStyle(.white)
-                            .padding(12)
-                            .background(.ultraThinMaterial)
-                            .clipShape(Circle())
-                    }
-                    Spacer()
-                }
-                .padding()
-                Spacer()
-            }
+//            // Bouton Retour
+//            VStack {
+//                HStack {
+//                    Button {
+//                        dismiss()
+//                    } label: {
+//                        Image(systemName: "chevron.left")
+//                            .font(.title3.bold())
+//                            .foregroundStyle(.white)
+//                            .padding(12)
+//                            .background(.ultraThinMaterial)
+//                            .clipShape(Circle())
+//                    }
+//                    Spacer()
+//                }
+//                .padding()
+//                Spacer()
+//            }
         }
-        .navigationBarHidden(true)
+//        .navigationBarHidden(true)
         
         // MARK: - LOGIQUE DE FETCH EN CASCADE
         .task {

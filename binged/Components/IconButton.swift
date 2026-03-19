@@ -20,7 +20,7 @@ struct IconButton: View {
         .padding(8)
         .background(.orange)
         .clipShape(.rect(cornerRadius: 20))
-        .foregroundStyle(.white)
+        .foregroundStyle(Color.background)
     }
 }
 
