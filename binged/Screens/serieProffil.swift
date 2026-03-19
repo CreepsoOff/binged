@@ -4,11 +4,17 @@
 //
 //  Created by Apprenant 92 on 10/03/2026.
 //
-
 import SwiftUI
 
 struct serieProffil: View {
     var serie: Serie
+    
+    var messages: [Message] = [
+        Message(text: "Incroyable cette série 😍", isMe: true),
+        Message(text: "Oui surtout la saison 1", isMe: false),
+        Message(text: "La DA est folle", isMe: true),
+        Message(text: "Grave !", isMe: false)
+    ]
     
     var body: some View {
         ZStack {
@@ -95,18 +101,31 @@ struct serieProffil: View {
                                     .cornerRadius(10))
                             
                             VStack(alignment: .leading, spacing: 10){
-                                HStack{
-                                    Text("Critique")
-                                        .foregroundColor(.white)
-                                        .font(.title2)
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                        .bold()
+                                ScrollView {
+                                    VStack(spacing: 12) {
+                                        HStack{
+                                            Text("Critique")
+                                                .foregroundColor(.white)
+                                                .font(.title2)
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                                .bold()
 
-                            iconButton(text: "Chatter", icon: "text.bubble.fill")
+                                    iconButton(text: "Chatter", icon: "text.bubble.fill")
+                                        }
+                                        ForEach(messages) { message in
+                                            HStack {
+                                                if message.isMe {
+                                                    Spacer()
+                                                    ChatBubble(text: message.text, isMe: true)
+                                                } else {
+                                                    ChatBubble(text: message.text, isMe: false)
+                                                    Spacer()
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .padding()
                                 }
-                                chatBubble(chat:"Yvette : sdjkfbksjdvbksjdbv")
-                                chatBubble(chat:"Yvette : sdjkfbksjdvbksjdbv")
-                                chatBubble(chat:"Yvette : sdjkfbksjdvbksjdbv fekjrnfkj fjklrejnfjk ferjkfnge")
                             }
                             .padding(20)
                             .frame(maxWidth: .infinity, alignment: .leading)

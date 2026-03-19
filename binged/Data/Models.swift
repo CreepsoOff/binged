@@ -376,3 +376,8 @@ struct ReviewResponse: Codable {
     let records: [ReviewRecord]
 }
 
+struct Message: Identifiable {
+    let id = UUID()
+    let text: String
+    let isMe: Bool
+}
