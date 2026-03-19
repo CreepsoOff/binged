@@ -94,8 +94,12 @@ struct AutherProfil: View {
                             .padding(.horizontal, 10)
                         ScrollView(.horizontal) {
                             HStack {
-                                ForEach(user.favoriteActorsSafe) { actor in
-                                    ActorBar(actor: actor)
+                                ForEach(user.favoriteActorsSafe){ actor in
+                                    NavigationLink {
+                                        ActorProfileView(actor: actor)
+                                    } label: {
+                                        ActorBar(actor: actor)
+                                    }
                                 }
                             }
                             .padding(.horizontal, 8)

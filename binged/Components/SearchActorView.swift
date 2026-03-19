@@ -33,7 +33,11 @@ struct SearchActorView: View {
                 
                 LazyVGrid(columns: columns, alignment: .center, spacing: 12) {
                     ForEach(filteredActors, id: \.id) { actor in
-                        ActorBar(actor: actor)
+                        NavigationLink {
+                            ActorProfileView(actor: actor)
+                        } label: {
+                            ActorBar(actor: actor)
+                        }
                     }
                 }
                 .padding(.horizontal, 16)

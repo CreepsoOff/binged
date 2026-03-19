@@ -75,7 +75,11 @@ struct OtherProfile: View {
                         ScrollView(.horizontal) {
                             HStack {
                                 ForEach(user.favoriteActorsSafe){ actor in
-                                    ActorBar(actor: actor)
+                                    NavigationLink {
+                                        ActorProfileView(actor: actor)
+                                    } label: {
+                                        ActorBar(actor: actor)
+                                    }
                                 }
                             }
                         }
