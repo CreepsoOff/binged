@@ -35,7 +35,6 @@ struct SearchGenre: View {
                 }
                 .padding(.horizontal) // Un peu de padding pour faire respirer la liste
             }
-            Text("a modifier")
         }
     }
 }

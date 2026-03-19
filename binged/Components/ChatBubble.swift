@@ -14,7 +14,7 @@ struct ChatBubble: View {
     var body: some View {
         Text(text)
             .padding()
-            .background(isMe ? Color.blue : Color.gray.opacity(0.3))
+            .background(isMe ? Color.blue : Color.gray.opacity(0.5))
             .foregroundColor(.white)
             .cornerRadius(12)
             .frame(maxWidth: 250, alignment: isMe ? .trailing : .leading)

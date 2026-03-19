@@ -40,13 +40,19 @@ struct ActorBar: View {
                 
                     
                 Text(actor.name)
-                    .foregroundColor(.white)
+                    //.foregroundColor(.white)
                     .font(.system(size: 16))
+                    .frame(width: 125)
+                    .lineLimit(2)
             }
         }
     }
 }
 
 #Preview {
-    ActorBar(actor: MockData.bryanCranston)
+    HStack{
+        ActorBar(actor: MockData.bryanCranston)
+        ActorBar(actor: MockData.bryanCranston)
+        ActorBar(actor: MockData.bryanCranston)
+    }
 }

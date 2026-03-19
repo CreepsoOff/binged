@@ -2,17 +2,18 @@
 //  AutherProfil.swift
 //  binged
 //
-//  Created by Apprenant 105 on 12/03/2026.
+//  Created by apprenant85 on 18/03/2026.
 //
 
 import SwiftUI
 
 struct AutherProfil: View {
-    
-    @State var user: User
+
+    @Binding var user: User
     @State private var isFollow = false
-    @State var vmuser = UserViewModel()
-    
+    @Environment(UserViewModel.self) private var vmuser
+    @Environment(SerieViewModels.self) private var vmSerie
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -23,7 +24,8 @@ struct AutherProfil: View {
                         .foregroundColor(.white)
                         .font(.system(size: 32))
                     HStack {
-                        if let url = user.picture?.first?.thumbnails?.large?.url {
+                        if let url = user.picture?.first?.thumbnails?.large?.url
+                        {
                             AsyncImage(url: url) { image in
                                 image
                                     .resizable()
@@ -33,30 +35,39 @@ struct AutherProfil: View {
                                 ProgressView()
                             }
                             .frame(width: 200, height: 100)
-                        }else {
-                            Image(systemName : "person.crop.circle")
+                        } else {
+                            Image(systemName: "person.crop.circle")
                                 .font(.system(size: 100))
                         }
                         Spacer()
-                        VStack{
+                        VStack {
                             Text(user.userBio!)
-                                .frame(width: UIScreen.main.bounds.width / 2, height: 100)
+                                .containerRelativeFrame(.horizontal) {
+                                    length,
+                                    _ in
+                                    length / 2
+                                }
+                                .frame(height: 100)
                                 .foregroundColor(.white)
                                 .font(.system(size: 16))
                                 .lineLimit(5)
                             Button(action: {
                                 isFollow.toggle()
                             }) {
-                                Image(systemName: isFollow ? "person.fill.xmark" : "person.fill.checkmark")
-                                    .padding(8)
-                                    .background(.orange)
-                                    .cornerRadius(20)
-                                    .foregroundColor(.white)
+                                Image(
+                                    systemName: isFollow
+                                        ? "person.fill.xmark"
+                                        : "person.fill.checkmark"
+                                )
+                                .padding(8)
+                                .background(.orange)
+                                .cornerRadius(20)
+                                .foregroundColor(.white)
                             }
                         }
                     }
                     .frame(width: .infinity, height: 220)
-                    
+
                     VStack(alignment: .leading) {
                         Text("Ces Favoris")
                             .foregroundColor(.white)
@@ -84,12 +95,16 @@ struct AutherProfil: View {
                         ScrollView(.horizontal) {
                             HStack {
                                 ForEach(user.favoriteActorsSafe){ actor in
-                                    ActorBar(actor: actor)
+                                    NavigationLink {
+                                        ActorProfileView(actor: actor)
+                                    } label: {
+                                        ActorBar(actor: actor)
+                                    }
                                 }
                             }
                             .padding(.horizontal, 8)
                         }
-                        
+
                         HStack {
                             Text("Série")
                                 .foregroundColor(.white)
@@ -99,37 +114,82 @@ struct AutherProfil: View {
                             NavigationLink {
                                 PlaylistsView(user: $user)
                             } label: {
-                                IconButton(text: "Playlist", icon: "book.pages.fill")
+                                IconButton(
+                                    text: "Playlist",
+                                    icon: "book.pages.fill"
+                                )
                             }
                         }
                         TabView {
                             ForEach(user.favoriteSeriesSafe) { serie in
-                                Image(serie.cover!)
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(height: 250)
-                                    .clipped()
-                                    .cornerRadius(10)
-                                    .padding(.horizontal)
+                                NavigationLink {
+                                    SeriesDetailView(serie: serie)
+                                } label: {
+                                    if let url = serie.cover?.first?.thumbnails?
+                                        .large?.url
+                                    {
+                                        AsyncImage(url: url) { image in
+                                            image
+                                                .resizable()
+                                                .scaledToFill()
+                                        } placeholder: {
+                                            ProgressView()
+                                        }
+                                        .frame(height: 250)
+                                        .clipped()
+                                        .cornerRadius(10)
+                                        .padding(.horizontal)
+                                    } else {
+                                        Rectangle()
+                                            .fill(Color.gray.opacity(0.3))
+                                            .frame(height: 250)
+                                            .cornerRadius(10)
+                                            .padding(.horizontal)
+                                    }
+                                }
                             }
                         }
                         .frame(height: 250)
-                        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
+                        .tabViewStyle(
+                            PageTabViewStyle(indexDisplayMode: .automatic)
+                        )
                     }
                     .padding(.horizontal, 8)
                 }
                 .padding(.horizontal, 8)
             }
-//        }.task {
-//            do {
-//                self.user = try await vmuser.getUserById("rec279AxVMVJ5GrPQ")
-//            } catch {
-//                print(error)
-//            }
+        }.task {
+            // Cascade fetch for Series
+            if let seriesIDs = user.favoriteSerieIDs {
+                for id in seriesIDs {
+                    if let s = try? await vmSerie.getSerieById(id) {
+                        if !user.favoriteSeries.contains(where: {
+                            $0?.name == s.name
+                        }) {
+                            user.favoriteSeries.append(s)
+                        }
+                    }
+                }
+            }
+
+            if let actorIDs = user.favoriteActorIDs {
+                for id in actorIDs {
+                    if let a = try? await vmSerie.getActorById(id) {
+                        if !user.favoriteActors.contains(where: {
+                            $0?.name == a.name
+                        }) {
+                            user.favoriteActors.append(a)
+                        }
+                    }
+                }
+            }
         }
     }
 }
 
-#Preview {
-    AutherProfil(user: MockData.colette)
+#Preview() {
+    AutherProfil(user: .constant(MockData.magalie))
+        .environment(SerieViewModels())
+        .environment(UserViewModel())
+        .environment(PlayListViewModel())
 }

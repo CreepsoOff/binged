@@ -17,10 +17,11 @@ struct MyProfile: View {
             ZStack {
                 Color("background")
                     .ignoresSafeArea()
-                VStack {
-                    Text("Mon Profil")
+                VStack(alignment: .center) {
+                    Text("Bienvenue \(userConnected.firstName!)")
                         .foregroundStyle(.white)
                         .font(.largeTitle)
+                        .bold()
                     HStack {
                         if let url = userConnected.picture?.first?.thumbnails?
                             .large?.url
