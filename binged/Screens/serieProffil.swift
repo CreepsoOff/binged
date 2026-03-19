@@ -12,8 +12,8 @@ struct serieProffil: View {
     var messages: [Message] = [
         Message(text: "Incroyable cette série 😍", isMe: true),
         Message(text: "Oui surtout la saison 1", isMe: false),
-        Message(text: "La DA est folle", isMe: true),
-        Message(text: "Grave !", isMe: false)
+        Message(text: "mon personnage préféré c'est Skyler", isMe: true),
+        Message(text: "oui elle est trop gentille", isMe: false)
     ]
     
     var body: some View {
@@ -132,7 +132,6 @@ struct serieProffil: View {
                             .background(
                                 Color.background1.opacity(50)
                                     .cornerRadius(10))
-                            
                         }
                         .padding()
                     }
