@@ -14,6 +14,8 @@ struct OnboardingView: View {
     @State private var selectedDecades: Set<String> = []
     @State private var selectedKinds: Set<Kind> = []
     
+    var onCompletion: () -> Void
+    
     let decades = ["1990s", "2000s", "2010s", "2020s"]
     
     let displayKinds: [Kind] = [.mini, .standard, .docuseries]
@@ -112,7 +114,7 @@ struct OnboardingView: View {
                 // MARK: - Bouton Continuer
                 Button {
                     // TODO: Sauvegarder les préférences de l'utilisateur et changer d'écran
-                    print("Genres sélectionnés: \(selectedGenres.count)")
+                    onCompletion()
                 } label: {
                     Text("Continuer")
                         .font(.headline)
@@ -199,5 +201,5 @@ struct FilterPillButton: View {
 
 // MARK: - Preview
 #Preview {
-    OnboardingView()
+    OnboardingView(onCompletion: {})
 }

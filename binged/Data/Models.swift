@@ -467,3 +467,9 @@ struct ReviewRecord: Codable {
 struct ReviewResponse: Codable {
     let records: [ReviewRecord]
 }
+
+struct Message: Identifiable {
+    var id = UUID()
+    let text: String
+    let isMe: Bool
+}

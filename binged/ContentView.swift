@@ -12,9 +12,17 @@ struct ContentView: View {
     @State private var actorVM = ActorViewModel()
     @State private var currentUser: User?
     
+    @State private var hasCompletedOnboarding: Bool = false
+    
     var body: some View {
         Group {
-            if let user = currentUser {
+            if !hasCompletedOnboarding {
+                OnboardingView {
+                    withAnimation {
+                        hasCompletedOnboarding = true
+                    }
+                }
+            } else if let user = currentUser {
                 TabView {
                     SeriesListView()
                         .tabItem {
@@ -58,4 +66,3 @@ struct ContentView: View {
 #Preview {
     ContentView()
 }
-

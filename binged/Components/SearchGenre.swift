@@ -28,9 +28,12 @@ struct SearchGenre: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
-                    // id: \.self est plus adapté pour un Enum
                     ForEach(filteredGenres, id: \.self) { genre in
-                        GenreButton(genre: genre.rawValue)
+                        NavigationLink {
+                            GenreResultsView(genre: genre)
+                        } label: {
+                            GenreButton(genre: genre.rawValue)
+                        }
                     }
                 }
                 .padding(.horizontal) // Un peu de padding pour faire respirer la liste
@@ -42,4 +45,8 @@ struct SearchGenre: View {
 
 #Preview {
     SearchGenre(user: MockData.magalie)
+        .environment(SerieViewModels())
+        .environment(UserViewModel())
+        .environment(PlayListViewModel())
+        .environment(ActorViewModel())
 }

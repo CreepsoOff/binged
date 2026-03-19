@@ -56,14 +56,15 @@ struct AutherProfil: View {
                             }) {
                                 Image(
                                     systemName: isFollow
-                                        ? "person.fill.xmark"
-                                        : "person.fill.checkmark"
+                                        ? "person.fill.checkmark"
+                                        : "person.fill.xmark"
                                 )
-                                .padding(8)
-                                .background(.orange)
-                                .cornerRadius(20)
-                                .foregroundColor(.white)
+                                Text(isFollow ? "Se désabonner" : "S'abonner")
                             }
+                            .padding(8)
+                            .background(.orange)
+                            .cornerRadius(20)
+                            .foregroundColor(.white)
                         }
                     }
                     .frame(width: .infinity, height: 220)
@@ -82,9 +83,13 @@ struct AutherProfil: View {
                             .padding(.horizontal, 10)
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 12) {
-                                GenreButton(genre: "Action")
-                                GenreButton(genre: "Policier")
-                                GenreButton(genre: "Romance")
+                                ForEach(user.favoriteGenres, id: \.self) { genre in
+                                    NavigationLink {
+                                        GenreResultsView(genre: genre)
+                                    } label: {
+                                        GenreButton(genre: genre.rawValue)
+                                    }
+                                }
                             }.padding(.horizontal, 8)
                         }
                         Text("Acteurs")

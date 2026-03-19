@@ -9,8 +9,9 @@ import SwiftUI
 
 struct OtherProfile: View {
     
-   @Binding var user: User
-   @Environment(SerieViewModels.self) private var vmSerie
+    @Binding var user: User
+    @State private var isFollow = false
+    @Environment(SerieViewModels.self) private var vmSerie
     
     var body: some View {
         NavigationStack {
@@ -43,7 +44,15 @@ struct OtherProfile: View {
                                 .font(.system(size: 16))
                                 .lineLimit(5)
                             
-                            BasicButton(text: "Suivre")
+                            Button(action: {
+                                isFollow.toggle()
+                            }) {
+                                withAnimation {
+                                    IconButton(text: isFollow ? "Se désabonner" : "S'abonner", icon: isFollow ? "person.fill.checkmark" : "person.fill.xmark")
+
+                                }
+                            }
+                            
                         }
                         
                     }
@@ -63,7 +72,11 @@ struct OtherProfile: View {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 12) {
                                 ForEach(user.favoriteGenres, id:\.rawValue) { genre in
-                                    GenreButton(genre: genre.rawValue)
+                                    NavigationLink {
+                                        GenreResultsView(genre: genre)
+                                    } label: {
+                                        GenreButton(genre: genre.rawValue)
+                                    }
                                 }
                             }
                         }
