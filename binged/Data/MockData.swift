@@ -15,7 +15,7 @@ enum MockData {
     
     
     // MARK: - 2. Plateformes
-    static let netflix = Platform(name: "Netflix", icon: "netflix_icon", baseURL: "https://netflix.com")
+    static let netflix = Platform(name: "Netflix", icon: [mockAttachment], baseURL: "https://netflix.com")
     
     // MARK: - 3. Acteurs (CastMember)
     static let bryanCranston = CastMember(

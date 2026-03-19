@@ -9,7 +9,7 @@ import SwiftUI
 import Observation
 
 
-/// Function to make dates 01/01/1970
+// MARK: - Function to make dates 01/01/1970
 extension Date {
     func formatDDMMYYYY() -> String {
         let formatter = DateFormatter()
@@ -18,7 +18,7 @@ extension Date {
     }
 }
 
-// MARK: - Gestion des Images Airtable
+// MARK: - Gestion des Images Airtable Attachment
 struct Attachment: Codable {
     let id: String
     let url: URL
@@ -36,7 +36,7 @@ struct ThumbnailVariant: Codable {
 }
 
 
-/// enum GenreType
+// MARK: - enum GenreType
 enum GenreType: String, CaseIterable, Codable {
     
     case sf = "Sciences Fiction"
@@ -107,7 +107,7 @@ struct Platform: Codable, Identifiable {
     var id = UUID()
     
     let name: String
-    let icon: String
+    let icon: [Attachment]?
     let baseURL: String?
     
     enum CodingKeys: String, CodingKey {
@@ -122,6 +122,8 @@ struct PlatformRecord: Codable {
     let fields: Platform
 }
 
+
+// MARK: - CastMember (Actor)
 struct CastMember: Codable, Identifiable {
     var id = UUID()
     
@@ -164,6 +166,7 @@ struct CastMemberRecord: Codable {
 }
 
 
+// MARK: - ActorSerie (Roles)
 struct ActorSerie: Codable, Identifiable {
     var id = UUID()
     var roleName: String
@@ -188,17 +191,13 @@ struct ActorSerieRecord: Codable {
 }
 
 
-/// USER = Ses favorites kinds seront un tableau de Kind
-
-
-
-
+// MARK: - Serie
 class Serie: Codable, Identifiable {
     var id = UUID()
     let name: String
     let desc: String
     let type: Kind
-    let cover: String?
+    let cover: [Attachment]?
     let year: Int
     let decennie: String
     let genre: GenreType
@@ -222,7 +221,7 @@ class Serie: Codable, Identifiable {
         case reviewIDs = "Reviews"
     }
     
-    init(name: String, desc: String, type: Kind, cover: String?, year: Int, decennie: String, genre: GenreType, actors: [ActorSerie] = [], platform: [Platform] = [], reviews: [ReviewItem] = [], nbSaisons: Int, nbEpisodes: Int, inProgress: Bool? = nil, trailerURL: String? = nil) {
+    init(name: String, desc: String, type: Kind, cover: [Attachment]?, year: Int, decennie: String, genre: GenreType, actors: [ActorSerie] = [], platform: [Platform] = [], reviews: [ReviewItem] = [], nbSaisons: Int, nbEpisodes: Int, inProgress: Bool? = nil, trailerURL: String? = nil) {
         self.name = name
         self.desc = desc
         self.type = type
@@ -363,6 +362,8 @@ struct UserRecord: Codable {
 }
 
 
+
+// MARK: - ReviewItem
 struct ReviewItem: Codable, Identifiable {
     var id = UUID()
     let user: String
