@@ -50,7 +50,7 @@ struct SearchActorView: View {
                     do {
                         let fetchedActor = try await vmActor.getActorById(actorID)
                         // On vérifie qu'on ne l'ajoute pas deux fois
-                        if !listActors.contains(where: { $0.id == fetchedActor.id }) {
+                        if !listActors.contains(where: { $0.name == fetchedActor.name }) {
                             self.listActors.append(fetchedActor)
                         }
                     } catch {

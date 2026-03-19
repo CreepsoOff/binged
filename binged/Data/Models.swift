@@ -280,7 +280,7 @@ struct SeriesResponse: Codable {
 }
 
 struct SerieRecord: Codable {
-    let id: String?
+    let id: String
     let fields: Serie
 }
 
@@ -467,4 +467,3 @@ struct ReviewRecord: Codable {
 struct ReviewResponse: Codable {
     let records: [ReviewRecord]
 }
-

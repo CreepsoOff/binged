@@ -94,24 +94,28 @@ struct OtherProfile: View {
                         }
                         TabView {
                             ForEach(user.favoriteSeriesSafe) { serie in
-                                if let url = serie.cover?.first?.thumbnails?.large?.url {
-                                    AsyncImage(url: url) { image in
-                                        image
-                                            .resizable()
-                                            .scaledToFill()
-                                    } placeholder: {
-                                        ProgressView()
-                                    }
-                                    .frame(height: 250)
-                                    .clipped()
-                                    .clipShape(.rect(cornerRadius: 10))
-                                    .padding(.horizontal)
-                                } else {
-                                    Rectangle()
-                                        .fill(Color.gray.opacity(0.3))
+                                NavigationLink {
+                                    SeriesDetailView(serie: serie)
+                                } label: {
+                                    if let url = serie.cover?.first?.thumbnails?.large?.url {
+                                        AsyncImage(url: url) { image in
+                                            image
+                                                .resizable()
+                                                .scaledToFill()
+                                        } placeholder: {
+                                            ProgressView()
+                                        }
                                         .frame(height: 250)
+                                        .clipped()
                                         .clipShape(.rect(cornerRadius: 10))
                                         .padding(.horizontal)
+                                    } else {
+                                        Rectangle()
+                                            .fill(Color.gray.opacity(0.3))
+                                            .frame(height: 250)
+                                            .clipShape(.rect(cornerRadius: 10))
+                                            .padding(.horizontal)
+                                    }
                                 }
                             }
                         }
@@ -125,7 +129,7 @@ struct OtherProfile: View {
             if let seriesIDs = user.favoriteSerieIDs {
                 for id in seriesIDs {
                     if let s = try? await vmSerie.getSerieById(id) {
-                        if !user.favoriteSeries.contains(where: { $0?.id == s.id }) {
+                        if !user.favoriteSeries.contains(where: { $0?.name == s.name }) {
                             user.favoriteSeries.append(s)
                         }
                     }
@@ -135,7 +139,7 @@ struct OtherProfile: View {
             if let actorIDs = user.favoriteActorIDs {
                 for id in actorIDs {
                     if let a = try? await vmSerie.getActorById(id) {
-                        if !user.favoriteActors.contains(where: { $0?.id == a.id }) {
+                        if !user.favoriteActors.contains(where: { $0?.name == a.name }) {
                             user.favoriteActors.append(a)
                         }
                     }

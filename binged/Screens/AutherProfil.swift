@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct AutherProfil: View {
-    
+
     @Binding var user: User
     @State private var isFollow = false
     @Environment(UserViewModel.self) private var vmuser
     @Environment(SerieViewModels.self) private var vmSerie
-    
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -24,7 +24,8 @@ struct AutherProfil: View {
                         .foregroundColor(.white)
                         .font(.system(size: 32))
                     HStack {
-                        if let url = user.picture?.first?.thumbnails?.large?.url {
+                        if let url = user.picture?.first?.thumbnails?.large?.url
+                        {
                             AsyncImage(url: url) { image in
                                 image
                                     .resizable()
@@ -34,16 +35,18 @@ struct AutherProfil: View {
                                 ProgressView()
                             }
                             .frame(width: 200, height: 100)
-                        }else {
-                            Image(systemName : "person.crop.circle")
+                        } else {
+                            Image(systemName: "person.crop.circle")
                                 .font(.system(size: 100))
                         }
                         Spacer()
-                        VStack{
+                        VStack {
                             Text(user.userBio!)
-                                .containerRelativeFrame(.horizontal) { length, _ in
-                                                    length / 2
-                                                }
+                                .containerRelativeFrame(.horizontal) {
+                                    length,
+                                    _ in
+                                    length / 2
+                                }
                                 .frame(height: 100)
                                 .foregroundColor(.white)
                                 .font(.system(size: 16))
@@ -51,16 +54,20 @@ struct AutherProfil: View {
                             Button(action: {
                                 isFollow.toggle()
                             }) {
-                                Image(systemName: isFollow ? "person.fill.xmark" : "person.fill.checkmark")
-                                    .padding(8)
-                                    .background(.orange)
-                                    .cornerRadius(20)
-                                    .foregroundColor(.white)
+                                Image(
+                                    systemName: isFollow
+                                        ? "person.fill.xmark"
+                                        : "person.fill.checkmark"
+                                )
+                                .padding(8)
+                                .background(.orange)
+                                .cornerRadius(20)
+                                .foregroundColor(.white)
                             }
                         }
                     }
                     .frame(width: .infinity, height: 220)
-                    
+
                     VStack(alignment: .leading) {
                         Text("Ces Favoris")
                             .foregroundColor(.white)
@@ -87,13 +94,13 @@ struct AutherProfil: View {
                             .padding(.horizontal, 10)
                         ScrollView(.horizontal) {
                             HStack {
-                                ForEach(user.favoriteActorsSafe){ actor in
+                                ForEach(user.favoriteActorsSafe) { actor in
                                     ActorBar(actor: actor)
                                 }
                             }
                             .padding(.horizontal, 8)
                         }
-                        
+
                         HStack {
                             Text("Série")
                                 .foregroundColor(.white)
@@ -103,34 +110,45 @@ struct AutherProfil: View {
                             NavigationLink {
                                 PlaylistsView(user: $user)
                             } label: {
-                                IconButton(text: "Playlist", icon: "book.pages.fill")
+                                IconButton(
+                                    text: "Playlist",
+                                    icon: "book.pages.fill"
+                                )
                             }
                         }
                         TabView {
                             ForEach(user.favoriteSeriesSafe) { serie in
-                                if let url = serie.cover?.first?.thumbnails?.large?.url {
-                                    AsyncImage(url: url) { image in
-                                        image
-                                            .resizable()
-                                            .scaledToFill()
-                                    } placeholder: {
-                                        ProgressView()
-                                    }
-                                    .frame(height: 250)
-                                    .clipped()
-                                    .cornerRadius(10)
-                                    .padding(.horizontal)
-                                } else {
-                                    Rectangle()
-                                        .fill(Color.gray.opacity(0.3))
+                                NavigationLink {
+                                    SeriesDetailView(serie: serie)
+                                } label: {
+                                    if let url = serie.cover?.first?.thumbnails?
+                                        .large?.url
+                                    {
+                                        AsyncImage(url: url) { image in
+                                            image
+                                                .resizable()
+                                                .scaledToFill()
+                                        } placeholder: {
+                                            ProgressView()
+                                        }
                                         .frame(height: 250)
+                                        .clipped()
                                         .cornerRadius(10)
                                         .padding(.horizontal)
+                                    } else {
+                                        Rectangle()
+                                            .fill(Color.gray.opacity(0.3))
+                                            .frame(height: 250)
+                                            .cornerRadius(10)
+                                            .padding(.horizontal)
+                                    }
                                 }
                             }
                         }
                         .frame(height: 250)
-                        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
+                        .tabViewStyle(
+                            PageTabViewStyle(indexDisplayMode: .automatic)
+                        )
                     }
                     .padding(.horizontal, 8)
                 }
@@ -141,18 +159,21 @@ struct AutherProfil: View {
             if let seriesIDs = user.favoriteSerieIDs {
                 for id in seriesIDs {
                     if let s = try? await vmSerie.getSerieById(id) {
-                        if !user.favoriteSeries.contains(where: { $0?.id == s.id }) {
+                        if !user.favoriteSeries.contains(where: {
+                            $0?.name == s.name
+                        }) {
                             user.favoriteSeries.append(s)
                         }
                     }
                 }
             }
-            
-            // Cascade fetch for Actors
+
             if let actorIDs = user.favoriteActorIDs {
                 for id in actorIDs {
                     if let a = try? await vmSerie.getActorById(id) {
-                        if !user.favoriteActors.contains(where: { $0?.id == a.id }) {
+                        if !user.favoriteActors.contains(where: {
+                            $0?.name == a.name
+                        }) {
                             user.favoriteActors.append(a)
                         }
                     }

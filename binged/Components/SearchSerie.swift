@@ -32,13 +32,17 @@ struct SearchSerie: View {
     }
     
     var body: some View {
-        VStack { // J'ai ajouté un VStack pour bien séparer la searchBar du ScrollView
-            SearchBar(text: $searchText) // Modifié ici
-            
+        VStack {
+            // Search bar at the top
+            SearchBar(text: $searchText)
+
+            // Grid of series inside a ScrollView
             ScrollView(showsIndicators: false) {
-                HStack {
-                    LazyVGrid(columns: columns, spacing: 20){
-                        ForEach(filteredSeries) { serie in
+                LazyVGrid(columns: columns, spacing: 20) {
+                    ForEach(filteredSeries) { serie in
+                        NavigationLink {
+                            SeriesDetailView(serie: serie)
+                        } label: {
                             if let url = serie.cover?.first?.thumbnails?.large?.url {
                                 VStack {
                                     AsyncImage(url: url) { image in
@@ -50,16 +54,28 @@ struct SearchSerie: View {
                                     }
                                     .frame(width: 100, height: 150)
                                     .clipped()
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
                                     .padding(.horizontal, 4)
+
                                     Text(serie.name)
+                                        .font(.caption)
+                                        .bold()
+                                        .foregroundStyle(.white)
+                                        .lineLimit(1)
                                 }
                             } else {
                                 VStack {
                                     Rectangle()
                                         .fill(Color.gray.opacity(0.3))
                                         .frame(width: 100, height: 150)
+                                        .clipShape(RoundedRectangle(cornerRadius: 10))
                                         .padding(.horizontal, 4)
+
                                     Text(serie.name)
+                                        .font(.caption)
+                                        .bold()
+                                        .foregroundStyle(.white)
+                                        .lineLimit(1)
                                 }
                             }
                         }
@@ -71,13 +87,13 @@ struct SearchSerie: View {
         .task {
             // 1. On synchronise d'abord avec les données locales du User
             self.listSeries = user.favoriteSeriesSafe
-            
+
             // 2. Si la liste est vide mais qu'on a des IDs, on charge le reste
             if self.listSeries.isEmpty, let ids = user.favoriteSerieIDs {
                 for serieID in ids {
                     do {
                         let fetchedSerie = try await vmSerie.getSerieById(serieID)
-                        if !listSeries.contains(where: { $0.id == fetchedSerie.id }) {
+                        if !listSeries.contains(where: { $0.name == fetchedSerie.name }) {
                             self.listSeries.append(fetchedSerie)
                         }
                     } catch {
