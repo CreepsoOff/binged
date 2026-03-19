@@ -6,6 +6,7 @@ class SerieViewModels {
 
     private let apiKey = Secrets.airtableAPIKey
     var series: [Serie] = []
+    var allActors: [CastMember] = []
     var allPlatforms: [Platform] = []
     var platformIDToName: [String: String] = [:]
     var events: [CalendarEvent] = []
@@ -141,6 +142,15 @@ class SerieViewModels {
             fetchedEvents.append(event)
         }
         self.events = fetchedEvents.sorted(by: { $0.date < $1.date })
+    }
+
+    func fetchAllActors() async throws {
+        let req = createRequest(urlStr: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Actor")
+        let (data, _) = try await URLSession.shared.data(for: req)
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        let records = try decoder.decode(CastMemberResponse.self, from: data).records
+        self.allActors = records.map { $0.fields }
     }
 
     func fetchSeries() async throws {

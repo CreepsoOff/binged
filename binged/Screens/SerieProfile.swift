@@ -1,79 +1,4 @@
-
-    var messages: [Message] = [
-        
-                    VStack{
-                        Text(serie.name)
-                            .font(.system(size: 32))
-                            .foregroundStyle(.white)
-                            .bold()
-                        Spacer()
-                        HStack{
-                            IconButton(text: "Trailer", icon: "play.fill")
-                            Spacer()
-                            Spacer()
-                            IconButton(text: "Ajouter", icon: "plus")
-                        }
-                    }
-                }
-                    HStack {
-                        if serie.actors.isEmpty{
-                            Text("il n'y a pas de série")
-                                .foregroundColor(.white)
-                        }
-                        ForEach(serie.actors, id: \.actor?.name) { actor in
-                            ActorBar(actor: actor.actor!)
-                     
-                    ZStack{
-                        Color("background2")
-                        ScrollView(showsIndicators: false) {
-                        VStack{
-                            VStack(alignment: .leading, spacing: 10){
-                                Text("Synopsis")
-          
-                                Text(serie.desc)
-                                    .foregroundColor(.white)
-                                    .font(.title3)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                            }
-                            .padding(20)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(
-                                Color.background1.opacity(50)
-                                    .cornerRadius(10))
-                            
-                            VStack(alignment: .leading, spacing: 10){
-                                ScrollView {
-                                    VStack(spacing: 12) {
-                                        HStack{
-                                            Text("Critique")
-                                                .foregroundColor(.white)
-                                                .font(.title2)
-                                                .frame(maxWidth: .infinity, alignment: .leading)
-                                                .bold()
-
-                                    IconButton(text: "Chatter", icon: "text.bubble.fill")
-                                        }
-                                        ForEach(messages) { message in
-                                            HStack {
-                                                if message.isMe {
-                                                    Spacer()
-                                                    ChatBubble(text: message.text, isMe: true)
-                                                } else {
-                                                    ChatBubble(text: message.text, isMe: false)
-                                                    Spacer()
-                                                }
-                                            }
-                                        }
-                                    }
-                                    .padding()
-                                }
-                            }
-                            .padding(20)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(
-                                Color.background1.opacity(50)
-                                    .cornerRadius(10))
-// HERE
+//
 //  serieProffil.swift
 //  binged
 //
@@ -109,25 +34,6 @@ struct SerieProfile: View {
                             ProgressView()
                         }
                         .frame(width:400, height: 300)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     } else {
                         Rectangle()
                             .fill(Color.gray.opacity(0.3))
@@ -179,14 +85,6 @@ struct SerieProfile: View {
                         }
                         ForEach(serie.actors, id: \.actor?.name) { actor in
                             ActorBar(actor: actor.actor!)
-
-
-
-
-
-
-
-
                         }
                     }
 
@@ -197,25 +95,6 @@ struct SerieProfile: View {
                         VStack{
                             VStack(alignment: .leading, spacing: 10){
                                 Text("Synopsis")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                                     .foregroundColor(.white)
                                     .font(.title2)
                                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -277,10 +156,6 @@ struct SerieProfile: View {
 
 #Preview {
     SerieProfile(serie: MockData.breakingBad)
-
-
-
-
 }
 
 

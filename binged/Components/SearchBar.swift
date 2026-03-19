@@ -16,6 +16,8 @@ struct SearchBar: View {
             
             TextField("Recherche...", text: $text)
                 .textFieldStyle(PlainTextFieldStyle())
+                .autocorrectionDisabled()
+                .textInputAutocapitalization(.never)
         }
         .padding(10)
         .background(Color(.systemGray6))

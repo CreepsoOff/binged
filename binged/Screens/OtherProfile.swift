@@ -118,25 +118,25 @@ struct OtherProfile: View {
                                         AsyncImage(url: url) { image in
                                             image
                                                 .resizable()
-                                                .scaledToFill()
+                                                .aspectRatio(2/3, contentMode: .fit)
                                         } placeholder: {
                                             ProgressView()
                                         }
-                                        .frame(height: 250)
-                                        .clipped()
-                                        .clipShape(.rect(cornerRadius: 10))
+                                        .frame(height: 450)
+                                        .clipShape(.rect(cornerRadius: 15))
                                         .padding(.horizontal)
                                     } else {
                                         Rectangle()
                                             .fill(Color.gray.opacity(0.3))
-                                            .frame(height: 250)
-                                            .clipShape(.rect(cornerRadius: 10))
+                                            .aspectRatio(2/3, contentMode: .fit)
+                                            .frame(height: 450)
+                                            .clipShape(.rect(cornerRadius: 15))
                                             .padding(.horizontal)
                                     }
                                 }
                             }
                         }
-                        .frame(height: 250)
+                        .frame(height: 480)
                         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
                     }
                 }

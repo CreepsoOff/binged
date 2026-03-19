@@ -335,6 +335,7 @@ class Playlist: Codable, Identifiable {
 }
 
 struct PlaylistsResponse: Codable { let records: [PlaylistRecord] }
+
 struct PlaylistRecord: Codable {
     let id: String
     let fields: Playlist

@@ -40,10 +40,10 @@ struct ActorBar: View {
                 
                     
                 Text(actor.name)
-                    //.foregroundColor(.white)
+                    .foregroundColor(.white)
                     .font(.system(size: 16))
                     .frame(width: 125)
-                    .lineLimit(2)
+                    .lineLimit(1)
             }
         }
     }

@@ -51,8 +51,20 @@ struct MyProfile: View {
                             BasicButton(text: "Modifier")
                         }
                     }
+                    
+                    NavigationLink {
+                        PlaylistsView(user: $userConnected)
+                    } label: {
+                        IconButton(
+                            text: "Playlist",
+                            icon: "book.pages.fill"
+                        )
+                    }
+                    
                     MyFavoris(user: self.$userConnected)
                         .padding()
+                    
+                    
 
                 }
             }

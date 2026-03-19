@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct sfButton: View {
+struct SFButton: View {
     
     var icon: String
     
@@ -23,7 +23,5 @@ struct sfButton: View {
 }
 
 #Preview {
-    sfButton(icon: "play.fill")
+    SFButton(icon: "play.fill")
 }
-
-//coucou c'est moi je teste

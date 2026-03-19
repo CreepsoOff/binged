@@ -29,11 +29,99 @@ class PlayListViewModel {
 
         do {
             let decoded = try decoder.decode(PlaylistRecord.self, from: data)
-            print(decoded.fields)
             return decoded.fields
         } catch {
             print("Échec du décodage:playlistbyID")
             throw error
         }
+    }
+
+    // Récupère l'ID Airtable d'une série par son nom
+    func fetchSerieRecordId(named name: String) async -> String? {
+        let filter = "filterByFormula={name}='\(name.replacingOccurrences(of: "'", with: "\\'"))'"
+        guard let encodedFilter = filter.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+              let url = URL(string: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Serie?\(encodedFilter)") else { return nil }
+
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(Secrets.airtableAPIKey)", forHTTPHeaderField: "Authorization")
+
+        do {
+            let (data, _) = try await URLSession.shared.data(for: request)
+            let response = try JSONDecoder().decode(SeriesResponse.self, from: data)
+            return response.records.first?.id
+        } catch {
+            return nil
+        }
+    }
+
+    // Met à jour une playlist (Ajout ou Retrait)
+    func updatePlaylistSeries(playlistID: String, seriesIDs: [String]) async throws {
+        let url = URL(string: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Playlist/\(playlistID)")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "PATCH"
+        request.setValue("Bearer \(Secrets.airtableAPIKey)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let body: [String: Any] = ["fields": ["serie": seriesIDs]]
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+
+        let (_, response) = try await URLSession.shared.data(for: request)
+        if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
+            throw NSError(domain: "AirtableError", code: httpResponse.statusCode)
+        }
+    }
+
+    // Crée une nouvelle playlist
+    func createPlaylist(name: String, creatorID: String, serieID: String) async throws {
+        let url = URL(string: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Playlist")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(Secrets.airtableAPIKey)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let body: [String: Any] = [
+            "fields": [
+                "Name": name,
+                "creator": [creatorID],
+                "serie": [serieID]
+            ]
+        ]
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+
+        let (_, response) = try await URLSession.shared.data(for: request)
+        if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
+            throw NSError(domain: "AirtableError", code: httpResponse.statusCode)
+        }
+    }
+
+    func isSerieInUserPlaylists(serieName: String, user: User, serieVM: SerieViewModels) async -> Bool {
+        guard let playlistIDs = user.playlistIDs else { return false }
+        
+        for plid in playlistIDs {
+            do {
+                let playlist = try await getPlayListById(plid)
+                if let sIDs = playlist.serieIDs {
+                    for sid in sIDs {
+                        // Pour éviter de charger la série complète si on peut l'éviter, 
+                        // on regarde si elle est déjà dans le cache du SerieViewModels
+                        if let cachedSerie = serieVM.series.first(where: { $0.id.uuidString == sid || $0.name == serieName }) {
+                            if cachedSerie.name == serieName {
+                                return true
+                            }
+                        } else {
+                            // Sinon on fait un fetch
+                            if let s = try? await serieVM.getSerieById(sid) {
+                                if s.name == serieName {
+                                    return true
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch {
+                print("Erreur lors de la vérification de la playlist \(plid)")
+            }
+        }
+        return false
     }
 }
