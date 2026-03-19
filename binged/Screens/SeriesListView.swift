@@ -22,8 +22,6 @@ struct SeriesListView: View {
             let matchYear = yearRange.contains(Double(serie.year))
             let matchProgress = !inProgressOnly || (serie.inProgress == true)
             
-            // On vérifie si l'une des plateformes de la série correspond au nom sélectionné
-            // Même en fetch light, on a les IDs, on utilise donc le mapping du ViewModel
             let seriePlatformNames = serie.platformIDs?.compactMap { viewModel.platformIDToName[$0] } ?? []
             let matchPlatform = selectedPlatforms.isEmpty || seriePlatformNames.contains(where: { selectedPlatforms.contains($0) })
             
@@ -94,6 +92,14 @@ struct SeriesListView: View {
                             .padding(.horizontal)
                             .padding(.bottom, 20)
                         }
+                        .refreshable {
+                            do {
+                                try await viewModel.fetchLightSeries()
+                                try await viewModel.fetchPlatforms()
+                            } catch {
+                                print("Erreur refresh: \(error)")
+                            }
+                        }
                     }
                 }
             }
@@ -112,19 +118,15 @@ struct SeriesListView: View {
             }
         }
         .task {
-            if viewModel.series.isEmpty {
-                do {
-                    try await viewModel.fetchLightSeries()
-                } catch {
-                    print("Erreur: \(error)")
-                }
+            do {
+                try await viewModel.fetchLightSeries()
+            } catch {
+                print("Erreur: \(error)")
             }
-            if viewModel.allPlatforms.isEmpty {
-                do {
-                    try await viewModel.fetchPlatforms()
-                } catch {
-                    print("Erreur plateformes: \(error)")
-                }
+            do {
+                try await viewModel.fetchPlatforms()
+            } catch {
+                print("Erreur plateformes: \(error)")
             }
         }
     }
@@ -140,4 +142,5 @@ struct SeriesListView: View {
         .environment(SerieViewModels())
         .environment(UserViewModel())
         .environment(PlayListViewModel())
+        .environment(ActorViewModel())
 }

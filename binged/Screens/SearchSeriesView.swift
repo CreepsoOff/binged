@@ -105,6 +105,13 @@ struct SearchSeriesView: View {
                             .padding(.horizontal, 16)
                             .padding(.bottom, 20)
                         }
+                        .refreshable {
+                            do {
+                                try await serieVM.fetchLightSeries()
+                            } catch {
+                                print("Erreur refresh search: \(error)")
+                            }
+                        }
                     }
                 }
             }
@@ -118,12 +125,10 @@ struct SearchSeriesView: View {
         .environment(serieVM)
         // MARK: - LE FETCH "LIGHT" AU DÉMARRAGE
         .task {
-            if serieVM.series.isEmpty {
-                do {
-                    try await serieVM.fetchLightSeries()
-                } catch {
-                    print("Erreur chargement des séries (Light): \(error)")
-                }
+            do {
+                try await serieVM.fetchLightSeries()
+            } catch {
+                print("Erreur chargement des séries (Light): \(error)")
             }
         }
     }
@@ -134,4 +139,5 @@ struct SearchSeriesView: View {
         .environment(SerieViewModels())
         .environment(UserViewModel())
         .environment(PlayListViewModel())
+        .environment(ActorViewModel())
 }

@@ -40,18 +40,23 @@ struct CalendarView: View {
                     }
                     .padding(.top)
                 }
+                .refreshable {
+                    do {
+                        try await viewModel.fetchCalendarEvents()
+                    } catch {
+                        print("Erreur refresh calendrier: \(error)")
+                    }
+                }
             }
             .navigationTitle("Calendrier")
             .toolbarBackground(.hidden, for: .navigationBar)
         }
         .preferredColorScheme(.dark)
         .task {
-            if viewModel.events.isEmpty {
-                do {
-                    try await viewModel.fetchCalendarEvents()
-                } catch {
-                    print("Erreur chargement calendrier: \(error)")
-                }
+            do {
+                try await viewModel.fetchCalendarEvents()
+            } catch {
+                print("Erreur chargement calendrier: \(error)")
             }
         }
     }

@@ -7,7 +7,6 @@
 import SwiftUI
 
 struct SearchSerie: View {
-    // On renomme la variable d'état pour éviter le conflit avec le nom de la struct
     @State private var searchText = ""
     let columns = [
         GridItem(.flexible()),
@@ -16,14 +15,11 @@ struct SearchSerie: View {
     ]
     
     var user: User
-    
     @Environment(SerieViewModels.self) private var vmSerie
-    
     @State private var listSeries: [Serie] = []
     
     var filteredSeries: [Serie] {
         if searchText.isEmpty {
-
             return listSeries
         }
         return listSeries.filter {
@@ -32,63 +28,75 @@ struct SearchSerie: View {
     }
     
     var body: some View {
-        VStack {
-            // Search bar at the top
+        VStack(spacing: 0) {
             SearchBar(text: $searchText)
-
-            // Grid of series inside a ScrollView
+                .padding(.bottom, 15)
+            
             ScrollView(showsIndicators: false) {
-                LazyVGrid(columns: columns, spacing: 20) {
-                    ForEach(filteredSeries) { serie in
-                        NavigationLink {
-                            SeriesDetailView(serie: serie)
-                        } label: {
-                            if let url = serie.cover?.first?.thumbnails?.large?.url {
-                                VStack {
-                                    AsyncImage(url: url) { image in
-                                        image
-                                            .resizable()
-                                            .scaledToFill()
-                                    } placeholder: {
-                                        ProgressView()
+                VStack {
+                    if filteredSeries.isEmpty && !searchText.isEmpty {
+                        Text("Aucun favori trouvé pour cette recherche.")
+                            .foregroundStyle(.gray)
+                            .padding(.top, 50)
+                    } else {
+                        LazyVGrid(columns: columns, spacing: 20){
+                            ForEach(filteredSeries) { serie in
+                                NavigationLink {
+                                    SeriesDetailView(serie: serie)
+                                } label: {
+                                    VStack {
+                                        if let url = serie.cover?.first?.thumbnails?.large?.url {
+                                            AsyncImage(url: url) { image in
+                                                image
+                                                    .resizable()
+                                                    .scaledToFill()
+                                            } placeholder: {
+                                                ProgressView()
+                                            }
+                                            .frame(width: 100, height: 150)
+                                            .clipped()
+                                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                                            .padding(.horizontal, 4)
+                                        } else {
+                                            Rectangle()
+                                                .fill(Color.gray.opacity(0.3))
+                                                .frame(width: 100, height: 150)
+                                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                                                .padding(.horizontal, 4)
+                                        }
+                                        
+                                        Text(serie.name)
+                                            .font(.caption)
+                                            .bold()
+                                            .foregroundStyle(.white)
+                                            .lineLimit(1)
                                     }
-                                    .frame(width: 100, height: 150)
-                                    .clipped()
-                                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                                    .padding(.horizontal, 4)
-
-                                    Text(serie.name)
-                                        .font(.caption)
-                                        .bold()
-                                        .foregroundStyle(.white)
-                                        .lineLimit(1)
-                                }
-                            } else {
-                                VStack {
-                                    Rectangle()
-                                        .fill(Color.gray.opacity(0.3))
-                                        .frame(width: 100, height: 150)
-                                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                                        .padding(.horizontal, 4)
-
-                                    Text(serie.name)
-                                        .font(.caption)
-                                        .bold()
-                                        .foregroundStyle(.white)
-                                        .lineLimit(1)
                                 }
                             }
                         }
                     }
                 }
-                .padding(.horizontal) // Un peu de padding pour faire respirer la liste
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal)
+            }
+            .refreshable {
+                // Refresh des favoris (on re-synchronise avec le user)
+                self.listSeries = user.favoriteSeriesSafe
+                
+                if let ids = user.favoriteSerieIDs {
+                    for serieID in ids {
+                        if let fetchedSerie = try? await vmSerie.getSerieById(serieID) {
+                            if !listSeries.contains(where: { $0.name == fetchedSerie.name }) {
+                                self.listSeries.append(fetchedSerie)
+                            }
+                        }
+                    }
+                }
             }
         }
         .task {
-            // 1. On synchronise d'abord avec les données locales du User
             self.listSeries = user.favoriteSeriesSafe
-
-            // 2. Si la liste est vide mais qu'on a des IDs, on charge le reste
+            
             if self.listSeries.isEmpty, let ids = user.favoriteSerieIDs {
                 for serieID in ids {
                     do {
