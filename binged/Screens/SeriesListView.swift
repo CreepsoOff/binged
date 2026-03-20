@@ -114,6 +114,7 @@ struct SeriesListView: View {
                 )
                 .presentationDetents([.fraction(0.85), .large])
                 .presentationDragIndicator(.visible)
+                .presentationBackground(Design.bgColor) // Force le fond opaque
             }
         }
         .task {

@@ -24,7 +24,7 @@ struct SerieProfile: View {
             VStack{
                 ZStack(alignment: .topLeading){
 
-
+//
                     if let url = serie.cover?.first?.thumbnails?.large?.url {
                         AsyncImage(url: url) { image in
                             image
