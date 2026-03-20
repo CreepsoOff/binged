@@ -18,7 +18,7 @@ struct ActorProfileView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     
-                    // MARK: - 1. EN-TÊTE (PHOTO & NOM)
+                    // MARK: - 1. HEADER (Photo & Infos)
                     ZStack(alignment: .bottomLeading) {
                         if let url = actor.imageName.first??.thumbnails?.large?.url {
                             AsyncImage(url: url) { image in
@@ -30,23 +30,14 @@ struct ActorProfileView: View {
                             }
                             .frame(height: 400)
                             .clipped()
-                        } else {
-                            Rectangle()
-                                .fill(Design.cardColor)
-                                .frame(height: 400)
-                                .overlay {
-                                    Image(systemName: "person.fill")
-                                        .font(.system(size: 80))
-                                        .foregroundStyle(.white.opacity(0.2))
-                                }
+                            .overlay {
+                                LinearGradient(
+                                    gradient: Gradient(colors: [.clear, Design.bgColor]),
+                                    startPoint: .center,
+                                    endPoint: .bottom
+                                )
+                            }
                         }
-                        
-                        // Dégradé pour la lisibilité du nom
-                        LinearGradient(
-                            gradient: Gradient(colors: [.clear, Design.bgColor]),
-                            startPoint: .center,
-                            endPoint: .bottom
-                        )
                         
                         VStack(alignment: .leading, spacing: 4) {
                             Text(actor.name)
@@ -98,22 +89,16 @@ struct ActorProfileView: View {
                                         .foregroundStyle(.white)
                                     Spacer()
                                 }
-                                .padding()
-                            } else if loadedData.isEmpty {
-                                Text("Aucune série trouvée pour cet acteur.")
-                                    .italic()
-                                    .foregroundStyle(.gray)
-                                    .padding(.horizontal)
                             } else {
-                                ScrollView(.horizontal) {
+                                ScrollView(.horizontal, showsIndicators: false) {
                                     HStack(alignment: .top, spacing: 16) {
-                                        ForEach(loadedData, id: \.serie.id) { item in
-                                            
+                                        ForEach(loadedData, id: \.role.id) { data in
                                             NavigationLink {
-                                                SeriesDetailView(serie: item.serie)
+                                                SeriesDetailView(serie: data.serie)
                                             } label: {
                                                 VStack(alignment: .leading) {
-                                                    if let url = item.serie.cover?.first?.thumbnails?.large?.url {
+                                                    // Cover Série
+                                                    if let url = data.serie.cover?.first?.thumbnails?.large?.url {
                                                         AsyncImage(url: url) { image in
                                                             image
                                                                 .resizable()
@@ -122,23 +107,18 @@ struct ActorProfileView: View {
                                                             ProgressView()
                                                         }
                                                         .frame(width: 120, height: 180)
-                                                        .clipShape(.rect(cornerRadius: 12))
-                                                    } else {
-                                                        Rectangle()
-                                                            .fill(Design.cardColor)
-                                                            .frame(width: 120, height: 180)
-                                                            .clipShape(.rect(cornerRadius: 12))
+                                                        .clipped()
+                                                        .cornerRadius(12)
                                                     }
-
-                                                    Text(item.serie.name)
+                                                    
+                                                    Text(data.serie.name)
                                                         .font(.caption)
                                                         .bold()
                                                         .foregroundStyle(.white)
                                                         .lineLimit(1)
                                                     
-                                                    // LE RETOUR DU NOM DU RÔLE ! 🎉
-                                                    Text(item.role.roleName)
-                                                        .font(.caption2)
+                                                    Text(data.role.roleName)
+                                                        .font(.system(size: 10))
                                                         .foregroundStyle(textSecondary)
                                                         .lineLimit(1)
                                                 }
@@ -158,44 +138,22 @@ struct ActorProfileView: View {
             }
             .scrollIndicators(.hidden)
             .ignoresSafeArea(edges: .top)
-            
-//            // Bouton Retour
-//            VStack {
-//                HStack {
-//                    Button {
-//                        dismiss()
-//                    } label: {
-//                        Image(systemName: "chevron.left")
-//                            .font(.title3.bold())
-//                            .foregroundStyle(.white)
-//                            .padding(12)
-//                            .background(.ultraThinMaterial)
-//                            .clipShape(Circle())
-//                    }
-//                    Spacer()
-//                }
-//                .padding()
-//                Spacer()
-//            }
         }
-//        .navigationBarHidden(true)
-        
-        // MARK: - LOGIQUE DE FETCH EN CASCADE
+        .toolbar(.hidden, for: .tabBar)
         .task {
-            // Si on a déjà chargé les données, on ne recommence pas
-            guard loadedData.isEmpty else { return }
-            
-            isLoadingData = true
-            
-            // 1. On récupère la liste des IDs de rôles (ActorSerie)
-            if let roleIDs = actor.actorSerieIDs {
-                for roleID in roleIDs {
+            // MARK: - LOGIQUE DE CASCADE (Fetch Roles -> Fetch Series)
+            // On ne le fait que si on n'a pas déjà chargé les données
+            if loadedData.isEmpty {
+                if let roleIDs = actor.actorSerieIDs {
                     do {
-                        // 2. On fetch chaque objet ActorSerie (le Rôle)
-                        let role = try await viewModel.getRoleById(roleID)
-                        
-                        // 3. On fetch la Série associée à ce rôle
-                        if let serieID = role.serieIDs?.first {
+                        for roleID in roleIDs {
+                            // 1. Fetch du rôle complet
+                            let role = try await viewModel.getRoleById(roleID)
+                            
+                            // 2. Récupération de l'ID de la série liée
+                            guard let serieID = role.serieIDs?.first else { continue }
+                            
+                            // 3. Fetch de la série complète
                             let serie = try await viewModel.getSerieById(serieID)
                             
                             // 4. On ajoute le couple (Série, Rôle) à notre liste locale

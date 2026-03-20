@@ -42,7 +42,7 @@ struct FilterSheetView: View {
     
     var body: some View {
         ZStack {
-            Color("background").ignoresSafeArea()
+            Design.bgColor.ignoresSafeArea()
             
             VStack {
                 HStack {
@@ -142,6 +142,7 @@ struct FilterSheetView: View {
                 .padding()
             }
         }
+        .preferredColorScheme(.dark)
     }
     
     private func toggleGenre(_ genre: GenreType) {

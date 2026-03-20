@@ -22,14 +22,20 @@ struct MyFavoris: View {
                     Text("Actor").tag(1)
                     Text("Serie").tag(2)
                 }.pickerStyle(.segmented)
-                switch selectedScreen {
-                case 1:
-                    SearchActorView(user: user)
-                case 2:
-                    SearchSerie(user: user)
-                default:
-                SearchGenre(user: user)
+                    .padding(.bottom, 10)
+                
+                Group {
+                    switch selectedScreen {
+                    case 1:
+                        SearchActorView(user: user)
+                    case 2:
+                        SearchSerie(user: user)
+                    default:
+                        SearchGenre(user: user)
+                    }
                 }
+                .padding(.vertical, 10)
+                
                 Spacer()
             }
         }

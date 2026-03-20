@@ -38,6 +38,11 @@ struct ContentView: View {
                             Label("Calendrier", systemImage: "calendar")
                         }
                     
+                    ChatGlobal()
+                        .tabItem {
+                            Label("Chat", systemImage: "bubble.left.and.bubble.right.fill")
+                        }
+                    
                     MyProfile(userConnected: user)
                         .tabItem {
                             Label("Profil", systemImage: "person.fill")

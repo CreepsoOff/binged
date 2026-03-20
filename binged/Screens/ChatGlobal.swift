@@ -11,7 +11,7 @@ struct ChatGlobal: View {
     
     @State private var newMessage = ""
     
-    var messages: [Message] = [
+    @State private var messages: [Message] = [
             Message(text: "Je sais plus quoi regarder 😩", isMe: true),
             Message(text: "T’as envie de quoi ?", isMe: false),
             Message(text: "Un truc comme Mindhunter, j’avais adoré", isMe: true),
@@ -43,7 +43,7 @@ struct ChatGlobal: View {
                 
                 // 🔥 HEADER
                 VStack(alignment: .leading) {
-                    Text("Chat")
+                    Text("Chat Global")
                         .foregroundColor(.white)
                         .font(.largeTitle)
                         .bold()
@@ -51,21 +51,38 @@ struct ChatGlobal: View {
                 .padding()
                 
                 // 🔥 CHAT
-                ScrollView {
-                    VStack(spacing: 12) {
-                        ForEach(messages) { message in
-                            HStack {
-                                if message.isMe {
-                                    Spacer()
-                                    ChatBubble(text: message.text, isMe: true)
-                                } else {
-                                    ChatBubble(text: message.text, isMe: false)
-                                    Spacer()
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        VStack(spacing: 12) {
+                            ForEach(messages) { message in
+                                HStack {
+                                    if message.isMe {
+                                        Spacer()
+                                        ChatBubble(text: message.text, isMe: true)
+                                    } else {
+                                        ChatBubble(text: message.text, isMe: false)
+                                        Spacer()
+                                    }
                                 }
+                                .id(message.id) // Important pour le scrollTo
+                            }
+                        }
+                        .padding()
+                    }
+                    .onChange(of: messages.count) {
+                        // Scroll en bas à chaque nouveau message
+                        if let lastId = messages.last?.id {
+                            withAnimation {
+                                proxy.scrollTo(lastId, anchor: .bottom)
                             }
                         }
                     }
-                    .padding()
+                    .onAppear {
+                        // Scroll en bas à l'ouverture
+                        if let lastId = messages.last?.id {
+                            proxy.scrollTo(lastId, anchor: .bottom)
+                        }
+                    }
                 }
                 
                 // 🔥 INPUT
@@ -77,9 +94,7 @@ struct ChatGlobal: View {
                         .foregroundColor(.white)
                     
                     Button {
-                        // action envoyer
-                        print("send: \(newMessage)")
-                        newMessage = ""
+                        sendMessage()
                     } label: {
                         Image(systemName: "paperplane.fill")
                             .foregroundColor(.white)
@@ -87,11 +102,21 @@ struct ChatGlobal: View {
                             .background(Color.blue)
                             .cornerRadius(10)
                     }
+                    .disabled(newMessage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
                 .padding()
                 .background(Color("background"))
             }
         }
+    }
+    
+    private func sendMessage() {
+        let trimmed = newMessage.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        
+        let msg = Message(text: trimmed, isMe: true)
+        messages.append(msg)
+        newMessage = ""
     }
 }
 

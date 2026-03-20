@@ -7,6 +7,7 @@ struct SeriesDetailView: View {
 
     @State private var showPlaylistPicker = false
     @State private var isAddedToPlaylist = false
+    @State private var isCheckingStatus = true // Nouvel état de chargement
 
     @Environment(SerieViewModels.self) private var serieVM
     @Environment(PlayListViewModel.self) private var playlistVM
@@ -56,13 +57,20 @@ struct SeriesDetailView: View {
                                     )
                                 }
                                 Spacer()
-                                Button {
-                                    showPlaylistPicker.toggle()
-                                } label: {
-                                    if isAddedToPlaylist {
-                                        IconButton(text: "Ajoutée", icon: "checkmark")
-                                    } else {
-                                        IconButton(text: "Ajouter", icon: "plus")
+                                
+                                if isCheckingStatus {
+                                    ProgressView()
+                                        .tint(.white)
+                                        .frame(width: 100) // Pour garder un espace constant
+                                } else {
+                                    Button {
+                                        showPlaylistPicker.toggle()
+                                    } label: {
+                                        if isAddedToPlaylist {
+                                            IconButton(text: "Ajoutée", icon: "checkmark")
+                                        } else {
+                                            IconButton(text: "Ajouter", icon: "plus")
+                                        }
                                     }
                                 }
                             }
@@ -260,7 +268,7 @@ struct SeriesDetailView: View {
                                 Spacer()
 
                                 NavigationLink {
-                                    /// (FAIRE CHAT SERIE ICI)
+                                    ChatSerie()
                                 } label: {
                                     IconButton(
                                         text: "Chatter",
@@ -308,6 +316,7 @@ struct SeriesDetailView: View {
             .scrollIndicators(.hidden)
             .ignoresSafeArea(edges: .top)
         }
+        .toolbar(.hidden, for: .tabBar)
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showPlaylistPicker) {
             if var user = userVM.currentUser {
@@ -369,12 +378,16 @@ struct SeriesDetailView: View {
     }
     
     private func checkIfAdded() {
+        isCheckingStatus = true
         Task {
             if let user = userVM.currentUser {
                 let added = await playlistVM.isSerieInUserPlaylists(serieName: serie.name, user: user, serieVM: serieVM)
                 withAnimation {
                     self.isAddedToPlaylist = added
+                    self.isCheckingStatus = false
                 }
+            } else {
+                isCheckingStatus = false
             }
         }
     }

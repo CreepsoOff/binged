@@ -73,7 +73,6 @@ struct SeriesListView: View {
                         VStack(spacing: 15) {
                             Image(systemName: "magnifyingglass")
                                 .font(.system(size: 50))
-                                .foregroundStyle(.gray)
                             Text("Aucune série ne correspond à tes filtres.")
                                 .foregroundStyle(.secondary)
                         }
@@ -115,6 +114,7 @@ struct SeriesListView: View {
                 )
                 .presentationDetents([.fraction(0.85), .large])
                 .presentationDragIndicator(.visible)
+                .presentationBackground(Design.bgColor) // Force le fond opaque
             }
         }
         .task {

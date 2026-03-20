@@ -41,7 +41,7 @@ struct GlobalSearchView: View {
                     if isInitialLoading {
                         Spacer()
                         ProgressView("Initialisation...")
-                            .tint(.white)
+                            .tint(.orange)
                             .foregroundStyle(.white)
                         Spacer()
                     } else {
