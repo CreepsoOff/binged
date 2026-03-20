@@ -72,7 +72,7 @@ class PlayListViewModel {
     }
 
     // Crée une nouvelle playlist
-    func createPlaylist(name: String, creatorID: String, serieID: String) async throws {
+    func createPlaylist(name: String, creatorID: String, serieID: String) async throws -> String {
         let url = URL(string: "https://api.airtable.com/v0/appIztQK14x6MyfL9/Playlist")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -88,10 +88,14 @@ class PlayListViewModel {
         ]
         request.httpBody = try JSONSerialization.data(withJSONObject: body)
 
-        let (_, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await URLSession.shared.data(for: request)
         if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
             throw NSError(domain: "AirtableError", code: httpResponse.statusCode)
         }
+        
+        let decoder = JSONDecoder()
+        let createdRecord = try decoder.decode(PlaylistRecord.self, from: data)
+        return createdRecord.id
     }
 
     func isSerieInUserPlaylists(serieName: String, user: User, serieVM: SerieViewModels) async -> Bool {

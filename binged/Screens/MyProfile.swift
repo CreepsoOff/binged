@@ -52,6 +52,8 @@ struct MyProfile: View {
                         }
                     }
                     
+                    Divider()
+                        .padding(.bottom, 8)
                     NavigationLink {
                         PlaylistsView(user: $userConnected)
                     } label: {
@@ -60,6 +62,7 @@ struct MyProfile: View {
                             icon: "book.pages.fill"
                         )
                     }
+                    .padding(.bottom, -12)
                     
                     MyFavoris(user: self.$userConnected)
                         .padding()

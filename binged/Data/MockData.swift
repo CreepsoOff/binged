@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 enum MockData {
     
@@ -12,6 +13,8 @@ enum MockData {
     static let mockThumbColette = ThumbnailVariant(url: mockURLcolette)
     static let mockThumbsColette = Thumbnails(small: mockThumbColette, large: mockThumbColette, full: mockThumbColette)
     static let mockAttachmentColette = Attachment(id: "att456", url: mockURLcolette, thumbnails: mockThumbsColette)
+    
+    static let arcaneCover = AsyncImage(url: URL(string: "https://v5.airtableusercontent.com/v3/u/51/51/1773957600000/4q88or8z7-7i1n6-5o4H2g/AMt4297d-km0h9RIOzyT-g9gm3-EamLsveE0OlaAuta7tWyD2GcWd9ymHJZxPisx5GGvbBMv0NFVgSxRNsVP4lyLiJk0_LyMTMWmjLq3r9iSNjSy8_zzMPBZTi4rqWQrjVpimzWDY-KuOH0l0bA1y7NulfuQGQCevC63h3pp3IE/0Euy4ZEY3dcpMnsDxEAH8vtJPXcLietSJBVmy0C4xtQ"))
     
     
     // MARK: - 2. Plateformes

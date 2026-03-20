@@ -18,7 +18,6 @@ struct PlaylistPickerView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                // Fond principal
                 Design.bgColor.ignoresSafeArea()
                 
                 VStack(spacing: 0) {
@@ -114,8 +113,10 @@ struct PlaylistPickerView: View {
     
     private func loadData() async {
         isLoading = true
+        // 1. On cherche l'ID de la série
         self.currentSerieRecordId = await vmplaylist.fetchSerieRecordId(named: serie.name)
         
+        // 2. On charge les playlists du user
         if let playlistIDs = user.playlistIDs {
             var fetched: [PlaylistRecord] = []
             for plid in playlistIDs {
@@ -149,7 +150,7 @@ struct PlaylistPickerView: View {
         Task {
             do {
                 try await vmplaylist.updatePlaylistSeries(playlistID: record.id, seriesIDs: serieIDs)
-                await loadData()
+                await loadData() // Rafraîchir
             } catch {
                 print("Erreur update: \(error)")
             }
@@ -161,7 +162,15 @@ struct PlaylistPickerView: View {
         
         Task {
             do {
-                try await vmplaylist.createPlaylist(name: newPlaylistName, creatorID: "rec279AxVMVJ5GrPQ", serieID: sid)
+                let newPlaylistID = try await vmplaylist.createPlaylist(name: newPlaylistName, creatorID: "rec279AxVMVJ5GrPQ", serieID: sid)
+                
+                // Mettre à jour la copie locale de l'utilisateur pour que loadData la trouve
+                if user.playlistIDs == nil {
+                    user.playlistIDs = [newPlaylistID]
+                } else {
+                    user.playlistIDs?.append(newPlaylistID)
+                }
+                
                 newPlaylistName = ""
                 await loadData()
             } catch {
@@ -169,11 +178,4 @@ struct PlaylistPickerView: View {
             }
         }
     }
-}
-
-#Preview {
-    PlaylistPickerView(serie: MockData.breakingBad, user: .constant(MockData.magalie))
-        .environment(PlayListViewModel())
-        .environment(SerieViewModels())
-        .environment(UserViewModel())
 }

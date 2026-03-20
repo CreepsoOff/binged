@@ -84,7 +84,7 @@ struct PlaylistsView: View {
                 var fetchedPlaylists: [Playlist] = []
                 for plid in playlistIDs {
                     do {
-                        var p = try await vmplaylist.getPlayListById(plid)
+                        let p = try await vmplaylist.getPlayListById(plid)
                         
                         if let sIDs = p.serieIDs {
                             for sid in sIDs {
